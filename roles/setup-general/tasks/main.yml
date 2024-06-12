@@ -1,0 +1,29 @@
+---
+- name: Set hostname
+  ansible.builtin.hostname:
+    name: "{{ general.hostname }}"
+
+- name: Set timezone
+  community.general.timezone:
+    name: "{{ general.timezone }}"
+
+# TODO: Extract Avahi setup to a separate setup-network role
+- name: Install Avahi daemon for mDNS
+  ansible.builtin.package:
+    name: avahi-daemon
+    state: present
+
+- name: Enable and start Avahi daemon
+  ansible.builtin.service:
+    name: avahi-daemon
+    enabled: yes
+    state: started
+
+- name: Configure Avahi daemon
+  ansible.builtin.template:
+    src: files/avahi-daemon.conf.j2
+    dest: /etc/avahi/avahi-daemon.conf
+    owner: root
+    group: root
+    mode: '0644'
+  notify: Restart Avahi daemon

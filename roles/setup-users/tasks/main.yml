@@ -1,0 +1,41 @@
+- name: Create worker group
+  ansible.builtin.group:
+    name: "{{ users.worker }}"
+    state: present
+    system: yes
+
+- name: Create worker user
+  ansible.builtin.user:
+    name: "{{ users.worker }}"
+    group: "{{ users.worker }}"
+    state: present
+    system: yes
+    create_home: no
+    shell: /sbin/nologin
+
+- name: Create NAS group
+  ansible.builtin.group:
+    name: "{{ users.nas }}"
+    state: present
+    system: yes
+
+- name: Create NAS user
+  ansible.builtin.user:
+    name: "{{ users.nas }}"
+    group: "{{ users.nas }}"
+    state: present
+    system: yes
+    create_home: yes
+    home: "{{ storage.nas_dir }}"
+    shell: /sbin/nologin
+
+- name: Make NAS user own Samba share directories
+  ansible.builtin.file:
+    name: "{{ item.path | default(samba_shares_root + '/' + item.name) }}"
+    state: directory
+    owner: "{{ users.nas }}"
+    group: "{{ users.nas }}"
+    mode: '0755'
+    recurse: false
+  with_items: "{{ samba_shares }}"
+  when: (item.public is defined and item.public) or (item.guest_ok is defined and item.guest_ok)

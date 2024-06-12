@@ -1,0 +1,12 @@
+---
+- name: Install Docker Python module
+  ansible.builtin.apt:
+    name: python3-docker
+    state: present
+
+- name: Create Docker home directory
+  ansible.builtin.file:
+    path: "{{ storage.docker_dir }}"
+    mode: 0755
+    state: directory
+  when: storage.docker_dir is defined

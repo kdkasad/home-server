@@ -1,0 +1,32 @@
+---
+- name: Deploy home server
+  hosts: homeserver
+  become: true
+  vars_files: config.yml
+
+  roles:
+    - role: setup-general
+      tags:
+        - setup
+
+    - role: setup-disks
+      tags:
+        - setup
+        - nas
+
+    - role: setup-users
+      tags:
+        - setup
+        - nas
+
+    - role: setup-ssh
+      tags:
+        - setup
+
+    - role: setup-docker
+      tags:
+        - docker
+
+    - role: vladgh.samba.server
+      tags:
+        - nas

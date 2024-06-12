@@ -1,0 +1,20 @@
+- name: Install OpenSSH
+  ansible.builtin.package:
+    name: openssh-server
+    state: present
+    update_cache: true
+
+- name: Copy sshd_config
+  ansible.builtin.copy:
+    src: files/sshd_config
+    dest: /etc/ssh/sshd_config.d/00-overrides.conf
+    owner: root
+    group: root
+    mode: '0644'
+  notify: Restart SSH service
+
+- name: Start & enable SSH service
+  ansible.builtin.service:
+    name: ssh
+    enabled: true
+    state: started

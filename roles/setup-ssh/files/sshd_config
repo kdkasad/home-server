@@ -1,0 +1,12 @@
+# Disable less secure authentication methods
+PasswordAuthentication no
+HostbasedAuthentication no
+
+# Don't allow logging in as root user
+PermitRootLogin no
+
+# Require minimum of 2048-bit RSA keys
+RequiredRSASize 2048
+
+# Check permissions of files such as ~/.ssh/authorized_keys before authenticating
+StrictModes yes

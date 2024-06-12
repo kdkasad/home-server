@@ -1,0 +1,40 @@
+---
+- name: Install LVM2
+  ansible.builtin.package:
+    name: lvm2
+    state: present
+
+- name: Create logical volumes
+  community.general.lvol:
+    vg: "{{ storage.vg }}"
+    lv: "{{ item.key }}"
+    size: "{{ item.value.size }}"
+    state: present
+    shrink: false
+    resizefs: true
+  with_items: "{{ storage.volumes | dict2items }}"
+
+- name: Create filesystems
+  community.general.filesystem:
+    fstype: "{{ item.value.fs }}"
+    state: present
+    dev: "/dev/{{ storage.vg }}/{{ item.key }}"
+  with_items: "{{ storage.volumes | dict2items }}"
+
+- name: Create mount points
+  ansible.builtin.file:
+    path: "{{ item.value.mount }}"
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+  with_items: "{{ storage.volumes | dict2items }}"
+
+- name: Mount volumes
+  ansible.posix.mount:
+    path: "{{ item.value.mount }}"
+    src: "/dev/{{ storage.vg }}/{{ item.key }}"
+    fstype: "{{ item.value.fs }}"
+    state: mounted
+    opts: defaults,rw
+  with_items: "{{ storage.volumes | dict2items }}"

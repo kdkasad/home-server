@@ -1,0 +1,75 @@
+---
+####################
+# General settings #
+####################
+
+general:
+  # Set the hostname of the server
+  hostname: homeserver
+
+  # Set the timezone
+  timezone: Etc/UTC
+
+users:
+  worker: worker
+  nas: nas
+
+####################
+# Storage settings #
+####################
+
+storage:
+
+  # Directory in which application data will be stored
+  data_dir: /data
+
+  # Directory in which NAS will be mounted
+  nas_dir: /nas
+
+  # Directory for Docker images
+  docker_dir: /var/lib/docker
+
+  # Define LVM volumes
+  vg: pool
+  volumes:
+    root:
+      mount: /
+      size: 64G
+      fs: ext4
+
+    nas:
+      mount: /nas
+      size: 50G
+      fs: ext4
+
+    data:
+      mount: /data
+      size: 100G
+      fs: ext4
+
+#################
+# Samba options #
+#################
+
+# See https://github.com/vladgh/ansible-collection-vladgh-samba
+samba_guest_account: "{{ users.nas }}"
+samba_shares_root: "{{ storage.nas_dir }}"
+samba_manage_directories: no
+samba_netbios_name: "{{ general.hostname }}"
+samba_server_string: Home NAS
+
+# Just run as a standalone SMB server, not a WINS or AD server
+samba_wins_support: no
+samba_domain_master: no
+samba_preferred_master: no
+samba_local_master: yes
+
+# Treat unknown users as guests, but treat bad passwords as errors.
+# See https://www.samba.org/samba/docs/current/man-html/smb.conf.5.html
+samba_map_to_guest: Bad User
+
+samba_shares:
+  - name: Dump
+    comment: A place for files to go
+    public: yes
+    writeable: yes
