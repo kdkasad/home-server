@@ -1,3 +1,4 @@
 keys/*
 !keys/ssh_private_keys_go_here
 inventory
+.facts_cache
