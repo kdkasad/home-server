@@ -57,10 +57,14 @@ $ ansible-galaxy install -r requirements.yml
 ```
 
 #### 5. Configure the `inventory` file to match your server's network address.
+```
+$ cp inventory.sample inventory
+```
+Then edit `inventory`, replacing the `<placeholders>` with the proper values for your environment.
 
 I also specify the SSH key to use in the inventory file,
 and I store that key in the `keys/` directory of this repository.
-You can omit this, and Ansible will use the default SSH key search path.
+You can remove this setting, and Ansible will use the default SSH key search path instead.
 
 #### 6. Use the sample configuration file to create your own configuration file.
 ```
