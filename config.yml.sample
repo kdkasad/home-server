@@ -84,3 +84,14 @@ samba_shares:
 ############################
 
 minecraft_server_enabled: no
+
+######################
+# Authentik settings #
+######################
+
+# After Authentik is enabled, go to https://<hostname>:9443/if/flow/initial-setup/
+authentik_enabled: no
+
+# See https://docs.goauthentik.io/docs/installation/configuration for documentation
+authentik_env:
+  PG_PASS: "{{ undef }}" # Use Ansible Vault to store an encrypted password here

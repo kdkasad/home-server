@@ -1,0 +1,57 @@
+---
+- name: Set up Authentik
+  when: authentik_enabled is true
+  block:
+    - name: Create data directories
+      ansible.builtin.file:
+        name: "{{ authentik_data_dir }}/{{ item }}"
+        state: directory
+        owner: "{{ users.worker }}"
+        group: "{{ users.worker }}"
+        mode: '0750'
+        recurse: false
+      with_items:
+        - postgres
+        - redis
+        - server/media
+        - server/custom-templates
+        - worker/media
+        - worker/certs
+        - worker/custom-templates
+
+    - name: Create docker-compose.yml file
+      ansible.builtin.template:
+        src: files/docker-compose.yml
+        dest: "{{ authentik_data_dir }}/docker-compose.yml"
+        owner: "{{ users.worker }}"
+        group: "{{ users.worker }}"
+        mode: '0400'
+
+    - name: Create .env file
+      ansible.builtin.template:
+        src: files/env
+        dest: "{{ authentik_data_dir }}/.env"
+        owner: "{{ users.worker }}"
+        group: "{{ users.worker }}"
+        mode: '0400'
+
+    - name: Start Authentik stack
+      become: true
+      become_user: "{{ users.worker }}"
+      community.docker.docker_compose_v2:
+        project_src: "{{ authentik_data_dir }}"
+        wait: true
+
+- name: Stop Authentik
+  when: authentik_enabled is false
+  block:
+    - name: Check for existing Authentik data directory
+      ansible.builtin.stat:
+        path: "{{ authentik_data_dir }}/docker-compose.yml"
+      register: authentik_dir_check
+
+    - name: Stop Authentik stack
+      when: authentik_dir_check.stat.exists
+      community.docker.docker_compose_v2:
+        project_src: "{{ authentik_data_dir }}"
+        state: absent

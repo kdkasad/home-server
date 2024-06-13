@@ -33,3 +33,7 @@
     - role: minecraft-server
       tags:
         - minecraft
+
+    - role: authentik
+      tags:
+        - authentik

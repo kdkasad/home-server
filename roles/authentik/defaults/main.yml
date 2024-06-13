@@ -1,0 +1,16 @@
+---
+# Whether the Authentik stack will be enabled
+authentik_enabled: false
+
+# Directory in which Authentik data will be stored
+authentik_data_dir: "{{ storage.data_dir }}/authentik"
+
+# Default environment variables to prepend to authentik_env
+authentik_env_default:
+  AUTHENTIK_VERSION: "2022.11.1"
+  AUTHENTIK_DEFAULT_USER_CHANGE_USERNAME: false
+  AUTHENTIK_DISABLE_STARTUP_ANALYTICS: true
+
+# Extra environment variables which can be set in config.yml
+authentik_env:
+  PG_PASS: "{{ undef(hint=\"You must specify a password for Authentik's PostgreSQL database\") }}"

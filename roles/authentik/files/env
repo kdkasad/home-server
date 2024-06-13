@@ -1,0 +1,7 @@
+{% for key, value in (authentik_env_default | combine(authentik_env)).items() %}
+{% if (key != 'PG_PASS') and (key != 'AUTHENTIK_SECRET_KEY') %}
+{{ key }}={{ value }}
+{% endif %}
+{% endfor %}
+PG_PASS={{ authentik_env.PG_PASS | mandatory }}
+AUTHENTIK_SECRET_KEY={{ authentik_env.AUTHENTIK_SECRET_KEY | default(65535 | random(seed=ansible_facts['hostname']) | hash('sha256')) }}
