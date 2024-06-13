@@ -1,4 +1,4 @@
 keys/*
-!keys/ssh_private_keys_go_here
+!keys/README.md
 inventory
 .facts_cache
