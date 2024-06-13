@@ -10,7 +10,32 @@ Much of the structure and some of the roles are taken from there.
 Any roles which were adapted from Ansible NAS have their own license files
 in their respective directories to retain the original copyright and license.
 
-# How to use
+
+## What's included?
+
+This playbook installs and configures the following services
+(when enabled in `config.yml`):
+
+- LAN file sharing (for NAS use), using [Samba](https://www.samba.org/)
+- [Docker](https://docker.io), a containerization platform.
+  Used to run most of the other services as containers.
+- [Minecraft](https://www.minecraft.net/en-us) server
+  (Java Edition, using [itzg/docker-minecraft-server](https://github.com/itzg/docker-minecraft-server))
+- [Authentik](https://goauthentik.io), a self-hosted identity provider.
+  Acts as a central authentication system for other services.
+
+### Planned
+These are some of the services/features I'd like to add in the near future:
+
+ - Reverse proxy (Traefik)
+ - VPN (WireGuard)
+ - Health, stats, and log monitoring
+ - Automated data backups
+ - Bitwarden password manager
+ - Jellyfin media server
+
+
+## Installation
 
 If you're looking to use this playbook to deploy your own home server, you may
 want to take a look at [Ansible NAS](https://ansible-nas.io) instead.
