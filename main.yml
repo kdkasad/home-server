@@ -2,7 +2,6 @@
 - name: Deploy home server
   hosts: homeserver
   become: true
-  vars_files: config.yml
 
   roles:
     - role: setup-general
