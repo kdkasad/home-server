@@ -10,6 +10,9 @@ general:
   # Set the timezone
   timezone: America/Los_Angeles
 
+  # Only automatically install security updates
+  auto_update_packages: security
+
 users:
   worker: worker
   nas: nas

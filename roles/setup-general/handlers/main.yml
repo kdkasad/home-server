@@ -1,5 +1,10 @@
 ---
 - name: Restart Avahi daemon
-  service:
+  ansible.builtin.service:
     name: avahi-daemon
+    state: restarted
+
+- name: Restart unattended upgrades service
+  ansible.builtin.service:
+    name: unattended-upgrades
     state: restarted
