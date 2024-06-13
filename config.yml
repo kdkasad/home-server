@@ -71,3 +71,43 @@ samba_shares:
     comment: A place for files to go
     public: yes
     writeable: yes
+
+############################
+# Minecraft server options #
+############################
+
+minecraft_server_enabled: yes
+minecraft_server_env:
+  # Server properties
+  SERVER_PORT: "25565"
+  ENFORCE_SECURE_PROFILE: "false"
+  ONLINE_MODE: "false"
+  ENABLE_COMMAND_BLOCK: "true"
+  ENABLE_QUERY: "true"
+
+  # Enable automatically pausing when nobody is online
+  EXEC_DIRECTLY: "false"
+  ENABLE_AUTOPAUSE: "true"
+  MAX_TICK_TIME: "-1" # See https://docker-minecraft-server.readthedocs.io/en/latest/misc/autopause-autostop/autopause/
+  AUTOPAUSE_TIMEOUT_EST: "600" # Pause 10 minutes after last player disconnects
+  AUTOPAUSE_TIMEOUT_INIT: "60" # Pause 1 minute after startup if inactive
+
+  # Server settings
+  TYPE: fabric
+  VERSION: "1.20.4"
+  INIT_MEMORY: "512M"
+  MAX_MEMORY: "4G"
+
+  # For custom datapacks and resource packs from vanillatweaks.net
+  # https://vanillatweaks.net/share#<sharecode>
+  VANILLATWEAKS_SHARECODE: rIS4z6,IWrn6G # data, resource
+
+  # Mods to download from Modrinth
+  # https://modrinth.com/mods/<slug>
+  MODRINTH_PROJECTS: |-
+    fabric-api
+    lithium
+    no-chat-reports
+    fabrictailor
+    coord-finder:beta
+    carpet

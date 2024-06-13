@@ -1,0 +1,15 @@
+---
+minecraft_server_enabled: false
+
+# Note: All environment variables defined here must be quoted.
+# Additionally, the itzg/minecraft-server image requires true/false for booleans,
+# and does not (yet) support yes/no.
+# https://github.com/itzg/docker-minecraft-server/issues/2892
+minecraft_server_env: {}
+
+minecraft_server_data_directory: "{{ storage.data_dir }}/minecraft_server"
+
+minecraft_server_port: "25565"
+
+minecraft_server_container_name: minecraft-server
+minecraft_server_image: itzg/minecraft-server:java21-alpine

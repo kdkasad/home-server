@@ -1,0 +1,40 @@
+---
+- name: Start Minecraft Server
+  when: minecraft_server_enabled is true
+  block:
+    - name: Create Minecraft Server Directories
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: directory
+        owner: "{{ users.worker }}"
+        group: "{{ users.worker }}"
+        mode: "0750"
+        recurse: yes
+      with_items:
+        - "{{ minecraft_server_data_directory }}"
+
+    - name: Minecraft Server Docker Container
+      become: true
+      become_user: "{{ users.worker }}"
+      community.docker.docker_container:
+        name: "{{ minecraft_server_container_name }}"
+        image: "{{ minecraft_server_image }}"
+        pull: true
+        volumes:
+          - "{{ minecraft_server_data_directory }}:/data:rw"
+        ports:
+          - "{{ minecraft_server_port }}:25565"
+        env: "{{ minecraft_server_env | combine({'EULA': 'TRUE'}) }}"
+        # Add CAP_NET_RAW if auto-pause is enabled
+        capabilities: "{{ ((minecraft_server_env.ENABLE_AUTOPAUSE | lower) in ['true', 'yes', '1']) | ternary(['CAP_NET_RAW'], []) }}"
+        restart_policy: unless-stopped
+
+- name: Stop Minecraft Server
+  when: minecraft_server_enabled is false
+  block:
+    - name: Stop Minecraft Server
+      become: true
+      become_user: "{{ users.worker }}"
+      community.docker.docker_container:
+        name: "{{ minecraft_server_container_name }}"
+        state: absent

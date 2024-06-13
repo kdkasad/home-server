@@ -30,3 +30,7 @@
     - role: vladgh.samba.server
       tags:
         - nas
+
+    - role: minecraft-server
+      tags:
+        - minecraft
