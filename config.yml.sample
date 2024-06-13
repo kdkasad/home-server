@@ -10,6 +10,11 @@ general:
   # Set the timezone
   timezone: Etc/UTC
 
+  # Whether to auto-update packages.
+  # Can be "all" for all updates, "security" for security updates only, or
+  # "none" for no updates
+  auto_update_packages: security
+
 users:
   worker: worker
   nas: nas
@@ -73,3 +78,9 @@ samba_shares:
     comment: A place for files to go
     public: yes
     writeable: yes
+
+############################
+# Minecraft server options #
+############################
+
+minecraft_server_enabled: no
