@@ -21,7 +21,7 @@
 
 - name: Configure Avahi daemon
   ansible.builtin.template:
-    src: files/avahi-daemon.conf.j2
+    src: templates/avahi-daemon.conf
     dest: /etc/avahi/avahi-daemon.conf
     owner: root
     group: root
@@ -38,7 +38,7 @@
 
     - name: Copy unattended upgrades configuration file
       ansible.builtin.template:
-        src: files/unattended-upgrades.conf.j2
+        src: templates/unattended-upgrades.conf
         dest: /etc/apt/apt.conf.d/50unattended-upgrades
         owner: root
         group: root

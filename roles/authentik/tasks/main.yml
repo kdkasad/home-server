@@ -21,7 +21,7 @@
 
     - name: Create docker-compose.yml file
       ansible.builtin.template:
-        src: files/docker-compose.yml
+        src: templates/docker-compose.yml
         dest: "{{ authentik_data_dir }}/docker-compose.yml"
         owner: "{{ users.worker }}"
         group: "{{ users.worker }}"
@@ -29,7 +29,7 @@
 
     - name: Create .env file
       ansible.builtin.template:
-        src: files/env
+        src: templates/env
         dest: "{{ authentik_data_dir }}/.env"
         owner: "{{ users.worker }}"
         group: "{{ users.worker }}"
