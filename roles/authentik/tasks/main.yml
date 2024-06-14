@@ -2,22 +2,17 @@
 - name: Set up Authentik
   when: authentik_enabled is true
   block:
-    - name: Create data directories
+    - name: Create parent data directories
       ansible.builtin.file:
         name: "{{ authentik_data_dir }}/{{ item }}"
         state: directory
-        owner: "{{ users.worker }}"
-        group: "{{ users.worker }}"
-        mode: '0750'
+        owner: "root"
+        group: "root"
+        mode: '0755'
         recurse: false
       with_items:
-        - postgres
-        - redis
-        - server/media
-        - server/custom-templates
-        - worker/media
-        - worker/certs
-        - worker/custom-templates
+        - server
+        - worker
 
     - name: Create docker-compose.yml file
       ansible.builtin.template:
