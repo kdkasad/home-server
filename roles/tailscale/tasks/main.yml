@@ -1,0 +1,38 @@
+---
+- name: Set up Tailscale
+  when: tailscale_enabled is true
+  block:
+    - name: Create data directory
+      ansible.builtin.file:
+        name: "{{ item }}"
+        state: directory
+        owner: "root"
+        group: "root"
+        mode: '0755'
+        recurse: false
+      with_items:
+        - "{{ tailscale_data_dir }}"
+
+    - name: Start Tailscale container
+      community.docker.docker_container:
+        name: tailscale
+        image: tailscale/tailscale:latest
+        restart_policy: unless-stopped
+        env:
+          TS_AUTHKEY: "{{ tailscale_auth_key | mandatory }}"
+          TS_USERSPACE: "false"
+          TS_STATE_DIR: /var/lib/tailscale
+          TS_HOSTNAME: "{{ general.hostname }}"
+          TS_ROUTES: "{{ tailscale_routes | map('ansible.utils.ipaddr') | join(',') | default(omit) }}"
+        network_mode: host
+        volumes:
+          - "{{ tailscale_data_dir }}:/var/lib/tailscale"
+        capabilities:
+          - net_admin
+          - sys_module
+
+- name: Stop Tailscale
+  when: tailscale_enabled is false
+  community.docker.docker_container:
+    name: tailscale
+    state: absent

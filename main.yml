@@ -41,3 +41,7 @@
     - role: traefik
       tags:
         - traefik
+
+    - role: tailscale
+      tags:
+        - tailscale

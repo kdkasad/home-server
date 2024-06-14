@@ -1,0 +1,5 @@
+---
+tailscale_enabled: false
+tailscale_auth_key: "{{ undef(hint='Tailscale auth key must be set') }}"
+tailscale_data_dir: "{{ storage.data_dir }}/tailscale"
+tailscale_routes: []

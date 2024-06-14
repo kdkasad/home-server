@@ -5,6 +5,7 @@ roles:
 
 collections:
   - name: ansible.posix
+  - name: ansible.utils
   - name: community.docker
   - name: community.general
 
