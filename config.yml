@@ -123,6 +123,12 @@ minecraft_server_env:
 ######################
 
 authentik_enabled: yes
+
+# Traefik routing options for Authentik
+authentik_routing:
+  enabled: true
+  subdomain: auth
+
 authentik_env:
   # These first three don't need to be encrypted. It's just so scrapers don't
   # pick up my email and try to spam me or find the password.

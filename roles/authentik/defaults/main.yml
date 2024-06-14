@@ -14,3 +14,8 @@ authentik_env_default:
 # Extra environment variables which can be set in config.yml
 authentik_env:
   PG_PASS: "{{ undef(hint=\"You must specify a password for Authentik's PostgreSQL database\") }}"
+
+# Whether to route Authentik traffic using Traefik
+authentik_routing:
+  enabled: true
+  subdomain: authentik

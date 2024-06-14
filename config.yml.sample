@@ -100,6 +100,11 @@ minecraft_server_enabled: no
 # After Authentik is enabled, go to https://<hostname>:9443/if/flow/initial-setup/
 authentik_enabled: no
 
+# Traefik routing options for Authentik
+authentik_routing:
+  enabled: true
+  subdomain: authentik
+
 # See https://docs.goauthentik.io/docs/installation/configuration for documentation
 authentik_env:
   PG_PASS: "{{ undef }}" # Use Ansible Vault to store an encrypted password here

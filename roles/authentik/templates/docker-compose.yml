@@ -40,9 +40,6 @@ services:
     pull_policy: always
     restart: unless-stopped
     command: server
-    ports:
-      - "9000:9000"
-      - "9443:9443"
     environment:
       AUTHENTIK_REDIS__HOST: redis
       AUTHENTIK_POSTGRESQL__HOST: postgresql
@@ -59,6 +56,10 @@ services:
     depends_on:
       - postgresql
       - redis
+    labels:
+      traefik.enable: "{{ authentik_routing.enabled | default(false) | ternary('true', 'false') }}"
+      traefik.http.routers.authentik.rule: "Host(`{{ authentik_routing.subdomain | default('authentik') }}.{{ general.domain }}`)"
+      traefik.http.services.authentik.loadbalancer.server.port: "9000"
 
   worker:
     image: ghcr.io/goauthentik/server:${AUTHENTIK_VERSION}
