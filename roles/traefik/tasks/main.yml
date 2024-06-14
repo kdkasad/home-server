@@ -38,9 +38,9 @@
         name: traefik
         image: traefik:v3.0
         pull: true
-        ports:
-          - "{{ traefik_ports.http | default(traefik_ports_default.http) }}:{{ traefik_ports.http | default(traefik_ports_default.http) }}"
-          - "{{ traefik_ports.https | default(traefik_ports_default.https) }}:{{ traefik_ports.https | default(traefik_ports_default.https) }}"
+        # ports:
+        #   - "{{ traefik_ports.http | default(traefik_ports_default.http) }}:{{ traefik_ports.http | default(traefik_ports_default.http) }}"
+        #   - "{{ traefik_ports.https | default(traefik_ports_default.https) }}:{{ traefik_ports.https | default(traefik_ports_default.https) }}"
         volumes:
           - "{{ traefik_data_dir }}/traefik.yml:/etc/traefik/traefik.yml:ro"
           - "{{ traefik_data_dir }}/letsencrypt:/letsencrypt:rw"
