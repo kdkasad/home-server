@@ -1,0 +1,24 @@
+---
+traefik_enabled: false
+
+traefik_data_dir: "{{ storage.data_dir }}/traefik"
+traefik_log_level: INFO
+
+traefik_ports:
+  http: 80
+  https: 443
+
+# Don't override this section; use traefik_ports instead.
+traefik_ports_default:
+  http: 80
+  https: 443
+
+# Subdomain for Traefik dashboard
+traefik_dashboard_subdomain: traefik
+
+# See https://doc.traefik.io/traefik/https/acme/ for information on how to
+# configure the provider and environment variables.
+traefik_acme_dns:
+  enabled: false
+  provider: ""
+  env: {}

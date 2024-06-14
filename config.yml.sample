@@ -1,4 +1,5 @@
 ---
+
 ####################
 # General settings #
 ####################
@@ -6,6 +7,9 @@
 general:
   # Set the hostname of the server
   hostname: homeserver
+
+  # Web domain name of the server
+  domain: homeserver.example.com
 
   # Set the timezone
   timezone: Etc/UTC
@@ -18,6 +22,7 @@ general:
 users:
   worker: worker
   nas: nas
+
 
 ####################
 # Storage settings #
@@ -52,6 +57,7 @@ storage:
       size: 100G
       fs: ext4
 
+
 #################
 # Samba options #
 #################
@@ -79,11 +85,13 @@ samba_shares:
     public: yes
     writeable: yes
 
+
 ############################
 # Minecraft server options #
 ############################
 
 minecraft_server_enabled: no
+
 
 ######################
 # Authentik settings #
@@ -95,3 +103,32 @@ authentik_enabled: no
 # See https://docs.goauthentik.io/docs/installation/configuration for documentation
 authentik_env:
   PG_PASS: "{{ undef }}" # Use Ansible Vault to store an encrypted password here
+
+
+####################
+# Traefik settings #
+####################
+
+traefik_enabled: yes
+
+traefik_ports:
+    http: 80
+    https: 443
+
+# See https://doc.traefik.io/traefik/https/acme/ for information on how to
+# configure the provider and environment variables.
+traefik_acme_dns:
+  enabled: yes
+  provider: cloudflare
+
+  # Email for Let's Encrypt, used to receive expiry notifications.
+  # This doesn't need to be encrypted, but doing so hides it from bots scraping
+  # GitHub for credentials.
+  email: <your_email>
+
+  # This is sensitive and must be encrypted, e.g. using Ansible Vault.
+  env:
+    # This API token needs Zone/Zone/Read permissions for all zones, and
+    # Zone/DNS/Edit permissions for the zone containing the domain for the
+    # server.
+    CF_DNS_API_TOKEN: <your_cloudflare_api_token>

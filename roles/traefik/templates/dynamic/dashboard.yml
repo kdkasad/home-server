@@ -1,0 +1,6 @@
+http:
+  routers:
+    traefik_dashboard:
+      rule: Host(`{{ traefik_dashboard_subdomain }}.{{ general.domain }}`)
+      service: api@internal
+      tls: {}

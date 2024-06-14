@@ -1,0 +1,46 @@
+log:
+  level: "{{ traefik_log_level }}"
+
+entryPoints:
+  # Listen for HTTP connections, but redirect to HTTPS
+  web:
+    address: ":{{ traefik_ports.http }}"
+    http:
+      redirections:
+        entryPoint:
+          to: websecure
+          scheme: https
+          permanent: true
+
+  # Listen for HTTPS connections
+  websecure:
+    address: ":{{ traefik_ports.https }}"
+    http:
+      tls:
+        certResolver: letsencrypt
+        domains:
+          - main: "{{ general.domain }}"
+            sans:
+            - "*.{{ general.domain }}"
+
+providers:
+  docker:
+    endpoint: unix:///var/run/docker.sock
+    exposedByDefault: false
+
+  file:
+    directory: "/etc/traefik/dynamic"
+    watch: true
+
+{% if (traefik_acme_dns.enabled | mandatory) is true %}
+certificatesResolvers:
+  letsencrypt:
+    acme:
+      email: "{{ traefik_acme_dns.email | mandatory }}"
+      storage: /letsencrypt/acme.json
+      dnsChallenge:
+        provider: "{{ traefik_acme_dns.provider | mandatory }}"
+{% endif %}
+
+api:
+  dashboard: true
