@@ -6,13 +6,19 @@
       ansible.builtin.file:
         name: "{{ authentik_data_dir }}/{{ item }}"
         state: directory
-        owner: "root"
-        group: "root"
+        # Authentik's containers require UID/GID of 1000 to be able to write to
+        # the mounted volumes.
+        # TODO: Use UID namespaces/mapping to make this more secure.
+        owner: "1000"
+        group: "1000"
         mode: '0755'
         recurse: false
       with_items:
-        - server
-        - worker
+        - server/media
+        - server/custom-templates
+        - worker/media
+        - worker/certs
+        - worker/custom-templates
 
     - name: Create docker-compose.yml file
       ansible.builtin.template:
