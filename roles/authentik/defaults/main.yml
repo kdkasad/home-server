@@ -13,7 +13,12 @@ authentik_env_default:
 
 # Extra environment variables which can be set in config.yml
 authentik_env:
+  # Root password for the Authentik's PostgreSQL database
   PG_PASS: "{{ undef(hint=\"You must specify a password for Authentik's PostgreSQL database\") }}"
+
+  # Initial email and password for the default Authentik administator user "akadmin"
+  AUTHENTIK_BOOTSTRAP_EMAIL: "{{ undef(hint='You must specify an email for the default Authentik akadmin user') }}"
+  AUTHENTIK_BOOTSTRAP_PASSWORD: "{{ undef(hint='You must specify a password for the default Authentik akadmin user') }}"
 
 # Whether to route Authentik traffic using Traefik
 authentik_routing:

@@ -146,6 +146,10 @@ authentik_env:
   # PostgreSQL root password
   PG_PASS: "{{ secret_authentik_pg_pass }}"
 
+  # Credentials for the Authentik "akadmin" user during initial setup
+  AUTHENTIK_BOOTSTRAP_EMAIL: "{{ secret_authentik_bootstrap_email }}"
+  AUTHENTIK_BOOTSTRAP_PASSWORD: "{{ secret_authentik_bootstrap_password }}"
+
 ####################
 # Traefik settings #
 ####################

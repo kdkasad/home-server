@@ -5,3 +5,5 @@
 {% endfor %}
 PG_PASS={{ authentik_env.PG_PASS | mandatory }}
 AUTHENTIK_SECRET_KEY={{ authentik_env.AUTHENTIK_SECRET_KEY | default(65535 | random(seed=ansible_facts['hostname']) | hash('sha256')) }}
+AUTHENTIK_BOOTSTRAP_EMAIL={{ authentik_env.AUTHENTIK_BOOTSTRAP_EMAIL | mandatory }}
+AUTHENTIK_BOOTSTRAP_PASSWORD={{ authentik_env.AUTHENTIK_BOOTSTRAP_PASSWORD | mandatory }}
