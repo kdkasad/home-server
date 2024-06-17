@@ -19,20 +19,23 @@ This playbook installs and configures the following services
 - LAN file sharing (for NAS use), using [Samba](https://www.samba.org/)
 - [Docker](https://docker.io), a containerization platform.
   Used to run most of the other services as containers.
+- [Traefik](https://traefik.io/traefik/) reverse proxy, for routing traffic to
+  services and managing TLS certificates.
 - [Minecraft](https://www.minecraft.net/en-us) server
   (Java Edition, using [itzg/docker-minecraft-server](https://github.com/itzg/docker-minecraft-server))
 - [Authentik](https://goauthentik.io), a self-hosted identity provider.
   Acts as a central authentication system for other services.
+- [Tailscale](https://tailscale.com), a VPN service.
+  Allows secure access to the server from anywhere.
 
 ### Planned
 These are some of the services/features I'd like to add in the near future:
 
- - Reverse proxy (Traefik)
- - VPN (WireGuard)
  - Health, stats, and log monitoring
  - Automated data backups
  - Bitwarden password manager
  - Jellyfin media server
+ - Automated configuration for using Authentik to provide authentication for Traefik
 
 
 ## Installation
