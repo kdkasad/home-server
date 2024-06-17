@@ -49,3 +49,7 @@
     - role: homarr
       tags:
         - homarr
+
+    - role: minio
+      tags:
+        - minio

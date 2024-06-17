@@ -204,3 +204,17 @@ homarr_env:
   AUTH_OIDC_ADMIN_GROUP: Administrators
   AUTH_OIDC_URI: "https://{{ authentik_routing.subdomain | default('auth') }}.{{ general.domain }}/application/o/homarr"
   AUTH_LOGOUT_REDIRECT_URL: "https://{{ authentik_routing.subdomain | default('auth') }}.{{ general.domain }}/application/o/homarr/end-session/"
+
+##################
+# Minio settings #
+##################
+
+minio_enabled: true
+
+minio_routing:
+  enabled: true
+  api_subdomain: s3
+  ui_subdomain: minio
+
+minio_root_user: "{{ secret_minio_root_user }}"
+minio_root_password: "{{ secret_minio_root_password }}"

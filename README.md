@@ -31,6 +31,7 @@ This playbook installs and configures the following services
   Acts as a central authentication system for other services.
 - [Tailscale](https://tailscale.com), a VPN service.
   Allows secure access to the server from anywhere.
+- [Minio](https://min.io), an S3-compatible object storage server.
 
 ### Planned
 These are some of the services/features I'd like to add in the near future:
