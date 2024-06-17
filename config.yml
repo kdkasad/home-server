@@ -183,3 +183,17 @@ tailscale_routes:
   - "10.0.0.0/24"
 
 tailscale_auth_key: "{{ secret_tailscale_auth_key }}"
+
+##################
+# Minio settings #
+##################
+
+minio_enabled: true
+
+minio_routing:
+  enabled: true
+  api_subdomain: s3
+  ui_subdomain: minio
+
+minio_root_user: "{{ secret_minio_root_user }}"
+minio_root_password: "{{ secret_minio_root_password }}"

@@ -1,0 +1,45 @@
+---
+- name: Set up Minio
+  when: minio_enabled is true
+  block:
+    - name: Create Minio data directory
+      ansible.builtin.file:
+        name: "{{ minio_data_dir }}"
+        state: directory
+        owner: "{{ users.worker }}"
+        group: "{{ users.worker }}"
+        mode: '0755'
+        recurse: false
+
+    - name: Start Minio container
+      community.docker.docker_container:
+        name: minio
+        image: "{{ minio_container.image }}:{{ minio_container.tag }}"
+        command: 'server /data --console-address ":9001"'
+        restart_policy: unless-stopped
+        env:
+          MINIO_ROOT_USER: "{{ minio_root_user | mandatory }}"
+          MINIO_ROOT_PASSWORD: "{{ minio_root_password | mandatory }}"
+        volumes:
+          - "{{ minio_data_dir }}:/data"
+        labels:
+          traefik.enable: "{{ minio_routing.enabled | default(false) | ternary('true', 'false') }}"
+          traefik.http.routers.minio-api.rule: "Host(`{{ minio_routing.api_subdomain }}.{{ general.domain }}`)"
+          traefik.http.routers.minio-api.service: minio-api
+          traefik.http.routers.minio-api.tls.certresolver: letsencrypt
+          traefik.http.routers.minio-api.tls.domains[0].main: "{{ minio_routing.api_subdomain }}.{{ general.domain }}"
+          traefik.http.services.minio-api.loadbalancer.server.port: "9000"
+          traefik.http.routers.minio-ui.rule: "Host(`{{ minio_routing.ui_subdomain }}.{{ general.domain }}`)"
+          traefik.http.routers.minio-ui.service: minio-ui
+          traefik.http.routers.minio-ui.tls.certresolver: letsencrypt
+          traefik.http.routers.minio-ui.tls.domains[0].main: "{{ minio_routing.ui_subdomain }}.{{ general.domain }}"
+          traefik.http.services.minio-ui.loadbalancer.server.port: "9001"
+
+
+- name: Stop Minio
+  when: minio_enabled is false
+  block:
+    - name: Stop Minio container
+      community.docker.docker_container:
+        name: minio
+        state: absent

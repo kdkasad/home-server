@@ -1,0 +1,16 @@
+---
+minio_enabled: false
+
+minio_routing:
+  enabled: true
+  api_subdomain: s3
+  ui_subdomain: minio
+
+minio_data_dir: "{{ storage.data_dir }}/minio"
+
+minio_container:
+  image: minio/minio
+  tag: RELEASE.2024-06-13T22-53-53Z
+
+minio_root_user: "{{ undef(hint='You must set the Minio root username') }}"
+minio_root_password: "{{ undef(hint='You must set the Minio root password') }}"
