@@ -1,0 +1,23 @@
+---
+bitwarden_enabled: false
+
+bitwarden_routing:
+  enabled: true
+  subdomain: bitwarden
+
+bitwarden_data_dir: "{{ storage.data_dir }}/bitwarden"
+
+# Whether to allow anyone who can reach your Bitwarden instance to sign up for
+# an account. If disabled, only users who are invited by an organization owner
+# or by an administrator can register.
+bitwarden_allow_signups: false
+
+# Whether to verify email addresses when users sign up. This requires a valid
+# SMTP configuration so Bitwarden can send outgoing emails.
+bitwarden_verify_emails: true
+
+# Settings to control the admin page. If enabled, the admin page will be
+# available on https://<bitwarden_domain>/admin.
+bitwarden_admin_panel:
+  enabled: false
+  password: "{{ undef(hint='Bitwarden admin password is required') }}"

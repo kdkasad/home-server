@@ -1,0 +1,32 @@
+---
+- name: Set up Bitwarden
+  when: bitwarden_enabled is true
+  block:
+    - name: Create Bitwarden data directory
+      ansible.builtin.file:
+        name: "{{ bitwarden_data_dir }}"
+        state: directory
+        owner: "{{ users.worker }}"
+        group: "{{ users.worker }}"
+        mode: '0750'
+        recurse: false
+
+    - name: Start Bitwarden container
+      community.docker.docker_container:
+        name: bitwarden
+        # We use the latest version because Bitwarden may update the client
+        # apps, and we want the server to stay up to date as well.
+        image: vaultwarden/server:latest-alpine
+        pull: always
+        restart_policy: unless-stopped
+        env:
+          DOMAIN: "https://{{ bitwarden_routing.subdomain }}.{{ general.domain }}"
+          SIGNUPS_ALLOWED: "{{ bitwarden_allow_signups | ternary('true', 'false') }}"
+          SIGNUPS_VERIFY: "{{ bitwarden_verify_emails | ternary('true', 'false') }}"
+          ADMIN_TOKEN: "{{ bitwarden_admin_panel.enabled | default(false) | ternary(bitwarden_admin_panel.password, omit) }}"
+        volumes:
+          - "{{ bitwarden_data_dir }}:/data"
+        labels:
+          traefik.enable: "true"
+          traefik.http.routers.bitwarden.rule: "Host(`{{ bitwarden_routing.subdomain }}.{{ general.domain }}`)"
+          traefik.http.services.bitwarden.loadbalancer.server.port: "80"

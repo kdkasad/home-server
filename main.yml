@@ -53,3 +53,7 @@
     - role: minio
       tags:
         - minio
+
+    - role: bitwarden
+      tags:
+        - bitwarden
