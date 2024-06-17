@@ -45,3 +45,7 @@
     - role: tailscale
       tags:
         - tailscale
+
+    - role: bitwarden
+      tags:
+        - bitwarden
