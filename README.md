@@ -17,6 +17,9 @@ This playbook installs and configures the following services
 (when enabled in `config.yml`):
 
 - LAN file sharing (for NAS use), using [Samba](https://www.samba.org/)
+  - Zero-configuration network discovery for MacOS, Windows, and Linux clients
+    using [Avahi](https://github.com/avahi/avahi) (mDNS, DNS-SD)
+    and [wsdd2](https://github.com/Netgear/wsdd2) (WS-Discovery, LLMNR).
 - [Docker](https://docker.io), a containerization platform.
   Used to run most of the other services as containers.
 - [Traefik](https://traefik.io/traefik/) reverse proxy, for routing traffic to
