@@ -30,13 +30,14 @@ This playbook installs and configures the following services
   Acts as a central authentication system for other services.
 - [Tailscale](https://tailscale.com), a VPN service.
   Allows secure access to the server from anywhere.
+- [Bitwarden](https://bitwarden.com) password manager,
+  using [Vaultwarden](https://github.com/dani-garcia/vaultwarden).
 
 ### Planned
 These are some of the services/features I'd like to add in the near future:
 
  - Health, stats, and log monitoring
  - Automated data backups
- - Bitwarden password manager
  - Jellyfin media server
  - Automated configuration for using Authentik to provide authentication for Traefik
 
