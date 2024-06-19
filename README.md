@@ -24,6 +24,7 @@ This playbook installs and configures the following services
   Used to run most of the other services as containers.
 - [Traefik](https://traefik.io/traefik/) reverse proxy, for routing traffic to
   services and managing TLS certificates.
+- [Homarr](https://homarr.dev) web dashboard.
 - [Minecraft](https://www.minecraft.net/en-us) server
   (Java Edition, using [itzg/docker-minecraft-server](https://github.com/itzg/docker-minecraft-server))
 - [Authentik](https://goauthentik.io), a self-hosted identity provider.

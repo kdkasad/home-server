@@ -1,0 +1,40 @@
+---
+- name: Set up Homarr
+  when: homarr_enabled is true
+  block:
+    - name: Create Homarr data directories
+      ansible.builtin.file:
+        name: "{{ homarr_data_dir }}/{{ item }}"
+        state: directory
+        owner: "{{ users.worker }}"
+        group: "{{ users.worker }}"
+        mode: '0755'
+      with_items:
+        - configs
+        - icons
+        - data
+
+    - name: Start Homarr container
+      community.docker.docker_container:
+        name: homarr
+        image: ghcr.io/ajnart/homarr:latest
+        restart_policy: unless-stopped
+        volumes:
+          - "/var/run/docker.sock:/var/run/docker.sock:ro"
+          - "{{ homarr_data_dir }}/configs:/app/data/configs"
+          - "{{ homarr_data_dir }}/icons:/app/public/icons"
+          - "{{ homarr_data_dir }}/data:/data"
+        labels:
+          traefik.enable: "{{ (homarr_routing_default | combine(homarr_routing)).enabled | ternary('true', 'false') }}"
+          traefik.http.routers.homarr.rule: >
+            Host(`{{ (homarr_routing_default | combine(homarr_routing)).homepage |
+            ternary(general.domain, (homarr_routing_default | combine(homarr_routing)).subdomain + '.' + general.domain) }}`)
+          traefik.http.routers.homarr.tls: ""
+          traefik.http.services.homarr.loadbalancer.server.port: '7575'
+        etc_hosts: "{{ dict(homarr_loopback_hosts | zip_longest([], fillvalue='host-gateway')) }}"
+
+- name: Stop Homarr
+  when: homarr_enabled is false
+  community.docker.docker_container:
+    name: homarr
+    state: absent

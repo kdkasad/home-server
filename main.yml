@@ -45,3 +45,7 @@
     - role: tailscale
       tags:
         - tailscale
+
+    - role: homarr
+      tags:
+        - homarr
