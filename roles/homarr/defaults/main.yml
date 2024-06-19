@@ -1,0 +1,20 @@
+---
+homarr_enabled: false
+
+homarr_data_dir: "{{ storage.data_dir }}/homarr"
+
+homarr_routing: {}
+
+homarr_routing_default:
+  enabled: true
+
+  # Whether to serve Homarr on the base domain, i.e. {{ general.domain }}.
+  homepage: true
+
+  # If homepage is false but enabled is true, this is the subdomain to serve
+  # Homarr on.
+  subdomain: homarr
+
+homarr_loopback_hosts:
+  - "{{ authentik_routing.subdomain | default('auth') }}.{{ general.domain }}"
+  - "{{ traefik_routing.subdomain | default('traefik') }}.{{ general.domain }}"

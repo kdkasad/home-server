@@ -151,3 +151,12 @@ tailscale_routes:
 
 # Use Ansible Vault to put your encrypted auth key here
 tailscale_auth_key: "{{ undef }}"
+
+###################
+# Homarr settings #
+###################
+
+homarr_enabled: true
+homarr_routing:
+  enabled: true
+  homepage: true

@@ -183,3 +183,12 @@ tailscale_routes:
   - "10.0.0.0/24"
 
 tailscale_auth_key: "{{ secret_tailscale_auth_key }}"
+
+###################
+# Homarr settings #
+###################
+
+homarr_enabled: true
+homarr_routing:
+  enabled: true
+  homepage: true
