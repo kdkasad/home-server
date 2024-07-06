@@ -14,3 +14,5 @@ minio_container:
 
 minio_root_user: "{{ undef(hint='You must set the Minio root username') }}"
 minio_root_password: "{{ undef(hint='You must set the Minio root password') }}"
+
+minio_env: {}

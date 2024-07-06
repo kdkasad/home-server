@@ -17,11 +17,14 @@
         image: "{{ minio_container.image }}:{{ minio_container.tag }}"
         command: 'server /data --console-address ":9001"'
         restart_policy: unless-stopped
-        env:
-          MINIO_ROOT_USER: "{{ minio_root_user | mandatory }}"
-          MINIO_ROOT_PASSWORD: "{{ minio_root_password | mandatory }}"
+        env: >-
+          {{ minio_env | combine({
+            "MINIO_ROOT_USER": minio_root_user | mandatory,
+            "MINIO_ROOT_PASSWORD": minio_root_password | mandatory,
+          }) }}
         volumes:
           - "{{ minio_data_dir }}:/data"
+        etc_hosts: "{{ ({(authentik_routing.subdomain | default('auth') + general.domain): 'host-gateway'}) }}"
         labels:
           traefik.enable: "{{ minio_routing.enabled | default(false) | ternary('true', 'false') }}"
           traefik.http.routers.minio-api.rule: "Host(`{{ minio_routing.api_subdomain }}.{{ general.domain }}`)"
