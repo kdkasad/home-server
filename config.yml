@@ -232,3 +232,13 @@ minio_env:
   MINIO_IDENTITY_OPENID_REDIRECT_URI_DYNAMIC: "on"
   MINIO_IDENTITY_OPENID_CLAIM_USERINFO: "on"
   MINIO_IDENTITY_OPENID_COMMENT: "Authentik"
+
+######################
+# Bitwarden settings #
+######################
+
+bitwarden_enabled: true
+
+bitwarden_routing:
+  enabled: true
+  subdomain: bw
