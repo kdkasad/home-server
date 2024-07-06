@@ -117,6 +117,8 @@ minecraft_server_env:
     fabrictailor
     coord-finder:beta
     carpet
+    worldedit
+    image2map
 
 ######################
 # Authentik settings #
