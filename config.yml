@@ -204,3 +204,31 @@ homarr_env:
   AUTH_OIDC_ADMIN_GROUP: Administrators
   AUTH_OIDC_URI: "https://{{ authentik_routing.subdomain | default('auth') }}.{{ general.domain }}/application/o/homarr"
   AUTH_LOGOUT_REDIRECT_URL: "https://{{ authentik_routing.subdomain | default('auth') }}.{{ general.domain }}/application/o/homarr/end-session/"
+
+##################
+# Minio settings #
+##################
+
+minio_enabled: true
+
+minio_routing:
+  enabled: true
+  api_subdomain: s3
+  ui_subdomain: minio
+
+minio_root_user: "{{ secret_minio_root_user }}"
+minio_root_password: "{{ secret_minio_root_password }}"
+
+# Environment variables to configure integration with Authentik using OpenID Connect.
+# Currently, this requires manual setup in the Authentik UI.
+minio_env:
+  MINIO_IDENTITY_OPENID_CONFIG_URL: "https://{{ authentik_routing.subdomain | default('auth') }}.{{ general.domain }}/application/o/minio/.well-known/openid-configuration"
+  MINIO_IDENTITY_OPENID_CLIENT_ID: "{{ secret_minio_openid_client_id }}"
+  MINIO_IDENTITY_OPENID_CLIENT_SECRET: "{{ secret_minio_openid_client_secret }}"
+  MINIO_IDENTITY_OPENID_CLAIM_NAME: policy
+  MINIO_IDENTITY_OPENID_DISPLAY_NAME: Log in with Authentik
+  MINIO_IDENTITY_OPENID_SCOPES: openid,profile,email,minio
+  MINIO_IDENTITY_OPENID_REDIRECT_URI: "{{ minio_routing.ui_subdomain | default('minio') }}.{{ general.domain }}/oauth_callback"
+  MINIO_IDENTITY_OPENID_REDIRECT_URI_DYNAMIC: "on"
+  MINIO_IDENTITY_OPENID_CLAIM_USERINFO: "on"
+  MINIO_IDENTITY_OPENID_COMMENT: "Authentik"
