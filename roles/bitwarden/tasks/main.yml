@@ -27,6 +27,13 @@
         volumes:
           - "{{ bitwarden_data_dir }}:/data"
         labels:
-          traefik.enable: "true"
-          traefik.http.routers.bitwarden.rule: "Host(`{{ bitwarden_routing.subdomain }}.{{ general.domain }}`)"
+          traefik.enable: "{{ bitwarden_routing.enabled | ternary('true', 'false') }}"
+          traefik.http.routers.bitwarden.rule: '
+            Host(`{{ bitwarden_routing.subdomain }}.{{ general.domain }}`)
+              && (
+                !PathPrefix(`/admin`)
+                || ClientIP(`{{ ansible_default_ipv4.network | ansible.utils.ipsubnet(ansible_default_ipv4.prefix) }}`)
+                || ClientIP(`fe80::/10`)
+              )'
+          # || ClientIP(`{{ ansible_default_ipv6.address | ansible.utils.ipsubnet(ansible_default_ipv6.prefix) }}`)
           traefik.http.services.bitwarden.loadbalancer.server.port: "80"
