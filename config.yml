@@ -192,3 +192,13 @@ homarr_enabled: true
 homarr_routing:
   enabled: true
   homepage: true
+
+# OIDC settings for Authentik
+homarr_env:
+  AUTH_PROVIDER: oidc
+  AUTH_OIDC_CLIENT_NAME: Authentik
+  AUTH_OIDC_CLIENT_ID: "{{ secret_homarr_oidc_client_id }}"
+  AUTH_OIDC_CLIENT_SECRET: "{{ secret_homarr_oidc_client_secret }}"
+  AUTH_OIDC_ADMIN_GROUP: Administrators
+  AUTH_OIDC_URI: "https://{{ authentik_routing.subdomain | default('auth') }}.{{ general.domain }}/application/o/homarr"
+  AUTH_LOGOUT_REDIRECT_URL: "https://{{ authentik_routing.subdomain | default('auth') }}.{{ general.domain }}/application/o/homarr/end-session/"

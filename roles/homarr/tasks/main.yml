@@ -1,6 +1,10 @@
 ---
 - name: Set up Homarr
   when: homarr_enabled is true
+  vars:
+    homarr_domain: >-
+      {{ (homarr_routing_default | combine(homarr_routing)).homepage |
+        ternary(general.domain, (homarr_routing_default | combine(homarr_routing)).subdomain + '.' + general.domain) }}
   block:
     - name: Create Homarr data directories
       ansible.builtin.file:
@@ -24,14 +28,19 @@
           - "{{ homarr_data_dir }}/configs:/app/data/configs"
           - "{{ homarr_data_dir }}/icons:/app/public/icons"
           - "{{ homarr_data_dir }}/data:/data"
+        # NEXTAUTH_URL below is a workaround for Homarr not using the correct
+        # redirect URL for OAuth/OIDC.
+        env: >
+          {{ homarr_env | combine({
+            'BASE_URL': homarr_domain,
+            'NEXTAUTH_URL': 'https://' + homarr_domain,
+          }) }}
+        etc_hosts: "{{ dict(homarr_loopback_hosts | zip_longest([], fillvalue='host-gateway')) }}"
         labels:
           traefik.enable: "{{ (homarr_routing_default | combine(homarr_routing)).enabled | ternary('true', 'false') }}"
-          traefik.http.routers.homarr.rule: >
-            Host(`{{ (homarr_routing_default | combine(homarr_routing)).homepage |
-            ternary(general.domain, (homarr_routing_default | combine(homarr_routing)).subdomain + '.' + general.domain) }}`)
+          traefik.http.routers.homarr.rule: Host(`{{ homarr_domain }}`)
           traefik.http.routers.homarr.tls: ""
           traefik.http.services.homarr.loadbalancer.server.port: '7575'
-        etc_hosts: "{{ dict(homarr_loopback_hosts | zip_longest([], fillvalue='host-gateway')) }}"
 
 - name: Stop Homarr
   when: homarr_enabled is false

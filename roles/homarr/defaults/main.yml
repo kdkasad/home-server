@@ -18,3 +18,6 @@ homarr_routing_default:
 homarr_loopback_hosts:
   - "{{ authentik_routing.subdomain | default('auth') }}.{{ general.domain }}"
   - "{{ traefik_routing.subdomain | default('traefik') }}.{{ general.domain }}"
+  - "{{ minio_routing.ui_subdomain | default('minio') }}.{{ general.domain }}"
+
+homarr_env: {}
