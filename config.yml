@@ -53,6 +53,21 @@ storage:
       size: 100G
       fs: ext4
 
+
+####################
+# DDNS options #
+####################
+
+ddns_enabled: yes
+
+# Cloudflare zone to which the server's domain belongs
+ddns_cloudflare_zone: kasad.com
+
+# This token requires the Zone/Zone/Read permission for all zones, and
+# Zone/DNS/Edit permission for the zone containing the domain for the server.
+ddns_cloudflare_api_token: "{{ secret_cloudflare_dns_api_token }}"
+
+
 #################
 # Samba options #
 #################

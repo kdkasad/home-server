@@ -15,14 +15,12 @@ in their respective directories to retain the original copyright and license.
 This playbook installs and configures the following services
 (when enabled in `config.yml`):
 
+### User-facing services
+
 - LAN file sharing (for NAS use), using [Samba](https://www.samba.org/)
   - Zero-configuration network discovery for MacOS, Windows, and Linux clients
     using [Avahi](https://github.com/avahi/avahi) (mDNS, DNS-SD)
     and [wsdd2](https://github.com/Netgear/wsdd2) (WS-Discovery, LLMNR).
-- [Docker](https://docker.io), a containerization platform.
-  Used to run most of the other services as containers.
-- [Traefik](https://traefik.io/traefik/) reverse proxy, for routing traffic to
-  services and managing TLS certificates.
 - [Homarr](https://homarr.dev) web dashboard.
 - [Minecraft](https://www.minecraft.net/en-us) server
   (Java Edition, using [itzg/docker-minecraft-server](https://github.com/itzg/docker-minecraft-server))
@@ -33,6 +31,15 @@ This playbook installs and configures the following services
 - [Minio](https://min.io), an S3-compatible object storage server.
 - [Bitwarden](https://bitwarden.com) password manager,
   using [Vaultwarden](https://github.com/dani-garcia/vaultwarden).
+
+### System services
+
+- [Docker](https://docker.io), a containerization platform.
+  Used to run most of the other services as containers.
+- [Traefik](https://traefik.io/traefik/) reverse proxy, for routing traffic to
+  services and managing TLS certificates.
+- [ddclient](https://github.com/ddclient/ddclient), a dynamic DNS client.
+  Updates the server's DNS record with the current public IP address.
 
 ### Planned
 

@@ -1,0 +1,32 @@
+---
+- name: Set up ddclient
+  when: ddns_enabled is true
+  block:
+    - name: Install ddclient
+      ansible.builtin.package:
+        name: ddclient
+        state: present
+
+    - name: Render configuration file
+      ansible.builtin.template:
+        src: ddclient.conf
+        dest: /etc/ddclient.conf
+        owner: root
+        group: root
+        mode: '0600'
+      notify: Reload ddclient service
+
+    - name: Start & enable ddclient service
+      ansible.builtin.service:
+        name: ddclient
+        state: started
+        enabled: true
+
+- name: Disable ddclient
+  when: ddns_enabled is false
+  block:
+    - name: Stop & disable ddclient service
+      ansible.builtin.service:
+        name: ddclient
+        state: stopped
+        enabled: false
