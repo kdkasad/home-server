@@ -30,6 +30,10 @@
       tags:
         - ddclient
 
+    - role: dnsmasq
+      tags:
+        - dnsmasq
+
     - role: vladgh.samba.server
       tags:
         - nas
