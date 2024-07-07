@@ -52,7 +52,6 @@ These are some of the services/features I'd like to add in the near future:
 - Automated data backups
 - Jellyfin media server
 - Automated configuration for using Authentik to provide authentication for services
-- DNS server to provide local DNS resolution for services
 
 ## Installation
 
