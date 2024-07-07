@@ -1,0 +1,6 @@
+---
+- name: Restart dnsmasq container
+  community.docker.docker_container:
+    name: dnsmasq
+    state: started
+    restart: true

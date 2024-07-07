@@ -68,6 +68,27 @@ ddns_cloudflare_zone: kasad.com
 ddns_cloudflare_api_token: "{{ secret_cloudflare_dns_api_token }}"
 
 
+######################
+# DNS server options #
+######################
+
+dnsmasq_enabled: true
+
+dnsmasq_local_domain_suffix: local
+dnsmasq_local_domains:
+  - "{{ dnsmasq_local_domain_suffix }}"
+  - hsd1.ca.comcast.net # Deal with Comcast's annoying DNS suffix
+  - local
+  - localdomain
+  - lan
+
+dnsmasq_custom_hosts:
+  - name: "{{ general.domain }}"
+    ip: "{{ ansible_default_ipv4.address }}"
+  - name: ".{{ general.hostname }}"
+    ip: "{{ ansible_default_ipv4.address }}"
+
+
 #################
 # Samba options #
 #################

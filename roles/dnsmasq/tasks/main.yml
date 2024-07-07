@@ -1,0 +1,42 @@
+---
+- name: Set up dnsmasq
+  when: dnsmasq_enabled is true
+  block:
+    - name: Create data directory
+      ansible.builtin.file:
+        name: "{{ dnsmasq_data_dir }}"
+        state: directory
+        owner: "{{ users.worker }}"
+        group: "{{ users.worker }}"
+        mode: '0750'
+
+    - name: Render configuration file
+      ansible.builtin.template:
+        src: dnsmasq.conf
+        dest: "{{ dnsmasq_data_dir }}/dnsmasq.conf"
+        owner: "{{ users.worker }}"
+        group: "{{ users.worker }}"
+        mode: '0640'
+      notify: Restart dnsmasq container
+
+    - name: Start dnsmasq
+      community.docker.docker_container:
+        name: dnsmasq
+        image: ghcr.io/dockur/dnsmasq:2.90
+        state: started
+        restart_policy: unless-stopped
+        ports:
+          - "53:53/udp"
+          - "53:53/tcp"
+        volumes:
+          - "{{ dnsmasq_data_dir }}/dnsmasq.conf:/etc/dnsmasq.conf:ro"
+        capabilities:
+          - NET_ADMIN
+
+- name: Disable dnsmasq
+  when: dnsmasq_enabled is false
+  block:
+    - name: Stop dnsmasq
+      community.docker.docker_container:
+        name: dnsmasq
+        state: absent

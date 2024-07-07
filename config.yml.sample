@@ -72,6 +72,17 @@ ddclient_cloudflare_zone: example.com
 ddns_cloudflare_api_token: <your_cloudflare_api_token>
 
 
+######################
+# DNS server options #
+######################
+
+dnsmasq_enabled: false
+
+dnsmasq_custom_hosts:
+  - name: "{{ general.domain }}"
+    ip: "{{ ansible_default_ipv4.address }}"
+
+
 #################
 # Samba options #
 #################

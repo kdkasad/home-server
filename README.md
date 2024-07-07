@@ -40,6 +40,9 @@ This playbook installs and configures the following services
   services and managing TLS certificates.
 - [ddclient](https://github.com/ddclient/ddclient), a dynamic DNS client.
   Updates the server's DNS record with the current public IP address.
+- Local DNS server using [dnsmasq](https://dnsmasq.org/doc.html).
+  Allows for custom DNS records, making the server accessible by the same name
+  from the local network and the rest of the internet.
 
 ### Planned
 
