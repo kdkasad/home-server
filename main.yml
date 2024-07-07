@@ -26,6 +26,10 @@
       tags:
         - docker
 
+    - role: ddclient
+      tags:
+        - ddclient
+
     - role: vladgh.samba.server
       tags:
         - nas

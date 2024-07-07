@@ -58,6 +58,20 @@ storage:
       fs: ext4
 
 
+####################
+# DDClient options #
+####################
+
+ddclient_enabled: yes
+
+# Cloudflare zone to which the server's domain belongs
+ddclient_cloudflare_zone: example.com
+
+# This token requires the Zone/Zone/Read permission for all zones, and
+# Zone/DNS/Edit permission for the zone containing the domain for the server.
+ddns_cloudflare_api_token: <your_cloudflare_api_token>
+
+
 #################
 # Samba options #
 #################
