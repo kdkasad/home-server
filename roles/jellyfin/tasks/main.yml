@@ -74,6 +74,8 @@
           traefik.http.routers.jellyfin.rule: Host(`{{ jellyfin_routing.subdomain }}.{{ general.domain }}`)
           traefik.http.routers.jellyfin.entrypoints: websecure
           traefik.http.services.jellyfin.loadbalancer.server.port: '8096'
+        healthcheck:
+          test: ["CMD-SHELL", "curl -fs http://localhost:8096/health"]
 
 - name: Disable Jellyfin
   when: jellyfin_enabled is false
