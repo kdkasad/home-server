@@ -1,0 +1,13 @@
+---
+jellyfin_enabled: false
+
+jellyfin_data_dir: "{{ storage.data_dir }}/jellyfin"
+jellyfin_media_dir: "{{ storage.nas_dir }}/Media"
+
+# Enable VA-API hardware acceleration.
+# Enable this on Intel GPUs.
+jellyfin_enable_vaapi: false
+
+jellyfin_routing:
+  enabled: true
+  subdomain: jellyfin

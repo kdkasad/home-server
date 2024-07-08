@@ -1,0 +1,81 @@
+---
+- name: Set up Jellyfin
+  when: jellyfin_enabled is true
+  block:
+
+    - name: Install ACL utilities
+      ansible.builtin.package:
+        name: acl
+        state: present
+
+    - name: Add Jellyfin user
+      ansible.builtin.user:
+        name: jellyfin
+        uid: 896
+        system: true
+        shell: /sbin/nologin
+
+    # Use ACLs to allow Jellyfin to access media files. This allows us to use
+    # one of the NAS shares as the media directory, and have Jellyfin access
+    # the files without having to change the owner or run as root.
+    - name: Set permissions on Jellyfin media directory
+      ansible.posix.acl:
+        path: "{{ jellyfin_media_dir }}"
+        entity: jellyfin
+        etype: user
+        permissions: rwX
+        default: true
+        recurse: true
+        recalculate_mask: mask
+        state: present
+
+    - name: Create metadata directory for media
+      ansible.builtin.file:
+        path: "{{ jellyfin_media_dir }}/metadata"
+        state: directory
+        owner: jellyfin
+        mode: '0700'
+
+    - name: Create Jellyfin data directory
+      ansible.builtin.file:
+        path: "{{ jellyfin_data_dir }}"
+        state: directory
+        owner: jellyfin
+        mode: '0700'
+
+    - name: Start Jellyfin
+      # when: false
+      community.docker.docker_container:
+        name: jellyfin
+        image: lscr.io/linuxserver/jellyfin:latest
+        restart_policy: unless-stopped
+        volumes:
+          - "{{ jellyfin_media_dir }}:/media"
+          - "{{ jellyfin_data_dir }}/config:/config"
+        tmpfs:
+          - /config/transcodes
+          - /config/cache
+          - /config/data/transcodes
+        devices: >-
+          {{ jellyfin_enable_vaapi | ternary([
+            '/dev/dri/card0:/dev/dri/card0',
+            '/dev/dri/renderD128:/dev/dri/renderD128',
+          ], []) }}
+        env:
+          PUID: '896' # jellyfin user
+          UMASK: '002'
+          DOCKER_MODS: ghcr.io/kdkasad/docker-mods/jellyfin-jellyscrub
+        network_mode: host # Use host networking to allow Jellyfin to use DLNA
+        labels:
+          traefik.enable: "{{ jellyfin_routing.enabled | ternary('true', 'false') }}"
+          traefik.http.routers.jellyfin.rule: Host(`{{ jellyfin_routing.subdomain }}.{{ general.domain }}`)
+          traefik.http.routers.jellyfin.entrypoints: websecure
+          traefik.http.services.jellyfin.loadbalancer.server.port: '8096'
+
+- name: Disable Jellyfin
+  when: jellyfin_enabled is false
+  block:
+    - name: Stop Jellyfin
+      community.docker.docker_container:
+        name: jellyfin
+        state: absent
