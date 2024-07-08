@@ -22,6 +22,8 @@ entryPoints:
           - main: "{{ general.domain }}"
             sans:
             - "*.{{ general.domain }}"
+      middlewares:
+        - norobots@file
 
 providers:
   docker:

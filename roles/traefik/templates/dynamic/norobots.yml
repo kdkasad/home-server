@@ -1,0 +1,7 @@
+---
+http:
+  middlewares:
+    norobots:
+      headers:
+        customResponseHeaders:
+          X-Robots-Tag: noindex, nofollow, nosnippet, noarchive, notranslate, noimageindex
