@@ -11,6 +11,9 @@
     - name: Add Jellyfin user
       ansible.builtin.user:
         name: jellyfin
+        groups:
+          - video
+          - render
         uid: 896
         system: true
         shell: /sbin/nologin
