@@ -20,5 +20,6 @@ homarr_loopback_hosts:
   - "{{ traefik_routing.subdomain | default('traefik') }}.{{ general.domain }}"
   - "{{ minio_routing.ui_subdomain | default('minio') }}.{{ general.domain }}"
   - "{{ bitwarden_routing.subdomain | default('bitwarden') }}.{{ general.domain }}"
+  - "{{ jellyfin_routing.subdomain | default('jellyfin') }}.{{ general.domain }}"
 
 homarr_env: {}
