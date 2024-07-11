@@ -7,14 +7,14 @@ authentik_data_dir: "{{ storage.data_dir }}/authentik"
 
 # Default environment variables to prepend to authentik_env
 authentik_env_default:
-  AUTHENTIK_VERSION: "2024.4"
+  AUTHENTIK_VERSION: "2024.6.1"
   AUTHENTIK_DEFAULT_USER_CHANGE_USERNAME: false
   AUTHENTIK_DISABLE_STARTUP_ANALYTICS: true
 
 # Extra environment variables which can be set in config.yml
 authentik_env:
   # Root password for the Authentik's PostgreSQL database
-  PG_PASS: "{{ undef(hint=\"You must specify a password for Authentik's PostgreSQL database\") }}"
+  PG_PASS: '{{ undef(hint="You must specify a password for Authentik''s PostgreSQL database") }}'
 
   # Initial email and password for the default Authentik administator user "akadmin"
   AUTHENTIK_BOOTSTRAP_EMAIL: "{{ undef(hint='You must specify an email for the default Authentik akadmin user') }}"
