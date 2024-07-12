@@ -155,6 +155,7 @@ minecraft_server_env:
     carpet
     worldedit
     image2map
+  REMOVE_OLD_MODS: "true"
 
 ######################
 # Authentik settings #
