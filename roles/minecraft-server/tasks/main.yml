@@ -31,7 +31,8 @@
           - "{{ minecraft_server_port }}:25565"
         env: "{{ minecraft_server_env | combine({'EULA': 'TRUE'}) }}"
         # Add CAP_NET_RAW if auto-pause is enabled
-        capabilities: "{{ ((minecraft_server_env.ENABLE_AUTOPAUSE | lower) in ['true', 'yes', '1']) | ternary(['CAP_NET_RAW'], []) }}"
+        capabilities: >-
+          {{ ((minecraft_server_env.ENABLE_AUTOPAUSE | lower) in ['true', 'yes', '1']) | ternary(['CAP_NET_RAW'], []) }}
         restart_policy: unless-stopped
 
 - name: Stop Minecraft Server

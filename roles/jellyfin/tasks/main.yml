@@ -77,11 +77,11 @@
             '/dev/dri/renderD128:/dev/dri/renderD128',
           ], []) }}
         env:
-          PUID: '896' # jellyfin user
+          PUID: '896'  # jellyfin user
           UMASK: '002'
           DOCKER_MODS: ghcr.io/kdkasad/docker-mods/jellyfin-jellyscrub
           JELLYFIN_PublishedServerUrl: "https://{{ jellyfin_routing.subdomain }}.{{ general.domain }}"
-        network_mode: host # Use host networking to allow Jellyfin to use DLNA
+        network_mode: host  # Use host networking to allow Jellyfin to use DLNA
         labels:
           traefik.enable: "{{ jellyfin_routing.enabled | ternary('true', 'false') }}"
           traefik.http.routers.jellyfin.rule: Host(`{{ jellyfin_routing.subdomain }}.{{ general.domain }}`)

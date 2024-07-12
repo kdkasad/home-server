@@ -1,0 +1,23 @@
+---
+extends: default
+
+ignore-from-file:
+  - .gitignore
+  - .yamlignore
+
+rules:
+  truthy:
+    allowed-values:
+      - 'true'
+      - 'false'
+      - 'yes'
+      - 'no'
+
+  line-length:
+    allow-non-breakable-words: true
+    max: 120
+    level: warning
+
+  braces:
+    min-spaces-inside: 0
+    max-spaces-inside: 1

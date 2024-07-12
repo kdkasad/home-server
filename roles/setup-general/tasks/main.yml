@@ -11,8 +11,8 @@
 - name: Install network discovery service daemons
   ansible.builtin.package:
     name:
-      - avahi-daemon # for mDNS
-      - wsdd2 # for WSD and LLMNR
+      - avahi-daemon  # for mDNS
+      - wsdd2  # for WSD and LLMNR
     state: present
 
 - name: Enable and start Avahi daemon

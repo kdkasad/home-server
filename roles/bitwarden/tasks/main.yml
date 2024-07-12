@@ -23,17 +23,17 @@
           DOMAIN: "https://{{ bitwarden_routing.subdomain }}.{{ general.domain }}"
           SIGNUPS_ALLOWED: "{{ bitwarden_allow_signups | ternary('true', 'false') }}"
           SIGNUPS_VERIFY: "{{ bitwarden_verify_emails | ternary('true', 'false') }}"
-          ADMIN_TOKEN: "{{ bitwarden_admin_panel.enabled | default(false) | ternary(bitwarden_admin_panel.password, omit) }}"
+          ADMIN_TOKEN: >-
+            {{ bitwarden_admin_panel.enabled | default(false) | ternary(bitwarden_admin_panel.password, omit) }}
         volumes:
           - "{{ bitwarden_data_dir }}:/data"
         labels:
           traefik.enable: "{{ bitwarden_routing.enabled | ternary('true', 'false') }}"
-          traefik.http.routers.bitwarden.rule: '
+          traefik.http.routers.bitwarden.rule: >-
             Host(`{{ bitwarden_routing.subdomain }}.{{ general.domain }}`)
               && (
                 !PathPrefix(`/admin`)
                 || ClientIP(`{{ ansible_default_ipv4.network | ansible.utils.ipsubnet(ansible_default_ipv4.prefix) }}`)
                 || ClientIP(`fe80::/10`)
-              )'
-          # || ClientIP(`{{ ansible_default_ipv6.address | ansible.utils.ipsubnet(ansible_default_ipv6.prefix) }}`)
+              )
           traefik.http.services.bitwarden.loadbalancer.server.port: "80"

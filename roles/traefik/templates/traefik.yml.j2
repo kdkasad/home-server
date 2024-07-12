@@ -1,3 +1,4 @@
+---
 log:
   level: "{{ traefik_log_level }}"
 
@@ -21,7 +22,7 @@ entryPoints:
         domains:
           - main: "{{ general.domain }}"
             sans:
-            - "*.{{ general.domain }}"
+              - "*.{{ general.domain }}"
       middlewares:
         - norobots@file
 

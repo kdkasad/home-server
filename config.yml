@@ -77,7 +77,7 @@ dnsmasq_enabled: true
 dnsmasq_local_domain_suffix: local
 dnsmasq_local_domains:
   - "{{ dnsmasq_local_domain_suffix }}"
-  - hsd1.ca.comcast.net # Deal with Comcast's annoying DNS suffix
+  - hsd1.ca.comcast.net  # Deal with Comcast's annoying DNS suffix
   - local
   - localdomain
   - lan
@@ -135,9 +135,9 @@ minecraft_server_env:
   # Enable automatically pausing when nobody is online
   EXEC_DIRECTLY: "false"
   ENABLE_AUTOPAUSE: "true"
-  MAX_TICK_TIME: "-1" # See https://docker-minecraft-server.readthedocs.io/en/latest/misc/autopause-autostop/autopause/
-  AUTOPAUSE_TIMEOUT_EST: "600" # Pause 10 minutes after last player disconnects
-  AUTOPAUSE_TIMEOUT_INIT: "60" # Pause 1 minute after startup if inactive
+  MAX_TICK_TIME: "-1"  # See https://docker-minecraft-server.readthedocs.io/en/latest/misc/autopause-autostop/autopause/
+  AUTOPAUSE_TIMEOUT_EST: "600"  # Pause 10 minutes after last player disconnects
+  AUTOPAUSE_TIMEOUT_INIT: "60"  # Pause 1 minute after startup if inactive
 
   # Server settings
   TYPE: fabric
@@ -147,7 +147,7 @@ minecraft_server_env:
 
   # For custom datapacks and resource packs from vanillatweaks.net
   # https://vanillatweaks.net/share#<sharecode>
-  VANILLATWEAKS_SHARECODE: rIS4z6,IWrn6G # data, resource
+  VANILLATWEAKS_SHARECODE: rIS4z6,IWrn6G  # data, resource
 
   # Mods to download from Modrinth
   # https://modrinth.com/mods/<slug>
@@ -201,8 +201,8 @@ authentik_env:
 traefik_enabled: true
 
 traefik_ports:
-    http: 80
-    https: 443
+  http: 80
+  https: 443
 
 # See https://doc.traefik.io/traefik/https/acme/ for information on how to
 # configure the provider and environment variables.
@@ -244,8 +244,10 @@ homarr_env:
   AUTH_OIDC_CLIENT_ID: "{{ secret_homarr_oidc_client_id }}"
   AUTH_OIDC_CLIENT_SECRET: "{{ secret_homarr_oidc_client_secret }}"
   AUTH_OIDC_ADMIN_GROUP: Administrators
-  AUTH_OIDC_URI: "https://{{ authentik_routing.subdomain | default('auth') }}.{{ general.domain }}/application/o/homarr"
-  AUTH_LOGOUT_REDIRECT_URL: "https://{{ authentik_routing.subdomain | default('auth') }}.{{ general.domain }}/application/o/homarr/end-session/"
+  AUTH_OIDC_URI: >-
+    https://{{ authentik_routing.subdomain | default('auth') }}.{{ general.domain }}/application/o/homarr
+  AUTH_LOGOUT_REDIRECT_URL: >-
+    https://{{ authentik_routing.subdomain | default('auth') }}.{{ general.domain }}/application/o/homarr/end-session/
 
 ##################
 # Minio settings #
@@ -264,13 +266,15 @@ minio_root_password: "{{ secret_minio_root_password }}"
 # Environment variables to configure integration with Authentik using OpenID Connect.
 # Currently, this requires manual setup in the Authentik UI.
 minio_env:
-  MINIO_IDENTITY_OPENID_CONFIG_URL: "https://{{ authentik_routing.subdomain | default('auth') }}.{{ general.domain }}/application/o/minio/.well-known/openid-configuration"
+  MINIO_IDENTITY_OPENID_CONFIG_URL: "https://{{ authentik_routing.subdomain | default('auth') }}.{{ general.domain }}\
+    /application/o/minio/.well-known/openid-configuration"
   MINIO_IDENTITY_OPENID_CLIENT_ID: "{{ secret_minio_openid_client_id }}"
   MINIO_IDENTITY_OPENID_CLIENT_SECRET: "{{ secret_minio_openid_client_secret }}"
   MINIO_IDENTITY_OPENID_CLAIM_NAME: policy
   MINIO_IDENTITY_OPENID_DISPLAY_NAME: Log in with Authentik
   MINIO_IDENTITY_OPENID_SCOPES: openid,profile,email,minio
-  MINIO_IDENTITY_OPENID_REDIRECT_URI: "{{ minio_routing.ui_subdomain | default('minio') }}.{{ general.domain }}/oauth_callback"
+  MINIO_IDENTITY_OPENID_REDIRECT_URI: >-
+    {{ minio_routing.ui_subdomain | default('minio') }}.{{ general.domain }}/oauth_callback
   MINIO_IDENTITY_OPENID_REDIRECT_URI_DYNAMIC: "on"
   MINIO_IDENTITY_OPENID_CLAIM_USERINFO: "on"
   MINIO_IDENTITY_OPENID_COMMENT: "Authentik"

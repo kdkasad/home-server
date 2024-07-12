@@ -1,3 +1,4 @@
+---
 - name: Install OpenSSH
   ansible.builtin.package:
     name: openssh-server
