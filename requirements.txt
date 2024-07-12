@@ -1,3 +1,4 @@
 requests
 yamllint
 ansible-lint
+ansible-core

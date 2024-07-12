@@ -90,32 +90,17 @@
         healthcheck:
           test: ["CMD-SHELL", "curl -fs http://localhost:8096/health"]
 
-    - name: Render Jellyfin setup script
+    - name: Perform initial Jellyfin setup
       when: not config_dir.stat.exists
-      ansible.builtin.template:
-        src: jellysetup.py
-        dest: /tmp/jellysetup.py
-        mode: '0750'
-        owner: jellyfin
-        group: jellyfin
-
-    - name: Wait for Jellyfin to start
-      ansible.builtin.wait_for:
-        host: localhost
-        port: 8096
-        timeout: 60
-
-    - name: Run Jellyfin setup script
-      when: not config_dir.stat.exists
-      ansible.builtin.command:
-        cmd: python3 /tmp/jellysetup.py
-      changed_when: true
-
-    - name: Delete Jellyfin setup script
-      when: not config_dir.stat.exists
-      ansible.builtin.file:
-        path: /tmp/jellysetup.py
-        state: absent
+      jellyfin_setup:
+        server_name: "{{ jellyfin_server_name }}"
+        admin_username: "{{ jellyfin_admin_username }}"
+        admin_password: "{{ jellyfin_admin_password }}"
+        oidc_client_id: "{{ jellyfin_oidc_client_id }}"
+        oidc_client_secret: "{{ jellyfin_oidc_client_secret }}"
+        jellyfin_domain: "{{ jellyfin_routing.subdomain }}.{{ general.domain }}"
+        authentik_domain: "{{ authentik_routing.subdomain | default('authentik') }}.{{ general.domain }}"
+        login_sso_only: "{{ jellyfin_sso_only }}"
 
 - name: Disable Jellyfin
   when: jellyfin_enabled is false
