@@ -26,9 +26,9 @@
       tags:
         - docker
 
-    - role: ddclient
+    - role: ddns
       tags:
-        - ddclient
+        - ddns
 
     - role: dnsmasq
       tags:
