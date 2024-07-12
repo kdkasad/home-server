@@ -1,11 +1,17 @@
 ---
 - name: Set up Jellyfin
   when: jellyfin_enabled is true
+  vars:
+    jellyfin_authorization_header: >-
+      MediaBrowser Client="Jellyfin Web", Device="Ansible", Version="10.9.7"
+      {{ jellyfin_auth_token | ternary(', Token="' + jellyfin_auth_token + '"', '') }}
   block:
 
-    - name: Install ACL utilities
+    - name: Install required packages
       ansible.builtin.package:
-        name: acl
+        name:
+          - acl               # For setting media library permissions using ACLs
+          - python3-requests  # For jellysetup.py script
         state: present
 
     - name: Add Jellyfin user
@@ -39,6 +45,12 @@
         owner: jellyfin
         mode: '0700'
 
+    - name: Check if Jellyfin configuration directory exists
+      ansible.builtin.stat:
+        path: "{{ jellyfin_data_dir }}/config"
+      register: config_dir
+      changed_when: false
+
     - name: Create Jellyfin data directory
       ansible.builtin.file:
         path: "{{ jellyfin_data_dir }}"
@@ -68,6 +80,7 @@
           PUID: '896' # jellyfin user
           UMASK: '002'
           DOCKER_MODS: ghcr.io/kdkasad/docker-mods/jellyfin-jellyscrub
+          JELLYFIN_PublishedServerUrl: "https://{{ jellyfin_routing.subdomain }}.{{ general.domain }}"
         network_mode: host # Use host networking to allow Jellyfin to use DLNA
         labels:
           traefik.enable: "{{ jellyfin_routing.enabled | ternary('true', 'false') }}"
@@ -76,6 +89,33 @@
           traefik.http.services.jellyfin.loadbalancer.server.port: '8096'
         healthcheck:
           test: ["CMD-SHELL", "curl -fs http://localhost:8096/health"]
+
+    - name: Render Jellyfin setup script
+      when: not config_dir.stat.exists
+      ansible.builtin.template:
+        src: jellysetup.py
+        dest: /tmp/jellysetup.py
+        mode: '0750'
+        owner: jellyfin
+        group: jellyfin
+
+    - name: Wait for Jellyfin to start
+      ansible.builtin.wait_for:
+        host: localhost
+        port: 8096
+        timeout: 60
+
+    - name: Run Jellyfin setup script
+      when: not config_dir.stat.exists
+      ansible.builtin.command:
+        cmd: python3 /tmp/jellysetup.py
+      changed_when: true
+
+    - name: Delete Jellyfin setup script
+      when: not config_dir.stat.exists
+      ansible.builtin.file:
+        path: /tmp/jellysetup.py
+        state: absent
 
 - name: Disable Jellyfin
   when: jellyfin_enabled is false
