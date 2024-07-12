@@ -65,3 +65,7 @@
     - role: bitwarden
       tags:
         - bitwarden
+
+    - role: jellyfin
+      tags:
+        - jellyfin

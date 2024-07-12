@@ -110,6 +110,11 @@ samba_shares:
     public: yes
     writeable: yes
 
+  - name: Media
+    comment: Media to be streamed using Jellyfin
+    public: yes
+    writable: yes
+
 
 ############################
 # Minecraft server options #
@@ -202,3 +207,10 @@ minio_routing:
 # Use Ansible Vault to put your encrypted credentials here
 minio_root_user: "{{ undef }}"
 minio_root_password: "{{ undef }}"
+
+
+#####################
+# Jellyfin settings #
+#####################
+
+jellyfin_enabled: false

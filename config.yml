@@ -114,6 +114,11 @@ samba_shares:
     public: yes
     writeable: yes
 
+  - name: Media
+    comment: Media to be streamed using Jellyfin
+    public: yes
+    writeable: yes
+
 ############################
 # Minecraft server options #
 ############################
@@ -279,3 +284,21 @@ bitwarden_enabled: true
 bitwarden_routing:
   enabled: true
   subdomain: bw
+
+
+#####################
+# Jellyfin settings #
+#####################
+
+jellyfin_enabled: true
+jellyfin_routing:
+  enabled: true
+  subdomain: media
+
+jellyfin_enable_vaapi: true
+
+jellyfin_admin_username: "{{ secret_jellyfin_admin_username }}"
+jellyfin_admin_password: "{{ secret_jellyfin_admin_password }}"
+
+jellyfin_sso_client_id: "{{ secret_jellyfin_sso_client_id }}"
+jellyfin_sso_client_secret: "{{ secret_jellyfin_sso_client_secret }}"

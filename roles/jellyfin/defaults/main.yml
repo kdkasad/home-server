@@ -1,0 +1,26 @@
+---
+jellyfin_enabled: false
+
+jellyfin_data_dir: "{{ storage.data_dir }}/jellyfin"
+jellyfin_media_dir: "{{ storage.nas_dir }}/Media"
+
+# Enable VA-API hardware acceleration.
+# Enable this on Intel GPUs.
+jellyfin_enable_vaapi: false
+
+jellyfin_routing:
+  enabled: true
+  subdomain: jellyfin
+
+# Set the server name
+jellyfin_server_name: Jellyfin Media Server
+
+# If true, the default login form will be hidden on the Jellyfin homepage and
+# only the "Log in with Authentik" button will be displayed. If false, the
+# default login form persists and the "Log in with Authentik" button will be
+# displayed below it.
+jellyfin_sso_only: true
+
+# OIDC client ID and secret for Jellyfin-Authentik integration.
+jellyfin_sso_client_id: "{{ undef }}"
+jellyfin_sso_client_secret: "{{ undef }}"

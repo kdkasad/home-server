@@ -3,3 +3,4 @@ keys/*
 inventory
 .facts_cache
 vault_password.txt
+venv/
