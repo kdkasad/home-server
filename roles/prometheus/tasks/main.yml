@@ -1,0 +1,52 @@
+---
+- name: Start Prometheus
+  when: prometheus_enabled is true
+  block:
+    - name: Create data diretories
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: directory
+        owner: "{{ users.worker }}"
+        group: "{{ users.worker }}"
+        mode: '0750'
+      loop:
+        - "{{ prometheus_data_dir }}"
+        - "{{ prometheus_data_dir }}/data"
+
+    - name: Render configuration file
+      ansible.builtin.template:
+        src: prometheus.yml
+        dest: "{{ prometheus_data_dir }}/prometheus.yml"
+        owner: "{{ users.worker }}"
+        mode: '0640'
+
+    - name: Get worker UID
+      ansible.builtin.command:
+        argv: ['id', '-u', "{{ users.worker }}"]
+      changed_when: false
+      register: id_worker
+
+    - name: Start Prometheus container
+      community.docker.docker_container:
+        name: prometheus
+        image: prom/prometheus:latest
+        pull: always
+        user: "{{ id_worker.stdout }}"
+        restart_policy: unless-stopped
+        volumes:
+          - "{{ prometheus_data_dir }}/prometheus.yml:/etc/prometheus.yml:ro"
+          - "{{ prometheus_data_dir }}/data:/prometheus"
+        labels:
+          traefik.enable: "true"
+          traefik.http.routers.prometheus.rule: "\
+            Host(`{{ prometheus_routing_subdomain }}.{{ general.domain }}`)
+            && (
+              ClientIP(`{{ ansible_default_ipv4.network | ansible.utils.ipsubnet(ansible_default_ipv4.prefix) }}`)
+              || ClientIP(`fe80::/10`)
+            )"
+
+- name: Stop Prometheus
+  when: prometheus_enabled is false
+  community.docker.docker_container:
+    name: prometheus
+    state: absent

@@ -214,3 +214,10 @@ minio_root_password: "{{ undef }}"
 #####################
 
 jellyfin_enabled: false
+
+
+#######################
+# Prometheus settings #
+#######################
+
+prometheus_enabled: yes

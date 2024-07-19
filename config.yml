@@ -306,3 +306,10 @@ jellyfin_admin_password: "{{ secret_jellyfin_admin_password }}"
 
 jellyfin_oidc_client_id: "{{ secret_jellyfin_oidc_client_id }}"
 jellyfin_oidc_client_secret: "{{ secret_jellyfin_oidc_client_secret }}"
+
+
+#######################
+# Prometheus settings #
+#######################
+
+prometheus_enabled: yes

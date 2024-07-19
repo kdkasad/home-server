@@ -69,3 +69,8 @@
     - role: jellyfin
       tags:
         - jellyfin
+
+    - role: prometheus
+      tags:
+        - prometheus
+        - monitoring
