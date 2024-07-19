@@ -32,3 +32,18 @@ services:
     # network_mode: host
     volumes:
       - "/:/host:ro,rslave"
+
+  cadvisor:
+    container_name: prometheus-cadvisor
+    image: gcr.io/cadvisor/cadvisor:latest
+    pull_policy: always
+    restart: unless-stopped
+    # privileged: true
+    devices:
+      - /dev/kmsg
+    volumes:
+      - "/:/rootfs:ro"
+      - "/var/run:/var/run:ro"
+      - "/sys:/sys:ro"
+      - "/var/lib/docker:/var/lib/docker:ro"
+      - "/dev/disk:/dev/disk:ro"
