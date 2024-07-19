@@ -24,7 +24,6 @@
           }) }}
         volumes:
           - "{{ minio_data_dir }}:/data"
-        etc_hosts: "{{ ({(authentik_routing.subdomain | default('auth') + general.domain): 'host-gateway'}) }}"
         labels:
           traefik.enable: "{{ minio_routing.enabled | default(false) | ternary('true', 'false') }}"
           traefik.http.routers.minio-api.rule: "Host(`{{ minio_routing.api_subdomain }}.{{ general.domain }}`)"

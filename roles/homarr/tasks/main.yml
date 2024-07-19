@@ -35,7 +35,6 @@
             'BASE_URL': homarr_domain,
             'NEXTAUTH_URL': 'https://' + homarr_domain,
           }) }}
-        etc_hosts: "{{ dict(homarr_loopback_hosts | zip_longest([], fillvalue='host-gateway')) }}"
         labels:
           traefik.enable: "{{ (homarr_routing_default | combine(homarr_routing)).enabled | ternary('true', 'false') }}"
           traefik.http.routers.homarr.rule: Host(`{{ homarr_domain }}`)
