@@ -38,7 +38,7 @@
         # Add CAP_NET_RAW if auto-pause is enabled
         capabilities: >-
           {{ ((minecraft_server_env.ENABLE_AUTOPAUSE | lower) in ['true', 'yes', '1']) | ternary(['CAP_NET_RAW'], []) }}
-        restart_policy: unless-stopped
+        restart_policy: no
       vars:
         default_env:
           EULA: 'TRUE'
