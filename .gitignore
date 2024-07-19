@@ -4,3 +4,4 @@ inventory
 .facts_cache
 vault_password.txt
 venv/
+__pycache__
