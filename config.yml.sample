@@ -147,8 +147,9 @@ authentik_env:
 traefik_enabled: yes
 
 traefik_ports:
-    http: 80
-    https: 443
+  http: 80
+  https: 443
+  metrics: 8090
 
 # See https://doc.traefik.io/traefik/https/acme/ for information on how to
 # configure the provider and environment variables.

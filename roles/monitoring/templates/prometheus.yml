@@ -22,3 +22,8 @@ scrape_configs:
   - job_name: cadvisor
     static_configs:
       - targets: ['cadvisor:8080']
+
+  - job_name: traefik
+    static_configs:
+      - targets:
+          - "{{ general.domain }}:{{ traefik_ports.metrics | default(8090) }}"
