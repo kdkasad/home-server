@@ -13,6 +13,7 @@
         - "{{ monitoring_data_dir }}"
         - "{{ monitoring_prometheus_data_dir }}"
         - "{{ monitoring_prometheus_data_dir }}/data"
+        - "{{ monitoring_grafana_data_dir }}"
 
     - name: Get worker UID
       ansible.builtin.command:

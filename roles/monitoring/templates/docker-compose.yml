@@ -15,6 +15,20 @@ services:
       traefik.http.routers.prometheus.entrypoints: websecure
       traefik.http.services.prometheus.loadbalancer.server.port: "9090"
 
+  grafana:
+    container_name: grafana
+    image: grafana/grafana-oss:latest
+    pull_policy: always
+    restart: unless-stopped
+    user: "{{ worker_uid }}"
+    volumes:
+      - "{{ monitoring_grafana_data_dir }}:/var/lib/grafana"
+    labels:
+      traefik.enable: "{{ monitoring_grafana_routing_enabled | ternary('true', 'false')}}"
+      traefik.http.routers.grafana.rule: Host(`{{ monitoring_grafana_routing_subdomain }}.{{ general.domain }}`)
+      traefik.http.routers.grafana.entrypoints: websecure
+      traefik.http.services.grafana.loadbalancer.server.port: "3000"
+
   node_exporter:
     container_name: prometheus-node-exporter
     image: quay.io/prometheus/node-exporter:latest

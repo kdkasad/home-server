@@ -3,7 +3,12 @@ monitoring_enabled: true
 
 monitoring_data_dir: "{{ storage.data_dir }}/monitoring"
 monitoring_prometheus_data_dir: "{{ monitoring_data_dir }}/prometheus"
+monitoring_grafana_data_dir: "{{ monitoring_data_dir }}/grafana"
 
 monitoring_prometheus_routing_enabled: true
 monitoring_prometheus_routing_subdomain: "prometheus"
 monitoring_prometheus_routing_private: true
+
+monitoring_grafana_routing_enabled: true
+monitoring_grafana_routing_subdomain: "grafana"
+monitoring_grafana_routing_private: true
