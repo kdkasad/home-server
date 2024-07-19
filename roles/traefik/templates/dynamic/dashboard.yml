@@ -2,12 +2,10 @@
 http:
   routers:
     traefik_dashboard:
-      rule: '
-        Host(`{{ traefik_dashboard_subdomain }}.{{ general.domain }}`)
-        && (
-          ClientIP(`{{ ansible_default_ipv4.network | ansible.utils.ipsubnet(ansible_default_ipv4.prefix) }}`)
-          || ClientIP(`fe80::/10`)
-        )
-        '
+      rule: Host(`{{ traefik_dashboard_subdomain }}.{{ general.domain }}`)
+      entrypoints:
+        - websecure
+      middlewares:
+        - privateip@file
       service: api@internal
       tls: {}

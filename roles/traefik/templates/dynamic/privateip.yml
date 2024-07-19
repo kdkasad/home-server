@@ -1,0 +1,11 @@
+---
+http:
+  middlewares:
+    privateip:
+      ipallowlist:
+        sourcerange:
+          - "{{ ansible_default_ipv4.network | ansible.utils.ipsubnet(ansible_default_ipv4.prefix) }}"
+          - "fe80::/10"
+          - "127.0.0.1/8"
+          - "::1/128"
+          - "172.16.0.0/12" # Docker containers
