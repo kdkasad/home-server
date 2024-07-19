@@ -5,7 +5,7 @@
 
 general:
   # Set the hostname of the server
-  hostname: casad
+  hostname: box.kasad.com
 
   # Web domain name of the server
   domain: box.kasad.com

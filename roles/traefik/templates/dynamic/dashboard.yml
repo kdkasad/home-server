@@ -3,7 +3,7 @@ http:
   routers:
     traefik_dashboard:
       rule: '
-        HostRegexp(`^{{ traefik_dashboard_subdomain }}\..+$`)
+        Host(`{{ traefik_dashboard_subdomain }}.{{ general.domain }}`)
         && (
           ClientIP(`{{ ansible_default_ipv4.network | ansible.utils.ipsubnet(ansible_default_ipv4.prefix) }}`)
           || ClientIP(`fe80::/10`)
