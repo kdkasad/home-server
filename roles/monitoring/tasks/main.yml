@@ -2,6 +2,11 @@
 - name: Start monitoring stack
   when: monitoring_enabled is true
   block:
+    - name: Install node-exporter
+      ansible.builtin.package:
+        name: prometheus-node-exporter
+        state: present
+
     - name: Create data diretories
       ansible.builtin.file:
         path: "{{ item }}"
@@ -40,11 +45,26 @@
         mode: '0640'
       notify: Restart Prometheus container
 
+    - name: Configure node-exporter
+      ansible.builtin.copy:
+        dest: /etc/default/prometheus-node-exporter
+        owner: root
+        mode: '0644'
+        content: |
+          ARGS={{ monitoring_node_exporter_args | map('quote') | join(' ') | quote }}
+      notify: Restart node-exporter
+
+    - name: Start & enable node-exporter
+      ansible.builtin.service:
+        name: prometheus-node-exporter
+        state: started
+
     - name: Start monitoring stack
       community.docker.docker_compose_v2:
         project_src: "{{ monitoring_data_dir }}"
         project_name: prometheus
         state: present
+        remove_orphans: yes
 
 - name: Stop monitoring stack
   when: monitoring_enabled is false

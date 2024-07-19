@@ -12,3 +12,6 @@ monitoring_prometheus_routing_private: true
 monitoring_grafana_routing_enabled: true
 monitoring_grafana_routing_subdomain: "grafana"
 monitoring_grafana_routing_private: true
+
+monitoring_node_exporter_args:
+  - --collector.systemd

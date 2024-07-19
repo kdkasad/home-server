@@ -29,19 +29,6 @@ services:
       traefik.http.routers.grafana.entrypoints: websecure
       traefik.http.services.grafana.loadbalancer.server.port: "3000"
 
-  node_exporter:
-    container_name: prometheus-node-exporter
-    image: quay.io/prometheus/node-exporter:latest
-    pull_policy: always
-    user: "{{ worker_uid }}"
-    restart: unless-stopped
-    command:
-      - "--path.rootfs=/host"
-    pid: host
-    # network_mode: host
-    volumes:
-      - "/:/host:ro,rslave"
-
   cadvisor:
     container_name: prometheus-cadvisor
     image: gcr.io/cadvisor/cadvisor:latest
