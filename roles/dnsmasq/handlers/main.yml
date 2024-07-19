@@ -4,3 +4,9 @@
     name: dnsmasq
     state: started
     restart: true
+
+- name: Regenerate resolv.conf
+  ansible.builtin.command:
+    cmd: resolvconf -u
+  changed_when: true
+  become: true
