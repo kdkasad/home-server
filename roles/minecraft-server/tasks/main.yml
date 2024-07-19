@@ -19,21 +19,31 @@
       register: worker_uid
       changed_when: false
 
+    - name: Get worker GID
+      ansible.builtin.command:
+        cmd: "id -g {{ users.worker }}"
+      register: worker_gid
+      changed_when: false
+
     - name: Minecraft Server Docker Container
       community.docker.docker_container:
         name: "{{ minecraft_server_container_name }}"
         image: "{{ minecraft_server_image }}"
         pull: true
-        user: "{{ worker_uid.stdout }}"
         volumes:
           - "{{ minecraft_server_data_directory }}:/data:rw"
         ports:
           - "{{ minecraft_server_port }}:25565"
-        env: "{{ minecraft_server_env | combine({'EULA': 'TRUE'}) }}"
+        env: "{{ minecraft_server_env | combine(default_env) }}"
         # Add CAP_NET_RAW if auto-pause is enabled
         capabilities: >-
           {{ ((minecraft_server_env.ENABLE_AUTOPAUSE | lower) in ['true', 'yes', '1']) | ternary(['CAP_NET_RAW'], []) }}
         restart_policy: unless-stopped
+      vars:
+        default_env:
+          EULA: 'TRUE'
+          UID: "{{ worker_uid.stdout }}"
+          GID: "{{ worker_gid.stdout }}"
 
 - name: Stop Minecraft Server
   when: minecraft_server_enabled is false
