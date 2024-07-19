@@ -309,7 +309,7 @@ jellyfin_oidc_client_secret: "{{ secret_jellyfin_oidc_client_secret }}"
 
 
 #######################
-# Prometheus settings #
+# Monitoring settings #
 #######################
 
-prometheus_enabled: yes
+monitoring_enabled: yes

@@ -217,7 +217,7 @@ jellyfin_enabled: false
 
 
 #######################
-# Prometheus settings #
+# Monitoring settings #
 #######################
 
-prometheus_enabled: yes
+monitoring_enabled: yes

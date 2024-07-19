@@ -1,0 +1,61 @@
+---
+- name: Start monitoring stack
+  when: monitoring_enabled is true
+  block:
+    - name: Create data diretories
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: directory
+        owner: "{{ users.worker }}"
+        group: "{{ users.worker }}"
+        mode: '0750'
+      loop:
+        - "{{ monitoring_data_dir }}"
+        - "{{ monitoring_prometheus_data_dir }}"
+        - "{{ monitoring_prometheus_data_dir }}/data"
+
+    - name: Get worker UID
+      ansible.builtin.command:
+        argv: ['id', '-u', "{{ users.worker }}"]
+      changed_when: false
+      register: id_worker
+
+    - name: Set worker UID variable
+      ansible.builtin.set_fact:
+        worker_uid: "{{ id_worker.stdout }}"
+
+    - name: Render Docker Compose file
+      ansible.builtin.template:
+        src: docker-compose.yml
+        dest: "{{ monitoring_data_dir }}/docker-compose.yml"
+        owner: "{{ users.worker }}"
+        mode: '0640'
+
+    - name: Render Prometheus configuration file
+      ansible.builtin.template:
+        src: prometheus.yml
+        dest: "{{ monitoring_prometheus_data_dir }}/prometheus.yml"
+        owner: "{{ users.worker }}"
+        mode: '0640'
+      notify: Restart Prometheus container
+
+    - name: Start monitoring stack
+      community.docker.docker_compose_v2:
+        project_src: "{{ monitoring_data_dir }}"
+        project_name: prometheus
+        state: present
+
+- name: Stop monitoring stack
+  when: monitoring_enabled is false
+  block:
+    - name: Check if directory exists
+      ansible.builtin.stat:
+        path: "{{ monitoring_data_dir }}/docker-compose.yml"
+      register: docker_compose_file
+
+    - name: Stop Prometheus stack
+      when: docker_compose_file.stat.exists
+      community.docker.docker_compose_v2:
+        project_src: "{{ monitoring_data_dir }}"
+        project_name: prometheus
+        state: absent

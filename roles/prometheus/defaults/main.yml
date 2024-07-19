@@ -1,7 +1,0 @@
----
-prometheus_enabled: true
-
-prometheus_data_dir: "{{ storage.data_dir }}/prometheus"
-
-prometheus_routing_enabled: true
-prometheus_routing_subdomain: "prometheus"
