@@ -33,6 +33,17 @@
         capabilities:
           - NET_ADMIN
 
+    - name: Use dnsmasq as DNS resolveer
+      ansible.builtin.lineinfile:
+        path: /etc/resolv.conf
+        create: true
+        owner: root
+        group: root
+        mode: '0644'
+        line: nameserver 127.0.0.1
+        regexp: "^nameserver\\s+(127\\.0\\.0\\.1|::1|localhost)"
+        insertbefore: BOF
+
 - name: Disable dnsmasq
   when: dnsmasq_enabled is false
   block:
