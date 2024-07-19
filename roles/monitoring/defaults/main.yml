@@ -13,5 +13,10 @@ monitoring_grafana_routing_enabled: true
 monitoring_grafana_routing_subdomain: "grafana"
 monitoring_grafana_routing_private: true
 
+monitoring_grafana_sso: false
+monitoring_grafana_sso_only: true
+monitoring_grafana_client_id: "{{ undef() }}"
+monitoring_grafana_client_secret: "{{ undef() }}"
+
 monitoring_node_exporter_args:
   - --collector.systemd

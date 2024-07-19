@@ -19,6 +19,7 @@
         - "{{ monitoring_prometheus_data_dir }}"
         - "{{ monitoring_prometheus_data_dir }}/data"
         - "{{ monitoring_grafana_data_dir }}"
+        - "{{ monitoring_grafana_data_dir }}/data"
 
     - name: Get worker UID
       ansible.builtin.command:
@@ -37,13 +38,18 @@
         owner: "{{ users.worker }}"
         mode: '0640'
 
-    - name: Render Prometheus configuration file
+    - name: Render configuration files
       ansible.builtin.template:
-        src: prometheus.yml
-        dest: "{{ monitoring_prometheus_data_dir }}/prometheus.yml"
+        src: "{{ item.src }}"
+        dest: "{{ item.dst }}"
         owner: "{{ users.worker }}"
         mode: '0640'
-      notify: Restart Prometheus container
+      register: configuration_files
+      loop:
+        - src: prometheus.yml
+          dst: "{{ monitoring_prometheus_data_dir }}/prometheus.yml"
+        - src: grafana.ini
+          dst: "{{ monitoring_grafana_data_dir }}/grafana.ini"
 
     - name: Configure node-exporter
       ansible.builtin.copy:
@@ -65,6 +71,7 @@
         project_name: prometheus
         state: present
         remove_orphans: yes
+        recreate: "{{ configuration_files.changed | ternary('always', 'auto') }}"
 
 - name: Stop monitoring stack
   when: monitoring_enabled is false

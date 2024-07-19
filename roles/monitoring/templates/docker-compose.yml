@@ -22,7 +22,8 @@ services:
     restart: unless-stopped
     user: "{{ worker_uid }}"
     volumes:
-      - "{{ monitoring_grafana_data_dir }}:/var/lib/grafana"
+      - "{{ monitoring_grafana_data_dir }}/grafana.ini:/etc/grafana/grafana.ini"
+      - "{{ monitoring_grafana_data_dir }}/data:/var/lib/grafana"
     labels:
       traefik.enable: "{{ monitoring_grafana_routing_enabled | ternary('true', 'false')}}"
       traefik.http.routers.grafana.rule: Host(`{{ monitoring_grafana_routing_subdomain }}.{{ general.domain }}`)
