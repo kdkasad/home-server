@@ -27,6 +27,7 @@ services:
     labels:
       traefik.enable: "{{ monitoring_grafana_routing_enabled | ternary('true', 'false')}}"
       traefik.http.routers.grafana.rule: Host(`{{ monitoring_grafana_routing_subdomain }}.{{ general.domain }}`)
+      traefik.http.routers.grafana.middlewares: "{{ monitoring_grafana_routing_private | ternary('privateip@file', '') }}"
       traefik.http.routers.grafana.entrypoints: websecure
       traefik.http.services.grafana.loadbalancer.server.port: "3000"
 

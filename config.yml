@@ -315,6 +315,9 @@ jellyfin_oidc_client_secret: "{{ secret_jellyfin_oidc_client_secret }}"
 
 monitoring_enabled: yes
 
+monitoring_prometheus_routing_private: yes
+monitoring_grafana_routing_private: no
+
 monitoring_grafana_sso: yes
 monitoring_grafana_sso_only: yes
 monitoring_grafana_client_id: "{{ secret_monitoring_grafana_client_id }}"
