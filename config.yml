@@ -317,6 +317,7 @@ monitoring_enabled: yes
 
 monitoring_prometheus_routing_private: yes
 monitoring_grafana_routing_private: no
+monitoring_grafana_routing_subdomain: dash
 
 monitoring_grafana_sso: yes
 monitoring_grafana_sso_only: yes
