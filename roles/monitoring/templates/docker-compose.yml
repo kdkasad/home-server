@@ -24,12 +24,22 @@ services:
     volumes:
       - "{{ monitoring_grafana_data_dir }}/grafana.ini:/etc/grafana/grafana.ini"
       - "{{ monitoring_grafana_data_dir }}/data:/var/lib/grafana"
+    environment:
+      GF_RENDERING_SERVER_URL: http://renderer:8081/render
+      GF_RENDERING_CALLBACK_URL: http://grafana:3000/
     labels:
       traefik.enable: "{{ monitoring_grafana_routing_enabled | ternary('true', 'false')}}"
       traefik.http.routers.grafana.rule: Host(`{{ monitoring_grafana_routing_subdomain }}.{{ general.domain }}`)
       traefik.http.routers.grafana.middlewares: "{{ monitoring_grafana_routing_private | ternary('privateip@file', '') }}"
       traefik.http.routers.grafana.entrypoints: websecure
       traefik.http.services.grafana.loadbalancer.server.port: "3000"
+
+  renderer:
+    container_name: grafana-renderer
+    image: grafana/grafana-image-renderer:latest
+    pull_policy: always
+    restart: unless-stopped
+    user: "{{ worker_uid }}"
 
   cadvisor:
     container_name: prometheus-cadvisor
