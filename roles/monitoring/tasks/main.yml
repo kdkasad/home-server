@@ -70,7 +70,9 @@
         project_src: "{{ monitoring_data_dir }}"
         project_name: prometheus
         state: present
+        wait: yes
         remove_orphans: yes
+        pull: always
         recreate: "{{ configuration_files.changed | ternary('always', 'auto') }}"
 
 - name: Stop monitoring stack

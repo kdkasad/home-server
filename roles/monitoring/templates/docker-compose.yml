@@ -1,7 +1,7 @@
 services:
   prometheus:
     container_name: prometheus
-    image: prom/prometheus:latest
+    image: quay.io/prometheus/prometheus:{{ monitoring_prometheus_tag }}
     pull_policy: always
     user: "{{ worker_uid }}"
     restart: unless-stopped
@@ -17,7 +17,7 @@ services:
 
   grafana:
     container_name: grafana
-    image: grafana/grafana-oss:latest
+    image: grafana/grafana-oss:{{ monitoring_grafana_tag }}
     pull_policy: always
     restart: unless-stopped
     user: "{{ worker_uid }}"
@@ -36,14 +36,14 @@ services:
 
   renderer:
     container_name: grafana-renderer
-    image: grafana/grafana-image-renderer:latest
+    image: grafana/grafana-image-renderer:{{ monitoring_grafana_image_renderer_tag }}
     pull_policy: always
     restart: unless-stopped
     user: "{{ worker_uid }}"
 
   cadvisor:
     container_name: prometheus-cadvisor
-    image: gcr.io/cadvisor/cadvisor:latest
+    image: gcr.io/cadvisor/cadvisor:{{ monitoring_cadvisor_tag }}
     pull_policy: always
     restart: unless-stopped
     # privileged: true
