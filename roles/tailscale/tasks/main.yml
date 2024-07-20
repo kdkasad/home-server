@@ -16,7 +16,9 @@
     - name: Start Tailscale container
       community.docker.docker_container:
         name: tailscale
-        image: tailscale/tailscale:latest
+        image: tailscale/tailscale:{{ tailscale_tag }}
+        pull: always
+        image_name_mismatch: recreate
         restart_policy: unless-stopped
         env:
           TS_AUTHKEY: "{{ tailscale_auth_key | mandatory }}"

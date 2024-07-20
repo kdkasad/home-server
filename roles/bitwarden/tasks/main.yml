@@ -16,8 +16,9 @@
         name: bitwarden
         # We use the latest version because Bitwarden may update the client
         # apps, and we want the server to stay up to date as well.
-        image: vaultwarden/server:latest-alpine
+        image: vaultwarden/server:{{ bitwarden_tag }}
         pull: always
+        image_name_mismatch: recreate
         restart_policy: unless-stopped
         env:
           DOMAIN: "https://{{ bitwarden_routing.subdomain }}.{{ general.domain }}"

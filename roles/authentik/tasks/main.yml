@@ -42,6 +42,7 @@
       community.docker.docker_compose_v2:
         project_src: "{{ authentik_data_dir }}"
         wait: true
+        pull: always
 
 - name: Stop Authentik
   when: authentik_enabled is false

@@ -62,7 +62,9 @@
       # when: false
       community.docker.docker_container:
         name: jellyfin
-        image: lscr.io/linuxserver/jellyfin:latest
+        image: lscr.io/linuxserver/jellyfin:{{ jellyfin_tag }}
+        pull: always
+        image_name_mismatch: recreate
         restart_policy: unless-stopped
         volumes:
           - "{{ jellyfin_media_dir }}:/media"

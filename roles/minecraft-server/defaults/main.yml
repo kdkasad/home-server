@@ -12,4 +12,4 @@ minecraft_server_data_directory: "{{ storage.data_dir }}/minecraft_server"
 minecraft_server_port: "25565"
 
 minecraft_server_container_name: minecraft-server
-minecraft_server_image: itzg/minecraft-server:java21-alpine
+minecraft_server_tag: java21-alpine

@@ -22,3 +22,6 @@ traefik_acme_dns:
   enabled: false
   provider: ""
   env: {}
+
+# Version/tag of the traefik image to use
+traefik_tag: "3.1"

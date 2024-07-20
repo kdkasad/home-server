@@ -15,6 +15,8 @@
       community.docker.docker_container:
         name: minio
         image: "{{ minio_container.image }}:{{ minio_container.tag }}"
+        pull: always
+        image_name_mismatch: recreate
         command: 'server /data --console-address ":9001"'
         restart_policy: unless-stopped
         env: >-

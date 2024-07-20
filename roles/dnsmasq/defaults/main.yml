@@ -23,3 +23,6 @@ dnsmasq_local_domains:
 dnsmasq_custom_hosts:
   - name: "{{ general.domain }}"
     ip: "{{ ansible_default_ipv4.address }}"
+
+# Version/tag of the ghcr.io/dockur/dnsmasq image to use
+dnsmasq_tag: "2.90"

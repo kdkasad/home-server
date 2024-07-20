@@ -22,7 +22,9 @@
     - name: Start dnsmasq
       community.docker.docker_container:
         name: dnsmasq
-        image: ghcr.io/dockur/dnsmasq:2.90
+        image: ghcr.io/dockur/dnsmasq:{{ dnsmasq_tag }}
+        pull: always
+        image_name_mismatch: recreate
         state: started
         restart_policy: unless-stopped
         ports:

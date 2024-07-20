@@ -21,3 +21,6 @@ bitwarden_verify_emails: true
 bitwarden_admin_panel:
   enabled: false
   password: "{{ undef(hint='Bitwarden admin password is required') }}"
+
+# Version/tag of the vaultwarden/server to use
+bitwarden_tag: 1.31.0-alpine

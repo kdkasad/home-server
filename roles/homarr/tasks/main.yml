@@ -21,7 +21,9 @@
     - name: Start Homarr container
       community.docker.docker_container:
         name: homarr
-        image: ghcr.io/ajnart/homarr:latest
+        image: ghcr.io/ajnart/homarr:{{ homarr_tag }}
+        pull: always
+        image_name_mismatch: recreate
         restart_policy: unless-stopped
         volumes:
           - "/var/run/docker.sock:/var/run/docker.sock:ro"

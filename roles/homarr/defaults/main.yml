@@ -16,3 +16,6 @@ homarr_routing_default:
   subdomain: homarr
 
 homarr_env: {}
+
+# Version/tag of the ghcr.io/ajnart/homarr image to use
+homarr_tag: "0.15.3"

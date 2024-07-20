@@ -28,8 +28,9 @@
     - name: Minecraft Server Docker Container
       community.docker.docker_container:
         name: "{{ minecraft_server_container_name }}"
-        image: "{{ minecraft_server_image }}"
-        pull: true
+        image: itzg/minecraft-server:{{ minecraft_server_tag }}
+        pull: always
+        image_name_mismatch: recreate
         volumes:
           - "{{ minecraft_server_data_directory }}:/data:rw"
         ports:
