@@ -51,6 +51,13 @@
         - src: grafana.ini
           dst: "{{ monitoring_grafana_data_dir }}/grafana.ini"
 
+    - name: Render Prometheus extra scrape configs
+      ansible.builtin.copy:
+        content: "{{ {'scrape_configs': monitoring_prometheus_extra_scrape_configs} | to_yaml(width=1337) }}"
+        dest: "{{ monitoring_prometheus_data_dir }}/extra_scrape_configs.yml"
+        owner: "{{ users.worker }}"
+        mode: '0640'
+
     - name: Configure node-exporter
       ansible.builtin.copy:
         dest: /etc/default/prometheus-node-exporter

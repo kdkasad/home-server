@@ -7,6 +7,7 @@ services:
     restart: unless-stopped
     volumes:
       - "{{ monitoring_prometheus_data_dir }}/prometheus.yml:/etc/prometheus/prometheus.yml:ro"
+      - "{{ monitoring_prometheus_data_dir }}/extra_scrape_configs.yml:/etc/prometheus/X_extra_scrape_configs.yml:ro"
       - "{{ monitoring_prometheus_data_dir }}/data:/prometheus"
     labels:
       traefik.enable: "{{ monitoring_prometheus_routing_enabled | ternary('true', 'false') }}"

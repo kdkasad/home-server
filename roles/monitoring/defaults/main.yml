@@ -33,7 +33,9 @@ monitoring_grafana_smtp_from_address: >-
 monitoring_grafana_smtp_from_name: Grafana
 monitoring_grafana_send_welcome_email: yes
 
-
 monitoring_node_exporter_args:
   - --collector.systemd
   - --collector.processes
+
+# Extra scrape configs for Prometheus.
+monitoring_prometheus_extra_scrape_configs: []
