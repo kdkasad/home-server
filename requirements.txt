@@ -2,3 +2,5 @@ requests
 yamllint
 ansible-lint
 ansible-core
+ansible
+netaddr
