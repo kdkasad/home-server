@@ -40,7 +40,7 @@
         labels:
           traefik.enable: "{{ (homarr_routing_default | combine(homarr_routing)).enabled | ternary('true', 'false') }}"
           traefik.http.routers.homarr.rule: Host(`{{ homarr_domain }}`)
-          traefik.http.routers.homarr.tls: ""
+          traefik.http.routers.homarr.entrypoints: websecure
           traefik.http.services.homarr.loadbalancer.server.port: '7575'
 
 - name: Stop Homarr

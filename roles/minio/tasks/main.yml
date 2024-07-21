@@ -30,13 +30,11 @@
           traefik.enable: "{{ minio_routing.enabled | default(false) | ternary('true', 'false') }}"
           traefik.http.routers.minio-api.rule: "Host(`{{ minio_routing.api_subdomain }}.{{ general.domain }}`)"
           traefik.http.routers.minio-api.service: minio-api
-          traefik.http.routers.minio-api.tls.certresolver: letsencrypt
-          traefik.http.routers.minio-api.tls.domains[0].main: "{{ minio_routing.api_subdomain }}.{{ general.domain }}"
+          traefik.http.routers.minio-api.entrypoints: websecure
           traefik.http.services.minio-api.loadbalancer.server.port: "9000"
           traefik.http.routers.minio-ui.rule: "Host(`{{ minio_routing.ui_subdomain }}.{{ general.domain }}`)"
           traefik.http.routers.minio-ui.service: minio-ui
-          traefik.http.routers.minio-ui.tls.certresolver: letsencrypt
-          traefik.http.routers.minio-ui.tls.domains[0].main: "{{ minio_routing.ui_subdomain }}.{{ general.domain }}"
+          traefik.http.routers.minio-ui.entrypoints: websecure
           traefik.http.services.minio-ui.loadbalancer.server.port: "9001"
 
 

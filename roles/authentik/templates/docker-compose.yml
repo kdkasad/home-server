@@ -57,6 +57,7 @@ services:
       traefik.enable: "{{ authentik_routing.enabled | default(false) | ternary('true', 'false') }}"
       traefik.http.routers.authentik.rule: >-
         Host(`{{ authentik_routing.subdomain | default('authentik') }}.{{ general.domain }}`)
+      traefik.http.routers.authentik.entrypoints: websecure
       traefik.http.services.authentik.loadbalancer.server.port: "9000"
 
   worker:
