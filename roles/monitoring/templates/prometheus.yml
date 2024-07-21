@@ -14,16 +14,24 @@ scrape_configs:
   - job_name: 'prometheus'
     static_configs:
       - targets: ['localhost:9090']
+        labels:
+          instance: "{{ general.domain }}"
 
   - job_name: node
     static_configs:
       - targets: ['{{ general.domain }}:9100']
+        labels:
+          instance: "{{ general.domain }}"
 
   - job_name: cadvisor
     static_configs:
       - targets: ['cadvisor:8080']
+        labels:
+          instance: "{{ general.domain }}"
 
   - job_name: traefik
     static_configs:
       - targets:
           - "{{ general.domain }}:{{ traefik_ports.metrics | default(8090) }}"
+        labels:
+          instance: "{{ general.domain }}"
