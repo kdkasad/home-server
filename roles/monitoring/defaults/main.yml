@@ -26,3 +26,4 @@ monitoring_grafana_client_secret: "{{ undef() }}"
 
 monitoring_node_exporter_args:
   - --collector.systemd
+  - --collector.processes
