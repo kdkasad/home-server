@@ -24,6 +24,16 @@ monitoring_grafana_sso_only: true
 monitoring_grafana_client_id: "{{ undef() }}"
 monitoring_grafana_client_secret: "{{ undef() }}"
 
+monitoring_grafana_smtp_enabled: no
+monitoring_grafana_smtp_host: "{{ undef() }}"
+monitoring_grafana_smtp_user: "{{ undef() }}"
+monitoring_grafana_smtp_password: "{{ undef() }}"
+monitoring_grafana_smtp_from_address: >-
+  no-reply@{{ monitoring_grafana_routing_subdomain }}.{{ general.domain }}
+monitoring_grafana_smtp_from_name: Grafana
+monitoring_grafana_send_welcome_email: yes
+
+
 monitoring_node_exporter_args:
   - --collector.systemd
   - --collector.processes

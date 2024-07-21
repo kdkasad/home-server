@@ -319,7 +319,14 @@ monitoring_prometheus_routing_private: yes
 monitoring_grafana_routing_private: no
 monitoring_grafana_routing_subdomain: dash
 
+# Grafana SSO settings
 monitoring_grafana_sso: yes
 monitoring_grafana_sso_only: yes
 monitoring_grafana_client_id: "{{ secret_monitoring_grafana_client_id }}"
 monitoring_grafana_client_secret: "{{ secret_monitoring_grafana_client_secret }}"
+
+# Grafana email settings
+monitoring_grafana_smtp_enabled: yes
+monitoring_grafana_smtp_host: "{{ secret_monitoring_grafana_smtp_host }}"
+monitoring_grafana_smtp_user: "{{ secret_monitoring_grafana_smtp_user }}"
+monitoring_grafana_smtp_password: "{{ secret_monitoring_grafana_smtp_password }}"
