@@ -1,4 +1,27 @@
 ---
+- name: Set geeringguy.docker role vars
+  ansible.builtin.set_fact:
+    docker_users:
+      - "{{ users.worker }}"
+    docker_install_compose_plugin: yes
+    _docker_daemon_options:
+      data-root: "{{ storage.docker_dir | default('/var/lib/docker') }}"
+    _docker_daemon_loki_options: "{{ setup_docker_docker_daemon_loki_options }}"
+
+- name: Check if Loki plugin is already installed
+  ansible.builtin.stat:
+    path: "{{ storage.docker_dir }}/x_loki_plugin_version.txt"
+  register: initial_plugin_stat
+
+- name: Install Docker
+  ansible.builtin.import_role:
+    name: geerlingguy.docker
+  vars:
+    docker_daemon_options: >-
+      {{ _docker_daemon_options | combine(
+        (initial_plugin_stat.stat.exists | ternary(_docker_daemon_loki_options, {})
+      ), recursive=true) }}
+
 - name: Install Docker Python module
   ansible.builtin.apt:
     name: python3-docker
@@ -7,6 +30,102 @@
 - name: Create Docker home directory
   ansible.builtin.file:
     path: "{{ storage.docker_dir }}"
-    mode: '0755'
     state: directory
+    owner: root
+    group: root
+    mode: '0755'
+    recurse: no
   when: storage.docker_dir is defined
+
+- name: Install and configure Loki logging driver
+  block:
+    - name: List existing plugins
+      ansible.builtin.command:
+        argv: ["docker", "plugin", "list", "--format", "{{ '{{' }}.Name{{ '}}' }}"]
+      changed_when: false
+      register: docker_plugin_list
+
+    # Note: this file is created by this Ansible role, and is not a Docker
+    # standard. If the Loki plugin is upgraded using a method other than this
+    # role, this process will misbehave.
+    - name: Check for Loki plugin version file
+      ansible.builtin.command:
+        cmd: cat {{ storage.docker_dir }}/x_loki_plugin_version.txt
+      changed_when: false
+      failed_when: false
+      register: cat_version_file
+
+    - name: Set facts for later use
+      ansible.builtin.set_fact:
+        have_loki_plugin: "{{ (plugin_list | length) > 0 }}"
+        loki_plugin_version: "{{ (cat_version_file.rc == 0) | ternary(cat_version_file.stdout, '') }}"
+      vars:
+        plugin_list: "{{ docker_plugin_list.stdout_lines | map('regex_search', '^loki:.*$') | reject('none') }}"
+
+    - name: Install Loki driver plugin
+      when: have_loki_plugin is false
+      ansible.builtin.command:
+        argv:
+          - docker
+          - plugin
+          - install
+          - grafana/loki-docker-driver:{{ setup_docker_loki_driver_tag }}
+          - --alias
+          - loki
+          - --grant-all-permissions
+      changed_when: true
+      register: install_loki
+
+    - name: Upgrade Loki driver plugin
+      when: >-
+        have_loki_plugin is true and (
+          (loki_plugin_version == '')
+          or (loki_plugin_version is version(setup_docker_loki_driver_tag, '<'))
+        )
+      block:
+        - name: Disable Loki plugin
+          ansible.builtin.command:
+            cmd: docker plugin disable loki --force
+          register: disable_plugin
+          changed_when: "'plugin is already disabled' not in disable_plugin.stderr"
+          failed_when: (disable_plugin.rc != 0) and ('plugin is already disabled' not in disable_plugin.stderr)
+
+        - name: Upgrade Loki plugin
+          ansible.builtin.command:
+            argv:
+              - docker
+              - plugin
+              - upgrade
+              - loki
+              - grafana/loki-docker-driver:{{ setup_docker_loki_driver_tag }}
+              - --grant-all-permissions
+          changed_when: true
+          register: upgrade_loki
+
+        - name: Enable Loki driver plugin
+          ansible.builtin.command:
+            cmd: docker plugin enable loki
+          changed_when: true
+
+    - name: Check whether install occurred
+      ansible.builtin.set_fact:
+        loki_changed: >-
+          {{ ((install_loki is defined) and install_loki.changed)
+          or ((upgrade_loki is defined) and upgrade_loki.changed) }}
+
+    - name: Save Loki plugin version file
+      when: loki_changed
+      ansible.builtin.copy:
+        content: |
+          {{ setup_docker_loki_driver_tag }}
+        dest: "{{ storage.docker_dir }}/x_loki_plugin_version.txt"
+        owner: root
+        group: docker
+        mode: '0640'
+
+    - name: Re-run Docker installation role with Loki plugin added to settings
+      when: initial_plugin_stat.stat.exists is false
+      ansible.builtin.import_role:
+        name: geerlingguy.docker
+      vars:
+        docker_daemon_options: "{{ _docker_daemon_options | combine(_docker_daemon_loki_options, recursive=true) }}"

@@ -1,0 +1,11 @@
+---
+setup_docker_loki_driver_tag: "3.1.0"
+
+setup_docker_docker_daemon_loki_options:
+  log-driver: loki
+  log-opts:
+    # Non-blocking mode must be used to prevent Docker from blocking all actions
+    # when Loki is down. Otherwise, we wouldn't be able to initially start the
+    # Loki container, or to stop/restart it once running.
+    mode: non-blocking
+    loki-url: http://127.0.0.1:3100/loki/api/v1/push
