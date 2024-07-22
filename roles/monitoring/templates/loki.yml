@@ -39,6 +39,12 @@ ruler:
 frontend:
   encoding: protobuf
 
+# Used for Explore Logs plugin in Grafana
+pattern_ingester:
+  enabled: true
+limits_config:
+  volume_enabled: true
+
 # By default, Loki will send anonymous, but uniquely-identifiable usage and configuration
 # analytics to Grafana Labs. These statistics are sent to https://stats.grafana.org/
 #
