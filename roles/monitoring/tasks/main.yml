@@ -22,6 +22,7 @@
         - "{{ monitoring_grafana_data_dir }}/data"
         - "{{ monitoring_loki_data_dir }}"
         - "{{ monitoring_loki_data_dir }}/data"
+        - "{{ monitoring_promtail_data_dir }}"
 
     - name: Get worker UID
       ansible.builtin.command:
@@ -29,9 +30,16 @@
       changed_when: false
       register: id_worker
 
-    - name: Set worker UID variable
+    - name: Get systemd-journal GID
+      ansible.builtin.command:
+        argv: ['bash', '-o', 'pipefail', '-c', "getent group systemd-journal | cut -d ':' -f 3"]
+      changed_when: false
+      register: id_systemd_journal
+
+    - name: Set ID variables
       ansible.builtin.set_fact:
         worker_uid: "{{ id_worker.stdout }}"
+        sd_journal_gid: "{{ id_systemd_journal.stdout }}"
 
     - name: Render Docker Compose file
       ansible.builtin.template:
@@ -71,6 +79,14 @@
         owner: "{{ users.worker }}"
         mode: '0640'
       notify: Restart Loki container
+
+    - name: Render Promtail configuration
+      ansible.builtin.template:
+        src: promtail.yml
+        dest: "{{ monitoring_promtail_data_dir }}/config.yml"
+        owner: "{{ users.worker }}"
+        mode: '0640'
+      notify: Restart Promtail container
 
     - name: Configure node-exporter
       ansible.builtin.copy:

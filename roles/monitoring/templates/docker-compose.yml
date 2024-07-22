@@ -71,3 +71,19 @@ services:
     volumes:
       - "{{ monitoring_loki_data_dir }}/local-config.yaml:/etc/loki/local-config.yaml"
       - "{{ monitoring_loki_data_dir }}/data:/loki"
+
+  promtail:
+    container_name: promtail
+    image: grafana/promtail:{{ monitoring_promtail_tag }}
+    pull_policy: always
+    restart: unless-stopped
+    user: "{{ worker_uid }}"
+    group_add:
+      - "{{ sd_journal_gid}}"  # Required for systemd-journal scraper
+    command:
+      - -config.file=/etc/promtail/config.yml
+    volumes:
+      - "{{ monitoring_promtail_data_dir }}/config.yml:/etc/promtail/config.yml"
+      - "/var/log:/var/log:ro,rslave"
+      - "/run/log/journal:/run/log/journal:ro,rslave"  # Required for systemd-journal scraper
+      - "/etc/machine-id:/etc/machine-id:ro"  # Required for systemd-journal scraper
