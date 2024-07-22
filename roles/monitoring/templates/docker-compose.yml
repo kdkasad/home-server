@@ -56,3 +56,18 @@ services:
       - "/sys:/sys:ro"
       - "/var/lib/docker:/var/lib/docker:ro"
       - "/dev/disk:/dev/disk:ro"
+
+  loki:
+    container_name: loki
+    image: grafana/loki:{{ monitoring_loki_tag }}
+    pull_policy: always
+    restart: unless-stopped
+    user: "{{ worker_uid }}"
+    command:
+      - -config.file=/etc/loki/local-config.yaml
+    expose:
+      - 80
+      - 9096
+    volumes:
+      - "{{ monitoring_loki_data_dir }}/local-config.yaml:/etc/loki/local-config.yaml"
+      - "{{ monitoring_loki_data_dir }}/data:/loki"

@@ -15,3 +15,9 @@
     name: grafana
     state: started
     restart: yes
+
+- name: Restart Loki container
+  community.docker.docker_container:
+    name: loki
+    state: started
+    restart: yes

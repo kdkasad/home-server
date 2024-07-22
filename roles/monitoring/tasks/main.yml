@@ -20,6 +20,8 @@
         - "{{ monitoring_prometheus_data_dir }}/data"
         - "{{ monitoring_grafana_data_dir }}"
         - "{{ monitoring_grafana_data_dir }}/data"
+        - "{{ monitoring_loki_data_dir }}"
+        - "{{ monitoring_loki_data_dir }}/data"
 
     - name: Get worker UID
       ansible.builtin.command:
@@ -38,20 +40,13 @@
         owner: "{{ users.worker }}"
         mode: '0640'
 
-    - name: Render configuration files
+    - name: Render Prometheus configuration
       ansible.builtin.template:
-        src: "{{ item.src }}"
-        dest: "{{ item.dst }}"
+        src: prometheus.yml
+        dest: "{{ monitoring_prometheus_data_dir }}/prometheus.yml"
         owner: "{{ users.worker }}"
         mode: '0640'
-      notify: "{{ item.notify }}"
-      loop:
-        - src: prometheus.yml
-          dst: "{{ monitoring_prometheus_data_dir }}/prometheus.yml"
-          notify: Reload Prometheus configuration
-        - src: grafana.ini
-          dst: "{{ monitoring_grafana_data_dir }}/grafana.ini"
-          notify: Restart Grafana container
+      notify: Reload Prometheus configuration
 
     - name: Render Prometheus extra scrape configs
       ansible.builtin.copy:
@@ -60,6 +55,22 @@
         owner: "{{ users.worker }}"
         mode: '0640'
       notify: Reload Prometheus configuration
+
+    - name: Render Grafana configuration
+      ansible.builtin.template:
+        src: grafana.ini
+        dest: "{{ monitoring_grafana_data_dir }}/grafana.ini"
+        owner: "{{ users.worker }}"
+        mode: '0640'
+      notify: Restart Grafana container
+
+    - name: Render Loki configuration
+      ansible.builtin.template:
+        src: loki.yml
+        dest: "{{ monitoring_loki_data_dir }}/local-config.yaml"
+        owner: "{{ users.worker }}"
+        mode: '0640'
+      notify: Restart Loki container
 
     - name: Configure node-exporter
       ansible.builtin.copy:

@@ -4,19 +4,21 @@ monitoring_enabled: true
 monitoring_data_dir: "{{ storage.data_dir }}/monitoring"
 monitoring_prometheus_data_dir: "{{ monitoring_data_dir }}/prometheus"
 monitoring_grafana_data_dir: "{{ monitoring_data_dir }}/grafana"
+monitoring_loki_data_dir: "{{ monitoring_data_dir }}/loki"
 
 # Version/tag of the quay.io/prometheus/prometheus image to use
 monitoring_prometheus_tag: v2.53.1
 monitoring_grafana_tag: "11.1.0"
 monitoring_grafana_image_renderer_tag: "3.11.1"
 monitoring_cadvisor_tag: v0.49.1
+monitoring_loki_tag: "3.1.0"
 
 monitoring_prometheus_routing_enabled: true
-monitoring_prometheus_routing_subdomain: "prometheus"
+monitoring_prometheus_routing_subdomain: prometheus
 monitoring_prometheus_routing_private: true
 
 monitoring_grafana_routing_enabled: true
-monitoring_grafana_routing_subdomain: "grafana"
+monitoring_grafana_routing_subdomain: grafana
 monitoring_grafana_routing_private: true
 
 monitoring_grafana_sso: false
