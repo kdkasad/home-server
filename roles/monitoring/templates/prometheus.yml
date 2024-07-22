@@ -26,6 +26,18 @@ scrape_configs:
         labels:
           instance: "{{ general.domain }}"
 
+  - job_name: loki
+    static_configs:
+      - targets: ['loki']
+        labels:
+          instance: "{{ general.domain }}"
+
+  - job_name: promtail
+    static_configs:
+      - targets: ['promtail']
+        labels:
+          instance: "{{ general.domain }}"
+
   - job_name: traefik
     static_configs:
       - targets:
