@@ -17,22 +17,43 @@ This playbook installs and configures the following services
 
 ### User-facing services
 
+These are services hosted on the server that end users can interact with
+directly.
+
+#### Organization
+- [Homarr](https://homarr.dev) web dashboard.
+
+#### Observability & monitoring
+- [Grafana](https://grafana.com), a data dashboarding tool.
+  Used to display metrics from Prometheus and send alerts based on data.
+- [Prometheus](https://prometheus.io), a monitoring and alerting toolkit.
+  Collects metrics from various sources, and provides them to Grafana for display.
+
+#### Storage & file sharing
 - LAN file sharing (for NAS use), using [Samba](https://www.samba.org/)
   - Zero-configuration network discovery for MacOS, Windows, and Linux clients
     using [Avahi](https://github.com/avahi/avahi) (mDNS, DNS-SD)
     and [wsdd2](https://github.com/Netgear/wsdd2) (WS-Discovery, LLMNR).
-- [Homarr](https://homarr.dev) web dashboard.
-- [Minecraft](https://www.minecraft.net/en-us) server
-  (Java Edition, using [itzg/docker-minecraft-server](https://github.com/itzg/docker-minecraft-server))
+- [Jellyfin](https://jellyfin.org) media server. Streams movies, TV shows,
+  music, and more over the web.
+- [Minio](https://min.io), an S3-compatible object storage server.
+
+#### Infrastructure & security
 - [Authentik](https://goauthentik.io), a self-hosted identity provider.
   Acts as a central authentication system for other services.
 - [Tailscale](https://tailscale.com), a VPN service.
   Allows secure access to the server from anywhere.
-- [Minio](https://min.io), an S3-compatible object storage server.
 - [Bitwarden](https://bitwarden.com) password manager,
   using [Vaultwarden](https://github.com/dani-garcia/vaultwarden).
 
+#### Games
+- [Minecraft](https://www.minecraft.net/en-us) server
+  (Java Edition), using [itzg/docker-minecraft-server](https://github.com/itzg/docker-minecraft-server).
+
 ### System services
+
+The server also runs several services that are not directly user-facing, but are
+necessary nonetheless.
 
 - [Docker](https://docker.io), a containerization platform.
   Used to run most of the other services as containers.
@@ -43,14 +64,17 @@ This playbook installs and configures the following services
 - Local DNS server using [dnsmasq](https://dnsmasq.org/doc.html).
   Allows for custom DNS records, making the server accessible by the same name
   from the local network and the rest of the internet.
+- Metrics exporters:
+  - [Prometheus node exporter](https://github.com/prometheus/node_exporter)
+    to export system metrics.
+  - [cAdvisor](https://github.com/google/cadvisor)
+    to export Docker container performance metrics.
 
 ### Planned
 
 These are some of the services/features I'd like to add in the near future:
 
-- Health, stats, and log monitoring
 - Automated data backups
-- Jellyfin media server
 - Automated configuration for using Authentik to provide authentication for services
 
 ## Installation
