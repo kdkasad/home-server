@@ -44,12 +44,14 @@
         dest: "{{ item.dst }}"
         owner: "{{ users.worker }}"
         mode: '0640'
-      register: configuration_files
+      notify: "{{ item.notify }}"
       loop:
         - src: prometheus.yml
           dst: "{{ monitoring_prometheus_data_dir }}/prometheus.yml"
+          notify: Reload Prometheus configuration
         - src: grafana.ini
           dst: "{{ monitoring_grafana_data_dir }}/grafana.ini"
+          notify: Restart Grafana container
 
     - name: Render Prometheus extra scrape configs
       ansible.builtin.copy:
@@ -57,6 +59,7 @@
         dest: "{{ monitoring_prometheus_data_dir }}/extra_scrape_configs.yml"
         owner: "{{ users.worker }}"
         mode: '0640'
+      notify: Reload Prometheus configuration
 
     - name: Configure node-exporter
       ansible.builtin.copy:
@@ -80,7 +83,6 @@
         wait: yes
         remove_orphans: yes
         pull: always
-        recreate: "{{ configuration_files.changed | ternary('always', 'auto') }}"
 
 - name: Stop monitoring stack
   when: monitoring_enabled is false
