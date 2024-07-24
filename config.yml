@@ -97,7 +97,7 @@ dnsmasq_custom_hosts:
 samba_guest_account: "{{ users.nas }}"
 samba_shares_root: "{{ storage.nas_dir }}"
 samba_manage_directories: no
-samba_netbios_name: "{{ general.hostname }}"
+samba_netbios_name: "{{ general.hostname | split('.') | first }}"
 samba_server_string: Home NAS
 samba_wins_support: no
 samba_domain_master: no
