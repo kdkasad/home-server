@@ -51,6 +51,10 @@ services:
     pull_policy: always
     restart: unless-stopped
     # privileged: true
+    command:
+      - -docker_only=true
+      - -housekeeping_interval=10s
+      - -disable_metrics=memory_numa,diskIO,tcp,advtcp,udp,app,process,hugetlb,perf_event,referenced_memory,cpu_topology,resctrl,cpuset,oom_event
     devices:
       - /dev/kmsg
     volumes:
