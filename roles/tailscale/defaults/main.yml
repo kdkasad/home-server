@@ -5,4 +5,4 @@ tailscale_data_dir: "{{ storage.data_dir }}/tailscale"
 tailscale_routes: []
 
 # Version/tag of the tailscale/tailscale image to use
-tailscale_tag: v1.20
+tailscale_tag: v1.70

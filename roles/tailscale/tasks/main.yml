@@ -16,7 +16,7 @@
     - name: Start Tailscale container
       community.docker.docker_container:
         name: tailscale
-        image: tailscale/tailscale:{{ tailscale_tag }}
+        image: ghcr.io/tailscale/tailscale:{{ tailscale_tag }}
         pull: always
         image_name_mismatch: recreate
         restart_policy: unless-stopped
