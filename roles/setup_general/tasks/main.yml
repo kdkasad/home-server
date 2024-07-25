@@ -7,13 +7,14 @@
   community.general.timezone:
     name: "{{ general.timezone }}"
 
+- name: Install unattended upgrades package
+  ansible.builtin.package:
+    name: unattended-upgrades
+    state: present
+
 - name: Configure unattended upgrades
   when: ansible_facts['distribution'] == "Debian" and general.auto_update_packages != "none"
   block:
-    - name: Install unattended upgrades package
-      ansible.builtin.package:
-        name: unattended-upgrades
-        state: present
 
     - name: Copy unattended upgrades configuration file
       ansible.builtin.template:
