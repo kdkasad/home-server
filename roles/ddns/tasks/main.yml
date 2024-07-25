@@ -25,7 +25,11 @@
 - name: Disable ddclient
   when: ddns_enabled is false
   block:
+    - name: Get service facts
+      ansible.builtin.service_facts: {}
+
     - name: Stop & disable ddclient service
+      when: "'ddclient.service' in services"
       ansible.builtin.service:
         name: ddclient
         state: stopped
