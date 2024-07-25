@@ -43,10 +43,16 @@ jobs:
 
   run-playbook:
     name: Run playbook
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Check out sources
         uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+          cache: pip
 
       - name: Install Python dependencies
         run: python3 -m pip install -r requirements.txt
