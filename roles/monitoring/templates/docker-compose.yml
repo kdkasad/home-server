@@ -1,4 +1,12 @@
 ---
+name: monitoring
+
+networks:
+  default: {}
+  subway:
+    external: true
+    name: subway
+
 services:
   prometheus:
     container_name: prometheus
@@ -16,6 +24,9 @@ services:
       traefik.http.routers.prometheus.middlewares: "{{ monitoring_prometheus_routing_private | ternary('privateip@file', '') }}"
       traefik.http.routers.prometheus.entrypoints: websecure
       traefik.http.services.prometheus.loadbalancer.server.port: "9090"
+    networks:
+      - default
+      - subway
 
   grafana:
     container_name: grafana
@@ -37,6 +48,9 @@ services:
       traefik.http.routers.grafana.middlewares: "{{ monitoring_grafana_routing_private | ternary('privateip@file', '') }}"
       traefik.http.routers.grafana.entrypoints: websecure
       traefik.http.services.grafana.loadbalancer.server.port: "3000"
+    networks:
+      - default
+      - subway
 
   renderer:
     container_name: grafana-renderer
@@ -44,6 +58,10 @@ services:
     pull_policy: always
     restart: unless-stopped
     user: "{{ worker_uid }}"
+    # Don't include the subway network, because only Grafana needs access to
+    # this service
+    networks:
+      - default
 
   cadvisor:
     container_name: prometheus-cadvisor
@@ -63,6 +81,10 @@ services:
       - "/sys:/sys:ro"
       - "/var/lib/docker:/var/lib/docker:ro"
       - "/dev/disk:/dev/disk:ro"
+    # Don't include the subway network, because only Prometheus needs access to
+    # this service
+    networks:
+      - default
 
   loki:
     container_name: loki
@@ -80,6 +102,9 @@ services:
     volumes:
       - "{{ monitoring_loki_data_dir }}/local-config.yaml:/etc/loki/local-config.yaml"
       - "{{ monitoring_loki_data_dir }}/data:/loki"
+    networks:
+      - default
+      - subway
 
   promtail:
     container_name: promtail
@@ -88,7 +113,7 @@ services:
     restart: unless-stopped
     user: "{{ worker_uid }}"
     group_add:
-      - "{{ sd_journal_gid}}"  # Required for systemd-journal scraper
+      - "{{ sd_journal_gid }}"  # Required for systemd-journal scraper
     command:
       - -config.file=/etc/promtail/config.yml
     expose:
@@ -98,3 +123,7 @@ services:
       - "/var/log:/var/log:ro,rslave"
       - "/run/log/journal:/run/log/journal:ro,rslave"  # Required for systemd-journal scraper
       - "/etc/machine-id:/etc/machine-id:ro"  # Required for systemd-journal scraper
+    # Don't include the subway network, because only Loki needs access to
+    # this service
+    networks:
+      - default

@@ -30,6 +30,7 @@
         name: "{{ minecraft_server_container_name }}"
         image: itzg/minecraft-server:{{ minecraft_server_tag }}
         pull: always
+        restart_policy: no
         image_name_mismatch: recreate
         volumes:
           - "{{ minecraft_server_data_directory }}:/data:rw"
@@ -39,7 +40,9 @@
         # Add CAP_NET_RAW if auto-pause is enabled
         capabilities: >-
           {{ ((minecraft_server_env.ENABLE_AUTOPAUSE | lower) in ['true', 'yes', '1']) | ternary(['CAP_NET_RAW'], []) }}
-        restart_policy: no
+        networks_cli_compatible: false
+        networks:
+          - name: subway
       vars:
         default_env:
           EULA: 'TRUE'

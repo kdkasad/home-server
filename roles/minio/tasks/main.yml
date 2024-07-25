@@ -36,6 +36,9 @@
           traefik.http.routers.minio-ui.service: minio-ui
           traefik.http.routers.minio-ui.entrypoints: websecure
           traefik.http.services.minio-ui.loadbalancer.server.port: "9001"
+        networks_cli_compatible: false
+        networks:
+          - name: subway
 
 
 - name: Stop Minio

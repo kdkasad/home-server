@@ -37,6 +37,12 @@
     recurse: no
   when: storage.docker_dir is defined
 
+- name: Create bridge network to link containers
+  community.docker.docker_network:
+    name: subway
+    state: present
+    driver: bridge
+
 - name: Install and configure Loki logging driver
   block:
     - name: List existing plugins

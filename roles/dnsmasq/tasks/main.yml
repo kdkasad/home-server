@@ -34,6 +34,9 @@
           - "{{ dnsmasq_data_dir }}/dnsmasq.conf:/etc/dnsmasq.conf:ro"
         capabilities:
           - NET_ADMIN
+        networks_cli_compatible: false
+        networks:
+          - name: subway
 
     - name: Use dnsmasq for our own DNS lookups
       block:

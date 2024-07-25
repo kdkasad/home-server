@@ -83,7 +83,6 @@
           UMASK: '002'
           DOCKER_MODS: ghcr.io/kdkasad/docker-mods/jellyfin-jellyscrub
           JELLYFIN_PublishedServerUrl: "https://{{ jellyfin_routing.subdomain }}.{{ general.domain }}"
-        network_mode: host  # Use host networking to allow Jellyfin to use DLNA
         labels:
           traefik.enable: "{{ jellyfin_routing.enabled | ternary('true', 'false') }}"
           traefik.http.routers.jellyfin.rule: Host(`{{ jellyfin_routing.subdomain }}.{{ general.domain }}`)
@@ -91,6 +90,9 @@
           traefik.http.services.jellyfin.loadbalancer.server.port: '8096'
         healthcheck:
           test: ["CMD-SHELL", "curl -fs http://localhost:8096/health"]
+        networks_cli_compatible: false
+        networks:
+          - name: subway
 
     - name: Perform initial Jellyfin setup
       when: not config_dir.stat.exists

@@ -41,3 +41,6 @@
           traefik.http.routers.bitwarden-admin.entrypoints: websecure
           traefik.http.routers.bitwarden-admin.middlewares: privateip@file
           traefik.http.routers.bitwarden-admin.service: bitwarden
+        networks_cli_compatible: false
+        networks:
+          - name: subway
