@@ -13,7 +13,10 @@ general:
   # Set the timezone
   timezone: America/Los_Angeles
 
-  # Only automatically install security updates
+  # Configure which package updates are installed automatically
+  # If set to "security", only security updates will be installed
+  # If set to "all", all updates will be installed
+  # If set to "none", no updates will be installed
   auto_update_packages: security
 
 users:
