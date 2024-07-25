@@ -22,8 +22,10 @@ services:
       - "{{ monitoring_prometheus_data_dir }}/data:/prometheus"
     labels:
       traefik.enable: "{{ monitoring_prometheus_routing_enabled | ternary('true', 'false') }}"
-      traefik.http.routers.prometheus.rule: Host(`{{ monitoring_prometheus_routing_subdomain }}.{{ general.domain }}`)
-      traefik.http.routers.prometheus.middlewares: "{{ monitoring_prometheus_routing_private | ternary('privateip@file', '') }}"
+      traefik.http.routers.prometheus.rule: >-
+        Host(`{{ monitoring_prometheus_routing_subdomain }}.{{ general.domain }}`)
+      traefik.http.routers.prometheus.middlewares: >-
+        {{ monitoring_prometheus_routing_private | ternary('privateip@file', '') }}
       traefik.http.routers.prometheus.entrypoints: websecure
       traefik.http.services.prometheus.loadbalancer.server.port: "9090"
     networks:
@@ -47,7 +49,8 @@ services:
     labels:
       traefik.enable: "{{ monitoring_grafana_routing_enabled | ternary('true', 'false')}}"
       traefik.http.routers.grafana.rule: Host(`{{ monitoring_grafana_routing_subdomain }}.{{ general.domain }}`)
-      traefik.http.routers.grafana.middlewares: "{{ monitoring_grafana_routing_private | ternary('privateip@file', '') }}"
+      traefik.http.routers.grafana.middlewares: >-
+        {{ monitoring_grafana_routing_private | ternary('privateip@file', '') }}
       traefik.http.routers.grafana.entrypoints: websecure
       traefik.http.services.grafana.loadbalancer.server.port: "3000"
     networks:
