@@ -1,1 +1,2 @@
 group_vars/homeserver/secrets.yml
+group_vars/homeserver/prometheus_scrape_configs.yml
