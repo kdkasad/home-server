@@ -26,10 +26,6 @@
       tags:
         - docker
 
-    - role: ddns
-      tags:
-        - ddns
-
     - role: dnsmasq
       tags:
         - dnsmasq
@@ -37,6 +33,16 @@
     - role: vladgh.samba.server
       tags:
         - nas
+
+    # This must happen after Samba is installed, because wsdd2.service depends
+    # on smbd.service.
+    - role: setup_zeroconf
+      tags:
+        - setup
+
+    - role: ddns
+      tags:
+        - ddns
 
     - role: minecraft_server
       tags:

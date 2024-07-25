@@ -1,0 +1,28 @@
+---
+- name: Install network discovery service daemons
+  ansible.builtin.package:
+    name:
+      - avahi-daemon  # for mDNS
+      - wsdd2  # for WSD and LLMNR
+    state: present
+
+- name: Configure Avahi daemon
+  ansible.builtin.template:
+    src: templates/avahi-daemon.conf
+    dest: /etc/avahi/avahi-daemon.conf
+    owner: root
+    group: root
+    mode: '0644'
+  register: avahi_conf
+
+- name: Enable and start Avahi daemon
+  ansible.builtin.service:
+    name: avahi-daemon
+    enabled: yes
+    state: "{{ avahi_conf.changed | ternary('restarted', 'started') }}"
+
+- name: Enable and start WSDD
+  ansible.builtin.service:
+    name: wsdd2
+    enabled: yes
+    state: started
