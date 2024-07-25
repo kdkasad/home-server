@@ -28,8 +28,8 @@
         state: started
         restart_policy: unless-stopped
         ports:
-          - "53:53/udp"
-          - "53:53/tcp"
+          - "{{ dnsmasq_port }}:{{ dnsmasq_port }}/udp"
+          - "{{ dnsmasq_port }}:{{ dnsmasq_port }}/tcp"
         volumes:
           - "{{ dnsmasq_data_dir }}/dnsmasq.conf:/etc/dnsmasq.conf:ro"
         capabilities:
@@ -52,7 +52,7 @@
             owner: root
             group: root
             mode: '0644'
-            line: nameserver 127.0.0.1
+            line: "nameserver 127.0.0.1:{{ dnsmasq_port }}"
             regexp: "^nameserver\\s+(127\\.0\\.0\\.1|::1|localhost)"
             insertafter: '^#'
           notify: Regenerate resolv.conf
