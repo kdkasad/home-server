@@ -4,25 +4,25 @@
   become: true
 
   roles:
-    - role: setup-general
+    - role: setup_general
       tags:
         - setup
 
-    - role: setup-disks
-      tags:
-        - setup
-        - nas
-
-    - role: setup-users
+    - role: setup_disks
       tags:
         - setup
         - nas
 
-    - role: setup-ssh
+    - role: setup_users
+      tags:
+        - setup
+        - nas
+
+    - role: setup_ssh
       tags:
         - setup
 
-    - role: setup-docker
+    - role: setup_docker
       tags:
         - docker
 
@@ -38,7 +38,7 @@
       tags:
         - nas
 
-    - role: minecraft-server
+    - role: minecraft_server
       tags:
         - minecraft
 
