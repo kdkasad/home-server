@@ -5,6 +5,9 @@ dnsmasq_enabled: false
 # Set data directory
 dnsmasq_data_dir: "{{ storage.data_dir }}/dnsmasq"
 
+# Set the port to listen on
+dnsmasq_port: 53
+
 # Use Cloudflare's DNS servers by default
 dnsmasq_upstream_dns_servers:
   - '1.1.1.1'

@@ -8,6 +8,8 @@ storage:
   vg: pool
   volumes: {}
 
+dnsmasq_port: 54
+
 
 ###########
 # SECRETS #
