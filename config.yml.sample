@@ -181,7 +181,7 @@ tailscale_routes:
   - "10.0.0.0/24"
 
 # Use Ansible Vault to put your encrypted auth key here
-tailscale_auth_key: "{{ undef }}"
+tailscale_auth_key: "{{ undef() }}"
 
 
 ###################
@@ -206,8 +206,8 @@ minio_routing:
   ui_subdomain: minio
 
 # Use Ansible Vault to put your encrypted credentials here
-minio_root_user: "{{ undef }}"
-minio_root_password: "{{ undef }}"
+minio_root_user: "{{ undef() }}"
+minio_root_password: "{{ undef() }}"
 
 
 #####################

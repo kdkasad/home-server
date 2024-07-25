@@ -22,8 +22,8 @@ jellyfin_server_name: Jellyfin Media Server
 jellyfin_sso_only: true
 
 # OIDC client ID and secret for Jellyfin-Authentik integration.
-jellyfin_oidc_client_id: "{{ undef }}"
-jellyfin_oidc_client_secret: "{{ undef }}"
+jellyfin_oidc_client_id: "{{ undef() }}"
+jellyfin_oidc_client_secret: "{{ undef() }}"
 
 # Version/tag of the lscr.io/linuxserver/jellyfin image to use
 jellyfin_tag: "10.9.7"
