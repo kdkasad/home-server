@@ -94,6 +94,14 @@
         networks:
           - name: subway
 
+    - name: Enable metrics for Jellyfin  # noqa no-handler
+      ansible.builtin.lineinfile:
+        state: present
+        path: "{{ jellyfin_data_dir }}/config/system.xml"
+        line: "  <EnableMetrics>true</EnableMetrics>"
+        regex: "^\\s*<EnableMetrics>[^<]+</EnableMetrics>\\s*$"
+      notify: Restart Jellyfin container
+
     - name: Perform initial Jellyfin setup
       when: not config_dir.stat.exists
       jellyfin_setup:

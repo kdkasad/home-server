@@ -45,5 +45,12 @@ scrape_configs:
         labels:
           instance: "{{ general.domain }}"
 
+  - job_name: jellyfin
+    static_configs:
+      - targets:
+          - "jellyfin:8096"
+        labels:
+          instance: "{{ general.domain }}"
+
 scrape_config_files:
   - "/etc/prometheus/X_extra_scrape_configs.yml"
