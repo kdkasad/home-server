@@ -12,6 +12,10 @@ jellyfin_routing:
   enabled: true
   subdomain: jellyfin
 
+# Whether to skip the initial Jellyfin setup. If set, you must manually set up
+# Jellyfin using the web UI.
+jellyfin_skip_setup: no
+
 # Set the server name
 jellyfin_server_name: Jellyfin Media Server
 

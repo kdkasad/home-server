@@ -10,6 +10,10 @@ storage:
 
 dnsmasq_port: 54
 
+# Jellyfin takes too long to start on the GitHub Actions runner.
+# TODO: Figure out why this is the case.
+jellyfin_skip_setup: yes
+
 
 ###########
 # SECRETS #

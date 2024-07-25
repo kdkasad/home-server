@@ -95,7 +95,7 @@
           - name: subway
 
     - name: Perform initial Jellyfin setup
-      when: not config_dir.stat.exists
+      when: (not config_dir.stat.exists) and (not jellyfin_skip_setup)
       jellyfin_setup:
         server_name: "{{ jellyfin_server_name }}"
         admin_username: "{{ jellyfin_admin_username }}"
@@ -113,6 +113,10 @@
         line: "  <EnableMetrics>true</EnableMetrics>"
         regex: "^\\s*<EnableMetrics>[^<]+</EnableMetrics>\\s*$"
       notify: Restart Jellyfin container
+      register: enable_metrics
+      until: enable_metrics is success
+      retries: 24
+      delay: 5
 
 - name: Disable Jellyfin
   when: jellyfin_enabled is false
