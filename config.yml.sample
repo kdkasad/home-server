@@ -62,7 +62,7 @@ storage:
 # DDNS options #
 ################
 
-ddns_enabled: yes
+ddns_enabled: no
 
 # Cloudflare zone to which the server's domain belongs
 ddns_cloudflare_zone: example.com
@@ -76,12 +76,13 @@ ddns_cloudflare_api_token: <your_cloudflare_api_token>
 # DNS server options #
 ######################
 
-dnsmasq_enabled: false
+dnsmasq_enabled: yes
 
 dnsmasq_custom_hosts:
   - name: "{{ general.domain }}"
     ip: "{{ ansible_default_ipv4.address }}"
-
+  - name: ".{{ general.domain }}"
+    ip: "{{ ansible_default_ipv4.address }}"
 
 #################
 # Samba options #
@@ -128,16 +129,23 @@ minecraft_server_enabled: no
 ######################
 
 # After Authentik is enabled, go to https://<hostname>:9443/if/flow/initial-setup/
-authentik_enabled: no
+authentik_enabled: yes
 
 # Traefik routing options for Authentik
 authentik_routing:
   enabled: true
   subdomain: authentik
 
-# See https://docs.goauthentik.io/docs/installation/configuration for documentation
+# See https://docs.goauthentik.io/docs/installation/configuration for documentation.
+# Use Ansible Vault to encrypt the secret_* variables.
 authentik_env:
-  PG_PASS: "{{ undef }}" # Use Ansible Vault to store an encrypted password here
+  # PostgreSQL root password
+  PG_PASS: "{{ secret_authentik_pg_pass }}"
+
+  # Credentials for the Authentik "akadmin" user during initial setup.
+  # Use Ansible Vault to store an encrypted password here.
+  AUTHENTIK_BOOTSTRAP_EMAIL: "{{ secret_authentik_bootstrap_email }}"
+  AUTHENTIK_BOOTSTRAP_PASSWORD: "{{ secret_authentik_bootstrap_password }}"
 
 
 ####################
@@ -154,7 +162,7 @@ traefik_ports:
 # See https://doc.traefik.io/traefik/https/acme/ for information on how to
 # configure the provider and environment variables.
 traefik_acme_dns:
-  enabled: yes
+  enabled: no
   provider: cloudflare
 
   # Email for Let's Encrypt, used to receive expiry notifications.
@@ -193,6 +201,19 @@ homarr_routing:
   enabled: true
   homepage: true
 
+# OIDC settings for Authentik
+homarr_env:
+  AUTH_PROVIDER: oidc
+  AUTH_OIDC_CLIENT_NAME: Authentik
+  AUTH_OIDC_CLIENT_ID: "{{ secret_homarr_oidc_client_id }}"
+  AUTH_OIDC_CLIENT_SECRET: "{{ secret_homarr_oidc_client_secret }}"
+  AUTH_OIDC_SCOPE_OVERWRITE: openid email profile groups
+  AUTH_OIDC_ADMIN_GROUP: Administrators
+  AUTH_OIDC_URI: >-
+    https://{{ authentik_routing.subdomain | default('auth') }}.{{ general.domain }}/application/o/homarr
+  AUTH_LOGOUT_REDIRECT_URL: >-
+    https://{{ authentik_routing.subdomain | default('auth') }}.{{ general.domain }}/application/o/homarr/end-session/
+
 
 ##################
 # Minio settings #
@@ -209,12 +230,44 @@ minio_routing:
 minio_root_user: "{{ undef() }}"
 minio_root_password: "{{ undef() }}"
 
+# Environment variables to configure integration with Authentik using OpenID Connect.
+# Currently, this requires manual setup in the Authentik UI.
+# Use Ansible Vault to put your encrypted client ID and secret below.
+minio_env:
+  MINIO_IDENTITY_OPENID_CONFIG_URL: "https://{{ authentik_routing.subdomain | default('auth') }}.{{ general.domain }}\
+    /application/o/minio/.well-known/openid-configuration"
+  MINIO_IDENTITY_OPENID_CLIENT_ID: "{{ secret_minio_openid_client_id }}"
+  MINIO_IDENTITY_OPENID_CLIENT_SECRET: "{{ secret_minio_openid_client_secret }}"
+  MINIO_IDENTITY_OPENID_CLAIM_NAME: policy
+  MINIO_IDENTITY_OPENID_DISPLAY_NAME: Log in with Authentik
+  MINIO_IDENTITY_OPENID_SCOPES: openid,profile,email,minio
+  MINIO_IDENTITY_OPENID_REDIRECT_URI: >-
+    {{ minio_routing.ui_subdomain | default('minio') }}.{{ general.domain }}/oauth_callback
+  MINIO_IDENTITY_OPENID_REDIRECT_URI_DYNAMIC: "on"
+  MINIO_IDENTITY_OPENID_CLAIM_USERINFO: "on"
+  MINIO_IDENTITY_OPENID_COMMENT: "Authentik"
+
+
+######################
+# Bitwarden settings #
+######################
+
+bitwarden_enabled: true
+
 
 #####################
 # Jellyfin settings #
 #####################
 
-jellyfin_enabled: false
+jellyfin_enabled: yes
+
+jellyfin_enable_vaapi: false
+
+jellyfin_admin_username: "{{ secret_jellyfin_admin_username }}"
+jellyfin_admin_password: "{{ secret_jellyfin_admin_password }}"
+
+jellyfin_oidc_client_id: "{{ secret_jellyfin_oidc_client_id }}"
+jellyfin_oidc_client_secret: "{{ secret_jellyfin_oidc_client_secret }}"
 
 
 #######################
@@ -222,3 +275,12 @@ jellyfin_enabled: false
 #######################
 
 monitoring_enabled: yes
+
+monitoring_prometheus_routing_private: yes
+monitoring_grafana_routing_private: no
+
+# Grafana SSO settings
+monitoring_grafana_sso: yes
+monitoring_grafana_sso_only: yes
+monitoring_grafana_client_id: "{{ secret_monitoring_grafana_client_id }}"
+monitoring_grafana_client_secret: "{{ secret_monitoring_grafana_client_secret }}"
