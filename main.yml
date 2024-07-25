@@ -18,6 +18,11 @@
         - setup
         - nas
 
+    - role: setup_dns
+      tags:
+        - setup
+        - dns
+
     - role: setup_ssh
       tags:
         - setup
@@ -29,6 +34,7 @@
     - role: dnsmasq
       tags:
         - dnsmasq
+        - dns
 
     - role: vladgh.samba.server
       tags:
@@ -39,10 +45,12 @@
     - role: setup_zeroconf
       tags:
         - setup
+        - dns
 
     - role: ddns
       tags:
         - ddns
+        - dns
 
     - role: minecraft_server
       tags:

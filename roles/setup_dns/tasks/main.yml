@@ -1,0 +1,35 @@
+---
+- name: Install systemd-resolved
+  ansible.builtin.package:
+    name: systemd-resolved
+    state: present
+
+- name: Ensure resolvconf is uninstalled
+  ansible.builtin.package:
+    name: resolvconf
+    state: absent
+
+- name: Template systemd-resolved configuration
+  ansible.builtin.template:
+    src: resolved.conf
+    dest: /etc/systemd/resolved.conf
+    owner: root
+    group: root
+    mode: '0644'
+  register: resolved_conf
+
+- name: Get service facts
+  ansible.builtin.service_facts: {}
+
+- name: Ensure resolvconf is not running
+  when: "'resolvconf.service' in ansible_facts['services']"
+  ansible.builtin.service:
+    name: resolvconf
+    state: stopped
+    enabled: no
+
+- name: Start & enable systemd-resolved
+  ansible.builtin.service:
+    name: systemd-resolved
+    state: "{{ resolved_conf.changed | ternary('restarted', 'started') }}"
+    enabled: yes
