@@ -7,35 +7,6 @@
   community.general.timezone:
     name: "{{ general.timezone }}"
 
-# TODO: Extract Avahi setup to a separate setup_network role
-- name: Install network discovery service daemons
-  ansible.builtin.package:
-    name:
-      - avahi-daemon  # for mDNS
-      - wsdd2  # for WSD and LLMNR
-    state: present
-
-- name: Enable and start Avahi daemon
-  ansible.builtin.service:
-    name: avahi-daemon
-    enabled: yes
-    state: started
-
-- name: Enable and start WSDD
-  ansible.builtin.service:
-    name: wsdd2
-    enabled: yes
-    state: started
-
-- name: Configure Avahi daemon
-  ansible.builtin.template:
-    src: templates/avahi-daemon.conf
-    dest: /etc/avahi/avahi-daemon.conf
-    owner: root
-    group: root
-    mode: '0644'
-  notify: Restart Avahi daemon
-
 - name: Configure unattended upgrades
   when: ansible_facts['distribution'] == "Debian" and general.auto_update_packages != "none"
   block:
