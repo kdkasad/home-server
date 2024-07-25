@@ -4,11 +4,11 @@
     name: prometheus-node-exporter
     state: restarted
 
-- name: Reload Prometheus configuration
-  community.docker.docker_container_exec:
-    container: prometheus
-    command: kill -HUP 1  # Send SIGHUP to Prometheus, which runs as PID 1
-  changed_when: true
+- name: Restart Prometheus container
+  community.docker.docker_container:
+    name: prometheus
+    state: started
+    restart: yes
 
 - name: Restart Grafana container
   community.docker.docker_container:

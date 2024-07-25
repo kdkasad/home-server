@@ -54,7 +54,7 @@
         dest: "{{ monitoring_prometheus_data_dir }}/prometheus.yml"
         owner: "{{ users.worker }}"
         mode: '0640'
-      notify: Reload Prometheus configuration
+      notify: Restart Prometheus container
 
     - name: Render Prometheus extra scrape configs
       ansible.builtin.copy:
@@ -62,7 +62,7 @@
         dest: "{{ monitoring_prometheus_data_dir }}/extra_scrape_configs.yml"
         owner: "{{ users.worker }}"
         mode: '0640'
-      notify: Reload Prometheus configuration
+      notify: Restart Prometheus container
 
     - name: Render Grafana configuration
       ansible.builtin.template:
