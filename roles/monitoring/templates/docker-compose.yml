@@ -111,9 +111,10 @@ services:
     image: grafana/promtail:{{ monitoring_promtail_tag }}
     pull_policy: always
     restart: unless-stopped
-    user: "{{ worker_uid }}"
+    user: root  # Required for reading Docker logs
     group_add:
-      - "{{ sd_journal_gid }}"  # Required for systemd-journal scraper
+      - "{{ sd_journal_gid }}"  # For systemd-journal scraper
+      - "{{ docker_gid }}"  # For Docker scraper
     command:
       - -config.file=/etc/promtail/config.yml
     expose:
@@ -121,8 +122,10 @@ services:
     volumes:
       - "{{ monitoring_promtail_data_dir }}/config.yml:/etc/promtail/config.yml"
       - "/var/log:/var/log:ro,rslave"
-      - "/run/log/journal:/run/log/journal:ro,rslave"  # Required for systemd-journal scraper
-      - "/etc/machine-id:/etc/machine-id:ro"  # Required for systemd-journal scraper
+      - "/run/log/journal:/run/log/journal:ro,rslave"  # For systemd-journal scraper
+      - "/etc/machine-id:/etc/machine-id:ro"  # For systemd-journal scraper
+      # - "{{ storage.docker_dir | default('/var/lib/docker' ) }}/containers:/var/lib/docker/containers:ro"  # For Docker log files
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"  # For Docker container metadata
     # Don't include the subway network, because only Loki needs access to
     # this service
     networks:

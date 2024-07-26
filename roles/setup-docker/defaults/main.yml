@@ -1,11 +1,19 @@
 ---
-setup_docker_loki_driver_tag: "3.1.0"
+# Configure Docker daemon options. These are merged with the default options
+# below and used to create /etc/docker/daemon.json.
+setup_docker_daemon_options: {}
 
-setup_docker_docker_daemon_loki_options:
-  log-driver: loki
+# Default options for Docker daemon. Use the `setup_docker_daemon_options`
+# variable to override these.
+setup_docker_default_daemon_options:
+  # Set the directory for Docker to store images, logs, etc. in.
+  data-root: "{{ storage.docker_dir | default('/var/lib/docker') }}"
+
+  # In order for Promtail to read container logs, we must use the json-file
+  # logging driver. The Loki logging driver plugin exists, but it causes issues
+  # when trying to stop/restart the Loki container.
+  log-driver: json-file
   log-opts:
-    # Non-blocking mode must be used to prevent Docker from blocking all actions
-    # when Loki is down. Otherwise, we wouldn't be able to initially start the
-    # Loki container, or to stop/restart it once running.
-    mode: non-blocking
-    loki-url: http://127.0.0.1:3100/loki/api/v1/push
+    tag: "{{ '{{' }}.Name{{ '}}' }}"
+    max-size: 10m
+    max-file: "1"

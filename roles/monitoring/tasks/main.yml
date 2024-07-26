@@ -36,10 +36,17 @@
       changed_when: false
       register: id_systemd_journal
 
+    - name: Get docker GID
+      ansible.builtin.command:
+        argv: ['bash', '-o', 'pipefail', '-c', "getent group docker | cut -d ':' -f 3"]
+      changed_when: false
+      register: id_docker
+
     - name: Set ID variables
       ansible.builtin.set_fact:
         worker_uid: "{{ id_worker.stdout }}"
         sd_journal_gid: "{{ id_systemd_journal.stdout }}"
+        docker_gid: "{{ id_docker.stdout }}"
 
     - name: Render Docker Compose file
       ansible.builtin.template:
