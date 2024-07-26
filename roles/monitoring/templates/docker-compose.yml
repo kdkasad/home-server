@@ -14,6 +14,8 @@ services:
     pull_policy: always
     user: "{{ worker_uid }}"
     restart: unless-stopped
+    extra_hosts:
+      - host.docker.internal:host-gateway
     volumes:
       - "{{ monitoring_prometheus_data_dir }}/prometheus.yml:/etc/prometheus/prometheus.yml:ro"
       - "{{ monitoring_prometheus_data_dir }}/extra_scrape_configs.yml:/etc/prometheus/X_extra_scrape_configs.yml:ro"
