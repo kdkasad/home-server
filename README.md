@@ -28,6 +28,8 @@ directly.
   Used to display metrics from Prometheus and send alerts based on data.
 - [Prometheus](https://prometheus.io), a monitoring and alerting toolkit.
   Collects metrics from various sources, and provides them to Grafana for display.
+- [Loki](https://grafana.com/loki), a log aggregation system.
+  Collects logs from various sources, and provides them to Grafana for display.
 
 #### Storage & file sharing
 - LAN file sharing (for NAS use), using [Samba](https://www.samba.org/)
@@ -36,7 +38,7 @@ directly.
     and [wsdd2](https://github.com/Netgear/wsdd2) (WS-Discovery, LLMNR).
 - [Jellyfin](https://jellyfin.org) media server. Streams movies, TV shows,
   music, and more over the web.
-- [Minio](https://min.io), an S3-compatible object storage server.
+- [MinIO](https://min.io), an S3-compatible object storage server.
 
 #### Infrastructure & security
 - [Authentik](https://goauthentik.io), a self-hosted identity provider.
@@ -64,11 +66,13 @@ necessary nonetheless.
 - Local DNS server using [dnsmasq](https://dnsmasq.org/doc.html).
   Allows for custom DNS records, making the server accessible by the same name
   from the local network and the rest of the internet.
-- Metrics exporters:
+- Metric/log exporters:
   - [Prometheus node exporter](https://github.com/prometheus/node_exporter)
     to export system metrics.
   - [cAdvisor](https://github.com/google/cadvisor)
     to export Docker container performance metrics.
+  - [Promtail](https://grafana.com/docs/loki/latest/send-data/promtail/),
+    to export system & Docker container logs to Loki.
 
 ### Planned
 
