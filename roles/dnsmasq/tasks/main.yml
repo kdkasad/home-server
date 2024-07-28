@@ -17,7 +17,7 @@
         owner: "{{ users.worker }}"
         group: "{{ users.worker }}"
         mode: '0640'
-      notify: Restart dnsmasq container
+      register: dnsmasq_config
 
     - name: Start dnsmasq
       community.docker.docker_container:
@@ -26,10 +26,11 @@
         pull: always
         image_name_mismatch: recreate
         state: started
+        restart: "{{ dnsmasq_config.changed }}"
         restart_policy: unless-stopped
         ports:
-          - "53:53/udp"
-          - "53:53/tcp"
+          - "{{ dnsmasq_port }}:{{ dnsmasq_port }}/udp"
+          - "{{ dnsmasq_port }}:{{ dnsmasq_port }}/tcp"
         volumes:
           - "{{ dnsmasq_data_dir }}/dnsmasq.conf:/etc/dnsmasq.conf:ro"
         capabilities:
@@ -37,30 +38,6 @@
         networks_cli_compatible: false
         networks:
           - name: subway
-
-    - name: Use dnsmasq for our own DNS lookups
-      block:
-        - name: Ensure resolvconf is installed
-          ansible.builtin.package:
-            name: resolvconf
-            state: present
-
-        - name: Set /etc/resolv.conf head contents
-          ansible.builtin.lineinfile:
-            path: /etc/resolvconf/resolv.conf.d/head
-            create: true
-            owner: root
-            group: root
-            mode: '0644'
-            line: nameserver 127.0.0.1
-            regexp: "^nameserver\\s+(127\\.0\\.0\\.1|::1|localhost)"
-            insertafter: '^#'
-          notify: Regenerate resolv.conf
-
-        - name: Ensure resolvconf is running
-          ansible.builtin.service:
-            name: resolvconf
-            state: started
 
 - name: Disable dnsmasq
   when: dnsmasq_enabled is false

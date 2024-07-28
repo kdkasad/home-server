@@ -13,8 +13,18 @@ general:
   # Set the timezone
   timezone: America/Los_Angeles
 
-  # Only automatically install security updates
+  # Configure which package updates are installed automatically
+  # If set to "security", only security updates will be installed
+  # If set to "all", all updates will be installed
+  # If set to "none", no updates will be installed
   auto_update_packages: security
+
+  # DNS servers to use for non-local lookups
+  upstream_dns_servers:
+    - '1.1.1.1'
+    - '1.0.0.1'
+    - '2606:4700:4700::1111'
+    - '2606:4700:4700::1001'
 
 users:
   worker: worker
@@ -244,6 +254,7 @@ homarr_env:
   AUTH_OIDC_CLIENT_NAME: Authentik
   AUTH_OIDC_CLIENT_ID: "{{ secret_homarr_oidc_client_id }}"
   AUTH_OIDC_CLIENT_SECRET: "{{ secret_homarr_oidc_client_secret }}"
+  AUTH_OIDC_SCOPE_OVERWRITE: openid email profile groups
   AUTH_OIDC_ADMIN_GROUP: Administrators
   AUTH_OIDC_URI: >-
     https://{{ authentik_routing.subdomain | default('auth') }}.{{ general.domain }}/application/o/homarr

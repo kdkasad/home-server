@@ -4,41 +4,55 @@
   become: true
 
   roles:
-    - role: setup-general
+    - role: setup_general
       tags:
         - setup
 
-    - role: setup-disks
-      tags:
-        - setup
-        - nas
-
-    - role: setup-users
+    - role: setup_disks
       tags:
         - setup
         - nas
 
-    - role: setup-ssh
+    - role: setup_users
+      tags:
+        - setup
+        - nas
+
+    - role: setup_dns
+      tags:
+        - setup
+        - dns
+
+    - role: setup_ssh
       tags:
         - setup
 
-    - role: setup-docker
+    - role: setup_docker
       tags:
         - docker
-
-    - role: ddns
-      tags:
-        - ddns
 
     - role: dnsmasq
       tags:
         - dnsmasq
+        - dns
 
     - role: vladgh.samba.server
       tags:
         - nas
 
-    - role: minecraft-server
+    # This must happen after Samba is installed, because wsdd2.service depends
+    # on smbd.service.
+    - role: setup_zeroconf
+      tags:
+        - setup
+        - dns
+
+    - role: ddns
+      tags:
+        - ddns
+        - dns
+
+    - role: minecraft_server
       tags:
         - minecraft
 

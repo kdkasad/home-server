@@ -12,6 +12,10 @@ jellyfin_routing:
   enabled: true
   subdomain: jellyfin
 
+# Whether to skip the initial Jellyfin setup. If set, you must manually set up
+# Jellyfin using the web UI.
+jellyfin_skip_setup: no
+
 # Set the server name
 jellyfin_server_name: Jellyfin Media Server
 
@@ -22,8 +26,8 @@ jellyfin_server_name: Jellyfin Media Server
 jellyfin_sso_only: true
 
 # OIDC client ID and secret for Jellyfin-Authentik integration.
-jellyfin_oidc_client_id: "{{ undef }}"
-jellyfin_oidc_client_secret: "{{ undef }}"
+jellyfin_oidc_client_id: "{{ undef() }}"
+jellyfin_oidc_client_secret: "{{ undef() }}"
 
 # Version/tag of the lscr.io/linuxserver/jellyfin image to use
 jellyfin_tag: "10.9.7"

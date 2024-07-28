@@ -1,0 +1,95 @@
+---
+name: CI
+
+'on':
+  push: {}
+  pull_request: {}
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  ANSIBLE_FORCE_COLOR: '1'
+  ANSIBLE_CONFIG: ci/ansible.cfg
+
+jobs:
+  lint:
+    name: Lint code
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out sources
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install Python dependencies
+        run: python3 -m pip install -r requirements.txt
+
+      - name: Install Ansible Galaxy dependencies
+        run: ansible-galaxy install -r requirements.yml
+
+      - name: Run YAML linter
+        run: yamllint .
+
+      - name: Run Ansible syntax check
+        run: ansible-playbook main.yml --syntax-check
+
+      - name: Run Ansible linter
+        run: ansible-lint
+
+  run-playbook:
+    name: Run playbook
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check out sources
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+          cache: pip
+
+      - name: Install Python dependencies
+        run: python3 -m pip install -r requirements.txt
+
+      - name: Install Ansible Galaxy dependencies
+        run: ansible-galaxy install -r requirements.yml
+
+      - name: Remove encrypted secrets
+        run: grep -lZ -e '^\$ANSIBLE_VAULT' group_vars/*/*.yml | xargs -0 rm -f
+
+      - name: Use sample config
+        run: cp -f config.yml.sample config.yml
+
+      - name: Run playbook (first run)
+        run: ansible-playbook main.yml --extra-vars '@ci/config_overrides.yml'
+
+      - name: Run playbook (second run)
+        run: ansible-playbook main.yml --extra-vars '@ci/config_overrides.yml' | tee /tmp/secondrun.log
+
+      - name: Upload second run output as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: second-run-output
+          path: /tmp/secondrun.log
+
+  idempotence:
+    name: Check idempotence
+    runs-on: ubuntu-latest
+    needs: run-playbook
+    steps:
+      - name: Download second run output artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: second-run-output
+
+      - name: Check idempotence
+        run: >-
+          grep -A1 -e 'PLAY RECAP' secondrun.log | grep -q -e 'changed=0.*failed=0'
+          && (echo 'Idempotence test: pass' && exit 0)
+          || (echo 'Idempotence test: fail' && exit 1)

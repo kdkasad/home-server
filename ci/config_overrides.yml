@@ -1,0 +1,41 @@
+---
+storage:
+  data_dir: /data
+  nas_dir: /nas
+  docker_dir: /var/lib/docker
+
+  # Don't create LVM volumes since we don't control the disk setup
+  vg: pool
+  volumes: {}
+
+dnsmasq_port: 54
+
+# Jellyfin takes too long to start on the GitHub Actions runner.
+# TODO: Figure out why this is the case.
+jellyfin_skip_setup: yes
+
+
+###########
+# SECRETS #
+###########
+
+minio_root_user: "minio"
+minio_root_password: "minio"
+
+secret_authentik_pg_pass: authentik
+secret_authentik_bootstrap_email: authentik
+secret_authentik_bootstrap_password: authentik
+
+secret_homarr_oidc_client_id: homarrclientid
+secret_homarr_oidc_client_secret: homarrclientsecret
+
+secret_minio_openid_client_id: minioclientid
+secret_minio_openid_client_secret: minioclientsecret
+
+secret_jellyfin_admin_username: jellyfin
+secret_jellyfin_admin_password: jellyfin
+secret_jellyfin_oidc_client_id: jellyfinclientid
+secret_jellyfin_oidc_client_secret: jellyfinclientsecret
+
+secret_monitoring_grafana_client_id: grafanaclientid
+secret_monitoring_grafana_client_secret: grafanaclientsecret

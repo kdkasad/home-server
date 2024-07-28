@@ -94,16 +94,8 @@
         networks:
           - name: subway
 
-    - name: Enable metrics for Jellyfin  # noqa no-handler
-      ansible.builtin.lineinfile:
-        state: present
-        path: "{{ jellyfin_data_dir }}/config/system.xml"
-        line: "  <EnableMetrics>true</EnableMetrics>"
-        regex: "^\\s*<EnableMetrics>[^<]+</EnableMetrics>\\s*$"
-      notify: Restart Jellyfin container
-
     - name: Perform initial Jellyfin setup
-      when: not config_dir.stat.exists
+      when: (not config_dir.stat.exists) and (not jellyfin_skip_setup)
       jellyfin_setup:
         server_name: "{{ jellyfin_server_name }}"
         admin_username: "{{ jellyfin_admin_username }}"
@@ -113,6 +105,18 @@
         jellyfin_domain: "{{ jellyfin_routing.subdomain }}.{{ general.domain }}"
         authentik_domain: "{{ authentik_routing.subdomain | default('authentik') }}.{{ general.domain }}"
         login_sso_only: "{{ jellyfin_sso_only }}"
+
+    - name: Enable metrics for Jellyfin
+      ansible.builtin.lineinfile:
+        state: present
+        path: "{{ jellyfin_data_dir }}/config/system.xml"
+        line: "  <EnableMetrics>true</EnableMetrics>"
+        regex: "^\\s*<EnableMetrics>[^<]+</EnableMetrics>\\s*$"
+      notify: Restart Jellyfin container
+      register: enable_metrics
+      until: enable_metrics is success
+      retries: 24
+      delay: 5
 
 - name: Disable Jellyfin
   when: jellyfin_enabled is false

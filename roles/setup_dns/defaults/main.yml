@@ -1,0 +1,2 @@
+---
+setup_dns_upstream_dns_servers: "{{ general.upstream_dns_servers | mandatory }}"

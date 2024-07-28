@@ -1,5 +1,7 @@
 # Home server playbook
 
+[![CI](https://github.com/kdkasad/home-server/actions/workflows/ci.yml/badge.svg)](https://github.com/kdkasad/home-server/actions/workflows/ci.yml)
+
 An Ansible playbook to manage my home server,
 a mini-PC running Debian.
 

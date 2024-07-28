@@ -1,6 +1,6 @@
 keys/*
 !keys/README.md
-inventory
+/inventory
 .facts_cache
 vault_password.txt
 venv/
