@@ -59,5 +59,13 @@ scrape_configs:
         labels:
           instance: "{{ general.domain }}"
 
+  - job_name: minio
+    metrics_path: /minio/v2/metrics/cluster
+    static_configs:
+      - targets:
+          - "minio:9000"
+        labels:
+          instance: "{{ general.domain }}"
+
 scrape_config_files:
   - "/etc/prometheus/X_extra_scrape_configs.yml"

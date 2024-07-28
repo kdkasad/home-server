@@ -8,7 +8,7 @@
         state: directory
         owner: "{{ users.worker }}"
         group: "{{ users.worker }}"
-        mode: '0755'
+        mode: "0755"
         recurse: false
 
     - name: Start Minio container
@@ -24,12 +24,17 @@
             "MINIO_ROOT_USER": minio_root_user | mandatory,
             "MINIO_ROOT_PASSWORD": minio_root_password | mandatory,
             "MINIO_BROWSER_REDIRECT_URL": "https://" ~ minio_routing.ui_subdomain ~ "." ~ general.domain ~ "/",
+            "MINIO_PROMETHEUS_AUTH_TYPE": "public",
           }) }}
         volumes:
           - "{{ minio_data_dir }}:/data"
         labels:
           traefik.enable: "{{ minio_routing.enabled | default(false) | ternary('true', 'false') }}"
-          traefik.http.routers.minio-api.rule: "Host(`{{ minio_routing.api_subdomain }}.{{ general.domain }}`)"
+          # Don't allow external access to metrics endpoint
+          traefik.http.routers.minio-api.rule: "\
+            Host(`{{ minio_routing.api_subdomain }}.{{ general.domain }}`)\
+            && !PathPrefix(`/minio/v2/metrics`)\
+            "
           traefik.http.routers.minio-api.service: minio-api
           traefik.http.routers.minio-api.entrypoints: websecure
           traefik.http.services.minio-api.loadbalancer.server.port: "9000"
@@ -40,7 +45,6 @@
         networks_cli_compatible: false
         networks:
           - name: subway
-
 
 - name: Stop Minio
   when: minio_enabled is false
