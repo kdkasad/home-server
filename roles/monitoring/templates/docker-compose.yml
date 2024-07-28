@@ -129,7 +129,6 @@ services:
       - "/var/log:/var/log:ro,rslave"
       - "/run/log/journal:/run/log/journal:ro,rslave"  # For systemd-journal scraper
       - "/etc/machine-id:/etc/machine-id:ro"  # For systemd-journal scraper
-      # - "{{ storage.docker_dir | default('/var/lib/docker' ) }}/containers:/var/lib/docker/containers:ro"  # For Docker log files
       - "/var/run/docker.sock:/var/run/docker.sock:ro"  # For Docker container metadata
     # Don't include the subway network, because only Loki needs access to
     # this service
