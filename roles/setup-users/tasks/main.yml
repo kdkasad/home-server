@@ -13,6 +13,9 @@
     system: yes
     create_home: no
     shell: /sbin/nologin
+    groups:
+      - systemd-journal
+    append: yes
 
 - name: Create NAS group
   ansible.builtin.group:

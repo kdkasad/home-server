@@ -1,9 +1,0 @@
----
-dependencies:
-  - role: geerlingguy.docker
-    vars:
-      docker_users:
-        - "{{ users.worker }}"
-      docker_daemon_options:
-        data-root: "{{ storage.docker_dir | default('/var/lib/docker') }}"
-      docker_install_compose_plugin: yes

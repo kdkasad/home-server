@@ -203,6 +203,7 @@ traefik_enabled: true
 traefik_ports:
   http: 80
   https: 443
+  metrics: 8090
 
 # See https://doc.traefik.io/traefik/https/acme/ for information on how to
 # configure the provider and environment variables.
@@ -306,3 +307,36 @@ jellyfin_admin_password: "{{ secret_jellyfin_admin_password }}"
 
 jellyfin_oidc_client_id: "{{ secret_jellyfin_oidc_client_id }}"
 jellyfin_oidc_client_secret: "{{ secret_jellyfin_oidc_client_secret }}"
+
+
+#######################
+# Monitoring settings #
+#######################
+
+monitoring_enabled: yes
+
+monitoring_prometheus_routing_private: yes
+monitoring_grafana_routing_private: no
+monitoring_grafana_routing_subdomain: dash
+
+# Prometheus extra scrape targets
+monitoring_prometheus_extra_scrape_configs: >-
+  {{ secret_monitoring_prometheus_extra_scrape_configs }}
+
+# Grafana SSO settings
+monitoring_grafana_sso: yes
+monitoring_grafana_sso_only: yes
+monitoring_grafana_client_id: "{{ secret_monitoring_grafana_client_id }}"
+monitoring_grafana_client_secret: "{{ secret_monitoring_grafana_client_secret }}"
+
+# Grafana email settings
+monitoring_grafana_smtp_enabled: yes
+monitoring_grafana_smtp_host: "{{ secret_monitoring_grafana_smtp_host }}"
+monitoring_grafana_smtp_user: "{{ secret_monitoring_grafana_smtp_user }}"
+monitoring_grafana_smtp_password: "{{ secret_monitoring_grafana_smtp_password }}"
+
+# Don't collect metrics from some services
+monitoring_scrape_authentik: no
+monitoring_scrape_jellyfin: no
+monitoring_scrape_minio: no
+monitoring_scrape_traefik: yes

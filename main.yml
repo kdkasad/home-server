@@ -69,3 +69,7 @@
     - role: jellyfin
       tags:
         - jellyfin
+
+    - role: monitoring
+      tags:
+        - monitoring

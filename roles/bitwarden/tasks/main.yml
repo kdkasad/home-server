@@ -30,11 +30,17 @@
           - "{{ bitwarden_data_dir }}:/data"
         labels:
           traefik.enable: "{{ bitwarden_routing.enabled | ternary('true', 'false') }}"
-          traefik.http.routers.bitwarden.rule: "
-            Host(`{{ bitwarden_routing.subdomain }}.{{ general.domain }}`)
-              && (
-                !PathPrefix(`/admin`)
-                || ClientIP(`{{ ansible_default_ipv4.network | ansible.utils.ipsubnet(ansible_default_ipv4.prefix) }}`)
-                || ClientIP(`fe80::/10`)
-              )"
           traefik.http.services.bitwarden.loadbalancer.server.port: "80"
+
+          traefik.http.routers.bitwarden.rule: >-
+            Host(`{{ bitwarden_routing.subdomain }}.{{ general.domain }}`) && !PathPrefix(`/admin`)
+          traefik.http.routers.bitwarden.entrypoints: websecure
+
+          traefik.http.routers.bitwarden-admin.rule: >-
+            Host(`{{ bitwarden_routing.subdomain }}.{{ general.domain }}`) && PathPrefix(`/admin`)
+          traefik.http.routers.bitwarden-admin.entrypoints: websecure
+          traefik.http.routers.bitwarden-admin.middlewares: privateip@file
+          traefik.http.routers.bitwarden-admin.service: bitwarden
+        networks_cli_compatible: false
+        networks:
+          - name: subway

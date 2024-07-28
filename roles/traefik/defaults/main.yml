@@ -7,6 +7,7 @@ traefik_log_level: INFO
 traefik_ports:
   http: 80
   https: 443
+  metrics: 8090
 
 # Don't override this section; use traefik_ports instead.
 traefik_ports_default:

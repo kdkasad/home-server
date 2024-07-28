@@ -1,0 +1,134 @@
+---
+- name: Start monitoring stack
+  when: monitoring_enabled is true
+  block:
+    - name: Install node-exporter
+      ansible.builtin.package:
+        name: prometheus-node-exporter
+        state: present
+
+    - name: Create data diretories
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: directory
+        owner: "{{ users.worker }}"
+        group: "{{ users.worker }}"
+        mode: '0750'
+      loop:
+        - "{{ monitoring_data_dir }}"
+        - "{{ monitoring_prometheus_data_dir }}"
+        - "{{ monitoring_prometheus_data_dir }}/data"
+        - "{{ monitoring_grafana_data_dir }}"
+        - "{{ monitoring_grafana_data_dir }}/data"
+        - "{{ monitoring_loki_data_dir }}"
+        - "{{ monitoring_loki_data_dir }}/data"
+        - "{{ monitoring_promtail_data_dir }}"
+
+    - name: Get worker UID
+      ansible.builtin.command:
+        argv: ['id', '-u', "{{ users.worker }}"]
+      changed_when: false
+      register: id_worker
+
+    - name: Get systemd-journal GID
+      ansible.builtin.command:
+        argv: ['bash', '-o', 'pipefail', '-c', "getent group systemd-journal | cut -d ':' -f 3"]
+      changed_when: false
+      register: id_systemd_journal
+
+    - name: Get docker GID
+      ansible.builtin.command:
+        argv: ['bash', '-o', 'pipefail', '-c', "getent group docker | cut -d ':' -f 3"]
+      changed_when: false
+      register: id_docker
+
+    - name: Set ID variables
+      ansible.builtin.set_fact:
+        worker_uid: "{{ id_worker.stdout }}"
+        sd_journal_gid: "{{ id_systemd_journal.stdout }}"
+        docker_gid: "{{ id_docker.stdout }}"
+
+    - name: Render Docker Compose file
+      ansible.builtin.template:
+        src: docker-compose.yml
+        dest: "{{ monitoring_data_dir }}/docker-compose.yml"
+        owner: "{{ users.worker }}"
+        mode: '0640'
+
+    - name: Render Prometheus configuration
+      ansible.builtin.template:
+        src: prometheus.yml
+        dest: "{{ monitoring_prometheus_data_dir }}/prometheus.yml"
+        owner: "{{ users.worker }}"
+        mode: '0640'
+      notify: Restart Prometheus container
+
+    - name: Render Prometheus extra scrape configs
+      ansible.builtin.copy:
+        content: "{{ {'scrape_configs': monitoring_prometheus_extra_scrape_configs} | to_yaml(width=1337) }}"
+        dest: "{{ monitoring_prometheus_data_dir }}/extra_scrape_configs.yml"
+        owner: "{{ users.worker }}"
+        mode: '0640'
+      notify: Restart Prometheus container
+
+    - name: Render Grafana configuration
+      ansible.builtin.template:
+        src: grafana.ini
+        dest: "{{ monitoring_grafana_data_dir }}/grafana.ini"
+        owner: "{{ users.worker }}"
+        mode: '0640'
+      notify: Restart Grafana container
+
+    - name: Render Loki configuration
+      ansible.builtin.template:
+        src: loki.yml
+        dest: "{{ monitoring_loki_data_dir }}/local-config.yaml"
+        owner: "{{ users.worker }}"
+        mode: '0640'
+      notify: Restart Loki container
+
+    - name: Render Promtail configuration
+      ansible.builtin.template:
+        src: promtail.yml
+        dest: "{{ monitoring_promtail_data_dir }}/config.yml"
+        owner: "{{ users.worker }}"
+        mode: '0640'
+      notify: Restart Promtail container
+
+    - name: Configure node-exporter
+      ansible.builtin.copy:
+        dest: /etc/default/prometheus-node-exporter
+        owner: root
+        mode: '0644'
+        content: |
+          ARGS={{ monitoring_node_exporter_args | map('quote') | join(' ') | quote }}
+      notify: Restart node-exporter
+
+    - name: Start & enable node-exporter
+      ansible.builtin.service:
+        name: prometheus-node-exporter
+        state: started
+
+    - name: Start monitoring stack
+      community.docker.docker_compose_v2:
+        project_src: "{{ monitoring_data_dir }}"
+        project_name: prometheus
+        state: present
+        wait: yes
+        remove_orphans: yes
+        pull: always
+
+- name: Stop monitoring stack
+  when: monitoring_enabled is false
+  block:
+    - name: Check if directory exists
+      ansible.builtin.stat:
+        path: "{{ monitoring_data_dir }}/docker-compose.yml"
+      register: docker_compose_file
+
+    - name: Stop Prometheus stack
+      when: docker_compose_file.stat.exists
+      community.docker.docker_compose_v2:
+        project_src: "{{ monitoring_data_dir }}"
+        project_name: prometheus
+        state: absent

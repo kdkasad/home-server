@@ -1,0 +1,29 @@
+---
+- name: Restart node-exporter
+  ansible.builtin.service:
+    name: prometheus-node-exporter
+    state: restarted
+
+- name: Restart Prometheus container
+  community.docker.docker_container:
+    name: prometheus
+    state: started
+    restart: yes
+
+- name: Restart Grafana container
+  community.docker.docker_container:
+    name: grafana
+    state: started
+    restart: yes
+
+- name: Restart Loki container
+  community.docker.docker_container:
+    name: loki
+    state: started
+    restart: yes
+
+- name: Restart Promtail container
+  community.docker.docker_container:
+    name: promtail
+    state: started
+    restart: yes

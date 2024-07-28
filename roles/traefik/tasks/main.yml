@@ -39,21 +39,22 @@
         image: traefik:{{ traefik_tag }}
         pull: always
         image_name_mismatch: recreate
+        recreate: "{{ template_config is changed }}"
+        restart_policy: unless-stopped
+        ports:
+          - "80:80"
+          - "443:443"
+        expose:
+          - "{{ traefik_ports.metrics | default(8090) }}"
         volumes:
           - "{{ traefik_data_dir }}/traefik.yml:/etc/traefik/traefik.yml:ro"
           - "{{ traefik_data_dir }}/letsencrypt:/letsencrypt:rw"
           - "{{ traefik_data_dir }}/dynamic:/etc/traefik/dynamic:rw"
           - "/var/run/docker.sock:/var/run/docker.sock:ro"
         env: "{{ traefik_acme_dns.env | mandatory }}"
-
-        # Host networking is used so Traefik can access all other Docker
-        # containers. This is required to reach the services being proxied. To
-        # get around this, one could use default networking and create a Docker
-        # network to which Traefik and all backend services are connected.
-        network_mode: host
-
-        restart_policy: unless-stopped
-        recreate: "{{ template_config is changed }}"
+        networks_cli_compatible: false
+        networks:
+          - name: subway
 
 - name: Stop Traefik
   when: traefik_enabled is false

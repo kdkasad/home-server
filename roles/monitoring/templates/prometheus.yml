@@ -1,0 +1,79 @@
+---
+global:
+  scrape_interval: 15s  # By default, scrape targets every 15 seconds.
+
+  # Attach these labels to any time series or alerts when communicating with
+  # external systems (federation, remote storage, Alertmanager).
+  external_labels:
+    monitor: 'codelab-monitor'
+
+scrape_configs:
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+        labels:
+          instance: "{{ general.domain }}"
+
+  - job_name: node
+    static_configs:
+      - targets: ['host.docker.internal:9100']
+        labels:
+          instance: "{{ general.domain }}"
+
+  - job_name: cadvisor
+    static_configs:
+      - targets: ['cadvisor:8080']
+        labels:
+          instance: "{{ general.domain }}"
+
+  - job_name: loki
+    static_configs:
+      - targets: ['loki']
+        labels:
+          instance: "{{ general.domain }}"
+
+  - job_name: promtail
+    static_configs:
+      - targets: ['promtail']
+        labels:
+          instance: "{{ general.domain }}"
+
+{% if (traefik_enabled | default(false)) and (monitoring_scrape_traefik) %}
+  - job_name: traefik
+    static_configs:
+      - targets:
+          - "traefik:{{ traefik_ports.metrics | default(8090) }}"
+        labels:
+          instance: "{{ general.domain }}"
+{% endif %}
+
+{% if (jellyfin_enabled | default(false)) and (monitoring_scrape_jellyfin) %}
+  - job_name: jellyfin
+    static_configs:
+      - targets:
+          - "jellyfin:8096"
+        labels:
+          instance: "{{ general.domain }}"
+{% endif %}
+
+{% if (authentik_enabled | default(false)) and (monitoring_scrape_authentik) %}
+  - job_name: authentik
+    static_configs:
+      - targets:
+          - "authentik-server:9300"
+        labels:
+          instance: "{{ general.domain }}"
+{% endif %}
+
+{% if (minio_enabled | default(false)) and (monitoring_scrape_minio) %}
+  - job_name: minio
+    metrics_path: /minio/v2/metrics/cluster
+    static_configs:
+      - targets:
+          - "minio:9000"
+        labels:
+          instance: "{{ general.domain }}"
+{% endif %}
+
+scrape_config_files:
+  - "/etc/prometheus/X_extra_scrape_configs.yml"

@@ -1,8 +1,15 @@
 ---
 name: authentik
 
+networks:
+  default: {}
+  subway:
+    external: true
+    name: subway
+
 services:
   postgresql:
+    container_name: authentik-postgresql
     image: postgres:{{ authentik_image_tags.postgres }}
     restart: unless-stopped
     healthcheck:
@@ -19,8 +26,11 @@ services:
       POSTGRES_DB: ${PG_DB:-authentik}
     env_file:
       - .env
+    networks:
+      - default
 
   redis:
+    container_name: authentik-redis
     image: redis:{{ authentik_image_tags.redis }}
     command: --save 60 1 --loglevel warning
     restart: unless-stopped
@@ -32,11 +42,16 @@ services:
       timeout: 3s
     volumes:
       - "{{ authentik_data_dir }}/redis:/data"
+    networks:
+      - default
 
   server:
+    container_name: authentik-server
     image: ghcr.io/goauthentik/server:{{ authentik_image_tags.authentik }}
     restart: unless-stopped
     command: server
+    expose:
+      - 9300
     environment:
       AUTHENTIK_REDIS__HOST: redis
       AUTHENTIK_POSTGRESQL__HOST: postgresql
@@ -59,8 +74,12 @@ services:
         Host(`{{ authentik_routing.subdomain | default('authentik') }}.{{ general.domain }}`)
       traefik.http.routers.authentik.entrypoints: websecure
       traefik.http.services.authentik.loadbalancer.server.port: "9000"
+    networks:
+      - default
+      - subway
 
   worker:
+    container_name: authentik-worker
     image: ghcr.io/goauthentik/server:{{ authentik_image_tags.authentik }}
     restart: unless-stopped
     command: worker
@@ -80,3 +99,5 @@ services:
     depends_on:
       - postgresql
       - redis
+    networks:
+      - default

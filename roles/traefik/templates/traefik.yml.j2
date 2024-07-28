@@ -26,10 +26,15 @@ entryPoints:
       middlewares:
         - norobots@file
 
+  # Serve metrics over HTTP
+  metrics:
+    address: ":{{ traefik_ports.metrics }}"
+
 providers:
   docker:
     endpoint: unix:///var/run/docker.sock
     exposedByDefault: false
+    network: subway
 
   file:
     directory: "/etc/traefik/dynamic"
@@ -47,3 +52,7 @@ certificatesResolvers:
 
 api:
   dashboard: true
+
+metrics:
+  prometheus:
+    entryPoint: metrics

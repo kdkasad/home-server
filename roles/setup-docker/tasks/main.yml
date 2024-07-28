@@ -1,12 +1,31 @@
 ---
-- name: Install Docker Python module
-  ansible.builtin.apt:
+- name: Install Docker
+  ansible.builtin.import_role:
+    name: geerlingguy.docker
+  vars:
+    docker_users:
+      - "{{ users.worker | mandatory }}"
+    docker_install_compose_plugin: yes
+    docker_daemon_options: >-
+      {{ setup_docker_daemon_options | combine(setup_docker_default_daemon_options, recursive=true) }}
+
+- name: Install Docker Python package
+  ansible.builtin.package:
     name: python3-docker
     state: present
 
 - name: Create Docker home directory
   ansible.builtin.file:
     path: "{{ storage.docker_dir }}"
-    mode: '0755'
     state: directory
+    owner: root
+    group: root
+    mode: '0755'
+    recurse: no
   when: storage.docker_dir is defined
+
+- name: Create bridge network to link containers
+  community.docker.docker_network:
+    name: subway
+    state: present
+    driver: bridge
