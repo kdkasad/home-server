@@ -52,5 +52,12 @@ scrape_configs:
         labels:
           instance: "{{ general.domain }}"
 
+  - job_name: authentik
+    static_configs:
+      - targets:
+          - "authentik-server:9300"
+        labels:
+          instance: "{{ general.domain }}"
+
 scrape_config_files:
   - "/etc/prometheus/X_extra_scrape_configs.yml"

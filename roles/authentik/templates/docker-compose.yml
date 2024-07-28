@@ -50,6 +50,8 @@ services:
     image: ghcr.io/goauthentik/server:{{ authentik_image_tags.authentik }}
     restart: unless-stopped
     command: server
+    expose:
+      - 9300
     environment:
       AUTHENTIK_REDIS__HOST: redis
       AUTHENTIK_POSTGRESQL__HOST: postgresql
