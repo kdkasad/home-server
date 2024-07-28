@@ -41,5 +41,11 @@ monitoring_node_exporter_args:
   - --collector.systemd
   - --collector.processes
 
+# Enable/disable metrics collection from specific services
+monitoring_scrape_authentik: yes
+monitoring_scrape_jellyfin: yes
+monitoring_scrape_minio: yes
+monitoring_scrape_traefik: yes
+
 # Extra scrape configs for Prometheus.
 monitoring_prometheus_extra_scrape_configs: []

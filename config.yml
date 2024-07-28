@@ -334,3 +334,9 @@ monitoring_grafana_smtp_enabled: yes
 monitoring_grafana_smtp_host: "{{ secret_monitoring_grafana_smtp_host }}"
 monitoring_grafana_smtp_user: "{{ secret_monitoring_grafana_smtp_user }}"
 monitoring_grafana_smtp_password: "{{ secret_monitoring_grafana_smtp_password }}"
+
+# Don't collect metrics from some services
+monitoring_scrape_authentik: no
+monitoring_scrape_jellyfin: no
+monitoring_scrape_minio: no
+monitoring_scrape_traefik: yes
