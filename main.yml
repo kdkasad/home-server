@@ -47,6 +47,10 @@
         - setup
         - dns
 
+    - role: healthchecksio
+      tags:
+        - healthcheck
+
     - role: ddns
       tags:
         - ddns

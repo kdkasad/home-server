@@ -1,0 +1,6 @@
+---
+healthchecksio_enabled: no
+
+# UUID of Healthchecks.io rule to ping.
+# This the last part of the URL https://hc-ping.com/<UUID>
+healthchecksio_uuid: "{{ undef() }}"

@@ -351,3 +351,11 @@ monitoring_scrape_authentik: no
 monitoring_scrape_jellyfin: no
 monitoring_scrape_minio: no
 monitoring_scrape_traefik: yes
+
+
+############################
+# Healthchecks.io settings #
+############################
+
+healthchecksio_enabled: yes
+healthchecksio_uuid: "{{ secret_healthchecksio_uuid }}"

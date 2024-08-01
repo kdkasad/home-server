@@ -1,0 +1,10 @@
+---
+- name: Enable/disable cron entry
+  become: yes
+  ansible.builtin.cron:
+    user: "{{ users.worker }}"
+    state: "{{ healthchecksio_enabled | ternary('present', 'absent') }}"
+    name: Ping Healthchecks.io
+    minute: "*/5"
+    job: >-
+      curl -fsS -m 10 --retry 5 -o /dev/null https://hc-ping.com/{{ healthchecksio_uuid }}

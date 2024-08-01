@@ -68,6 +68,7 @@ necessary nonetheless.
 - Local DNS server using [dnsmasq](https://dnsmasq.org/doc.html).
   Allows for custom DNS records, making the server accessible by the same name
   from the local network and the rest of the internet.
+- Cron job to ping Healthchecks.io service.
 - Metric/log exporters:
   - [Prometheus node exporter](https://github.com/prometheus/node_exporter)
     to export system metrics.

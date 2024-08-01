@@ -312,4 +312,11 @@ monitoring_grafana_sso_only: yes
 monitoring_grafana_client_id: "{{ secret_monitoring_grafana_client_id }}"
 monitoring_grafana_client_secret: "{{ secret_monitoring_grafana_client_secret }}"
 
+
+############################
+# Healthchecks.io settings #
+############################
+
+healthchecksio_enabled: no
+
 # vim: ft=yaml
