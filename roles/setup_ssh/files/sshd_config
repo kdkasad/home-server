@@ -1,3 +1,7 @@
+# Also listen on alternate port
+Port 22
+Port 50519
+
 # Disable less secure authentication methods
 PasswordAuthentication no
 HostbasedAuthentication no
