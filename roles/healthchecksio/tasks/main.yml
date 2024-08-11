@@ -7,4 +7,4 @@
     name: Ping Healthchecks.io
     minute: "*/5"
     job: >-
-      curl -fsS -m 10 --retry 5 -o /dev/null https://hc-ping.com/{{ healthchecksio_uuid }}
+      curl -fsS -m 10 --retry 5 -o /dev/null https://hc-ping.com/{{ healthchecksio_uuid | default('') }}
