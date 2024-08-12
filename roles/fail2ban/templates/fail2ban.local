@@ -1,0 +1,5 @@
+[Definition]
+
+# Setting this here to prevent fail2ban from warning that this is unset every
+# time it starts up.
+allowipv6 = auto

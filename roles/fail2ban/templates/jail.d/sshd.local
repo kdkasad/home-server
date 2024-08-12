@@ -1,0 +1,10 @@
+[sshd]
+enabled = true
+
+# Flag public key mismatches. This can cause false positives: A legitimate user
+# could have >5 private keys, in which case SSH will try each sequentially until
+# one works, triggering a ban.
+filter = sshd[publickey='any']
+
+# Also ban access to our custom port
+port = 22,50519

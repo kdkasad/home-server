@@ -1,0 +1,35 @@
+---
+- name: Install fail2ban
+  ansible.builtin.package:
+    name: fail2ban
+    state: present
+
+- name: Render fail2ban configuration files
+  ansible.builtin.template:
+    src: "{{ item }}"
+    dest: /etc/fail2ban/{{ item }}
+    owner: root
+    group: root
+    mode: 0644
+  loop:
+    - fail2ban.local
+    - jail.local
+  register: config_changed
+  notify: Restart fail2ban.service
+
+- name: Render fail2ban jail drop-ins
+  ansible.builtin.template:
+    src: "{{ item }}"
+    dest: /etc/fail2ban/jail.d/{{ item | basename }}
+    owner: root
+    group: root
+    mode: 0644
+  with_fileglob:
+    - templates/jail.d/*
+  notify: Restart fail2ban.service
+
+- name: Enable and start fail2ban
+  ansible.builtin.systemd:
+    name: fail2ban
+    enabled: yes
+    state: started

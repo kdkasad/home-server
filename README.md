@@ -76,6 +76,9 @@ necessary nonetheless.
     to export Docker container performance metrics.
   - [Promtail](https://grafana.com/docs/loki/latest/send-data/promtail/),
     to export system & Docker container logs to Loki.
+- [Fail2ban](https://github.com/fail2ban/fail2ban), a log-based intrusion
+  prevention system. Monitors logs for authentication failures and blocks
+  IPs that have too many failures.
 
 ### Planned
 

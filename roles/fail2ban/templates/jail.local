@@ -1,0 +1,21 @@
+[DEFAULT]
+
+# Use systemd-journal to find logs.
+backend = systemd
+
+# Ban hosts for 5 minutes on first fail.
+bantime = 5m
+
+# Randomly add up to 2 minutes to the ban time to prevent bots from timing
+# their attacks.
+bantime.rndtime = 120
+
+# Increase ban time for each subsequent fail.
+bantime.increment = true
+
+# Formula for calculating ban time.
+# This one doubles the ban time for each subsequent fail.
+bantime.formula = ban.Time * (1 << ban.Count)
+
+# Don't use hostnames for banning, but log as info.
+usedns = no

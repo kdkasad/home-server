@@ -26,9 +26,15 @@
     - role: setup_ssh
       tags:
         - setup
+        - ssh
+
+    - role: fail2ban
+      tags:
+        - fail2ban
 
     - role: setup_docker
       tags:
+        - setup
         - docker
 
     - role: dnsmasq
