@@ -1,0 +1,20 @@
+---
+# Whether to enable the WireGuard service
+wireguard_enabled: yes
+
+# Port to use for the WireGuard service
+wireguard_port: 51820
+
+# Subnet to use for the WireGuard VPN.
+# It appears the CIDR notation is not allowed here; the container is hard-coded to use /24.
+wireguard_vpn_subnet: "10.13.13.0"
+
+# List of peers to add to the WireGuard configuration.
+# Supports alphanumeric names only.
+wireguard_peers: []
+
+# Tag to use for the lscr.io/linuxserver/wireguard image
+wireguard_tag: latest
+
+# Directory in which to store WireGuard data
+wireguard_data_dir: "{{ storage.data_dir }}/wireguard"

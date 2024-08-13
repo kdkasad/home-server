@@ -206,17 +206,12 @@ traefik_acme_dns:
 
 
 ######################
-# Tailscale settings #
+# WireGuard settings #
 ######################
 
-tailscale_enabled: false
-
-# Subnets to route traffic to
-tailscale_routes:
-  - "10.0.0.0/24"
-
-# Use Ansible Vault to put your encrypted auth key here
-tailscale_auth_key: "{{ undef() }}"
+wireguard_enabled: yes
+wireguard_peers:
+  - TestClient
 
 
 ###################

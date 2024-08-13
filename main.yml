@@ -74,9 +74,9 @@
       tags:
         - traefik
 
-    - role: tailscale
+    - role: wireguard
       tags:
-        - tailscale
+        - wireguard
 
     - role: homarr
       tags:
