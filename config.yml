@@ -228,6 +228,17 @@ traefik_acme_dns:
     CF_DNS_API_TOKEN: "{{ secret_cloudflare_dns_api_token }}"
 
 
+######################
+# WireGuard settings #
+######################
+
+wireguard_enabled: yes
+wireguard_vpn_subnet: '10.5.19.0'
+wireguard_peers:
+  - KianPhone
+  - KianLaptop
+
+
 ###################
 # Homarr settings #
 ###################

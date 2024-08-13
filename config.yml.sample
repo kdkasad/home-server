@@ -205,6 +205,15 @@ traefik_acme_dns:
     CF_DNS_API_TOKEN: <your_cloudflare_api_token>
 
 
+######################
+# WireGuard settings #
+######################
+
+wireguard_enabled: yes
+wireguard_peers:
+  - TestClient
+
+
 ###################
 # Homarr settings #
 ###################

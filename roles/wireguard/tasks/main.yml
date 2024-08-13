@@ -1,0 +1,52 @@
+---
+- name: Set up Wireguard
+  when: wireguard_enabled is true
+  block:
+    - name: Create data directory
+      ansible.builtin.file:
+        path: "{{ wireguard_data_dir }}/config"
+        state: directory
+        owner: "{{ users.worker }}"
+        group: "{{ users.worker }}"
+        mode: '0750'
+
+    - name: Get worker UID
+      ansible.builtin.command:
+        cmd: "id -u {{ users.worker }}"
+      register: worker_uid
+      changed_when: false
+
+    - name: Get worker GID
+      ansible.builtin.command:
+        cmd: "id -g {{ users.worker }}"
+      register: worker_gid
+      changed_when: false
+
+    - name: Start Wireguard container
+      community.docker.docker_container:
+        name: wireguard
+        image: lscr.io/linuxserver/wireguard:{{ wireguard_tag }}
+        capabilities:
+          - NET_ADMIN
+        volumes:
+          - "{{ wireguard_data_dir }}/config:/config"
+        ports:
+          - "{{ wireguard_port }}:{{ wireguard_port }}/udp"
+        env:
+          PUID: "{{ worker_uid.stdout }}"
+          PGID: "{{ worker_gid.stdout }}"
+          SERVERURL: "{{ general.domain }}"
+          SERVERPORT: "{{ wireguard_port | string }}"
+          INTERNAL_SUBNET: "{{ wireguard_vpn_subnet }}"
+          LOG_CONFS: 'false'  # Don't log peer configurations on startup, since we won't be looking at the logs
+          PEERS: "{{ wireguard_peers | join(',') | default('0', true) }}"
+        sysctls:
+          net.ipv4.conf.all.src_valid_mark: '1'
+
+- name: Stop Wireguard
+  when: wireguard_enabled is false
+  block:
+    - name: Stop Wireguard container
+      community.docker.docker_container:
+        name: wireguard
+        state: absent

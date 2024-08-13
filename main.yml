@@ -74,6 +74,10 @@
       tags:
         - traefik
 
+    - role: wireguard
+      tags:
+        - wireguard
+
     - role: homarr
       tags:
         - homarr
