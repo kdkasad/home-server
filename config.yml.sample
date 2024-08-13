@@ -205,20 +205,6 @@ traefik_acme_dns:
     CF_DNS_API_TOKEN: <your_cloudflare_api_token>
 
 
-######################
-# Tailscale settings #
-######################
-
-tailscale_enabled: false
-
-# Subnets to route traffic to
-tailscale_routes:
-  - "10.0.0.0/24"
-
-# Use Ansible Vault to put your encrypted auth key here
-tailscale_auth_key: "{{ undef() }}"
-
-
 ###################
 # Homarr settings #
 ###################

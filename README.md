@@ -45,8 +45,6 @@ directly.
 #### Infrastructure & security
 - [Authentik](https://goauthentik.io), a self-hosted identity provider.
   Acts as a central authentication system for other services.
-- [Tailscale](https://tailscale.com), a VPN service.
-  Allows secure access to the server from anywhere.
 - [Bitwarden](https://bitwarden.com) password manager,
   using [Vaultwarden](https://github.com/dani-garcia/vaultwarden).
 

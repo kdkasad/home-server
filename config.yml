@@ -227,17 +227,6 @@ traefik_acme_dns:
   env:
     CF_DNS_API_TOKEN: "{{ secret_cloudflare_dns_api_token }}"
 
-######################
-# Tailscale settings #
-######################
-
-tailscale_enabled: true
-
-# Subnets to route traffic to
-tailscale_routes:
-  - "10.0.0.0/24"
-
-tailscale_auth_key: "{{ secret_tailscale_auth_key }}"
 
 ###################
 # Homarr settings #
