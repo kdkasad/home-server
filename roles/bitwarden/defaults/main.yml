@@ -23,4 +23,4 @@ bitwarden_admin_panel:
   password: "{{ undef(hint='Bitwarden admin password is required') }}"
 
 # Version/tag of the vaultwarden/server to use
-bitwarden_tag: 1.32.0-alpine
+bitwarden_tag: 1.32.1-alpine
