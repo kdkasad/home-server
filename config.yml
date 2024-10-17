@@ -227,17 +227,17 @@ traefik_acme_dns:
   env:
     CF_DNS_API_TOKEN: "{{ secret_cloudflare_dns_api_token }}"
 
+
 ######################
-# Tailscale settings #
+# WireGuard settings #
 ######################
 
-tailscale_enabled: true
+wireguard_enabled: yes
+wireguard_vpn_subnet: '10.5.19.0'
+wireguard_peers:
+  - KianPhone
+  - KianLaptop
 
-# Subnets to route traffic to
-tailscale_routes:
-  - "10.0.0.0/24"
-
-tailscale_auth_key: "{{ secret_tailscale_auth_key }}"
 
 ###################
 # Homarr settings #
