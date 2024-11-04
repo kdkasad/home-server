@@ -1,0 +1,20 @@
+---
+immich_enabled: false
+
+immich_data_dir: "{{ storage.data_dir }}/immich"
+immich_photos_dir: "{{ storage.nas_dir }}/Photos"
+
+immich_tag: release
+
+immich_routing:
+  enabled: true
+  subdomain: immich
+
+immich_postgres_password: '{{ undef(hint="You must specify a password for Immich''s PostgreSQL database") }}'
+
+immich_sso:
+  enabled: false
+  issuer_url: '{{ undef(hint="See Immich issuerUrl option") }}'
+  client_id: '{{ undef(hint="See Immich clientId option") }}'
+  client_secret: '{{ undef(hint="See Immich clientSecret option") }}'
+  button_text: '{{ undef(hint="See Immich buttonText option") }}'
