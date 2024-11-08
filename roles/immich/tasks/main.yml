@@ -17,12 +17,11 @@
     #     recalculate_mask: mask
     #     state: present
 
+    # Don't set permissions because Docker is annoying
     - name: Create Immich data directories
       ansible.builtin.file:
         path: "{{ immich_data_dir }}{{ item }}"
         state: directory
-        owner: "{{ users.worker }}"
-        group: "{{ users.worker }}"
         mode: '700'
         recurse: false
       loop:
