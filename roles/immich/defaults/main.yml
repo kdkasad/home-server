@@ -18,3 +18,8 @@ immich_sso:
   client_id: '{{ undef(hint="See Immich clientId option") }}'
   client_secret: '{{ undef(hint="See Immich clientSecret option") }}'
   button_text: '{{ undef(hint="See Immich buttonText option") }}'
+
+immich_hwaccel:
+  enabled: false
+  backend: '{{ undef() }}'
+  accel_setting: '{{ undef() }}'

@@ -43,6 +43,8 @@
           dst: .env
         - src: config.json
           dst: config.json
+        - src: hwaccel.transcoding.yml
+          dst: hwaccel.transcoding.yml
 
     - name: Start Immich stack
       community.docker.docker_compose_v2:

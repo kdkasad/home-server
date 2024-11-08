@@ -1,10 +1,11 @@
 {
     "ffmpeg": {
-        "crf": 23,
+        "crf": 30,
         "threads": 0,
-        "preset": "ultrafast",
-        "targetVideoCodec": "h264",
+        "preset": "fast",
+        "targetVideoCodec": "vp9",
         "acceptedVideoCodecs": [
+            "vp9",
             "h264"
         ],
         "targetAudioCodec": "aac",
@@ -29,10 +30,10 @@
         "cqMode": "auto",
         "twoPass": false,
         "preferredHwDevice": "auto",
-        "transcode": "required",
+        "transcode": "{{ immich_settings_transcode | ternary('required', 'disabled') }}",
         "tonemap": "hable",
-        "accel": "disabled",
-        "accelDecode": false
+        "accel": "{{ immich_hwaccel.accel_setting }}",
+        "accelDecode": {{ immich_hwaccel.enabled | ternary('true', 'false') }}
     },
     "job": {
         "backgroundTask": {

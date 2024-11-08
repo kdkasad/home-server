@@ -384,3 +384,10 @@ immich_sso:
   client_id: "{{ secret_immich_oidc_client_id }}"
   client_secret: "{{ secret_immich_oidc_client_secret }}"
   button_text: "Log in via Kasad auth portal"
+
+immich_hwaccel:
+  enabled: true
+  backend: quicksync
+  accel_setting: qsv
+
+immich_settings_transcode: false
