@@ -7,4 +7,4 @@ Wants=network-online.target
 What=//SNEETCH/Pictures
 Where=/mnt/photosarchive
 Type=cifs
-Options=username={{ photos_archive_user }},password={{ photos_archive_password }},workgroup=WORKGROUP,uid={{ users.worker }},gid={{ users.worker }},iocharset=utf8,file_mode=0600,dir_mode=0700
+Options=ro,username={{ photos_archive_user }},password={{ photos_archive_password }},workgroup=WORKGROUP,uid={{ users.worker }},gid={{ users.worker }},iocharset=utf8,file_mode=0600,dir_mode=0700
