@@ -1,0 +1,23 @@
+---
+- name: Install SMB utilities
+  ansible.builtin.package:
+    name: cifs-utils
+    state: present
+
+- name: Render systemd unit files
+  ansible.builtin.template:
+    src: "{{ item }}"
+    dest: /etc/systemd/system/{{ item }}
+    owner: root
+    group: root
+    mode: 0600
+  loop:
+    - mnt-photosarchive.mount
+    - mnt-photosarchive.automount
+
+- name: Start and enable systemd automount unit
+  ansible.builtin.systemd:
+    daemon_reload: yes
+    name: mnt-photosarchive.automount
+    state: started
+    enabled: yes

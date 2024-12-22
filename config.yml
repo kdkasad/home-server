@@ -391,3 +391,6 @@ immich_hwaccel:
   accel_setting: qsv
 
 immich_settings_transcode: false
+
+photos_archive_user: "{{ secret_photos_archive_user }}"
+photos_archive_password: "{{ secret_photos_archive_password }}"
