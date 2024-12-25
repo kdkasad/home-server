@@ -4,20 +4,36 @@
     name: cifs-utils
     state: present
 
+- name: Create photos archive group
+  ansible.builtin.group:
+    name: photosarchive
+    state: present
+    system: no
+
+- name: Add users to photos archive group
+  ansible.builtin.user:
+    name: "{{ item }}"
+    groups:
+      - photosarchive
+    append: yes
+  loop:
+    - "{{ users.worker }}"
+    - kian
+
 - name: Render systemd unit files
   ansible.builtin.template:
     src: "{{ item }}"
     dest: /etc/systemd/system/{{ item }}
     owner: root
     group: root
-    mode: 0600
+    mode: 0600 # not world-readable because they contain passwords
   loop:
     - mnt-photosarchive.mount
     - mnt-photosarchive.automount
+  notify: Restart units
 
 - name: Start and enable systemd automount unit
   ansible.builtin.systemd:
-    daemon_reload: yes
     name: mnt-photosarchive.automount
     state: started
     enabled: yes
