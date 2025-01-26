@@ -45,12 +45,14 @@
           dst: config.json
         - src: hwaccel.transcoding.yml
           dst: hwaccel.transcoding.yml
+      register: render_templates
 
     - name: Start Immich stack
       community.docker.docker_compose_v2:
         project_src: "{{ immich_data_dir }}"
         wait: true
         pull: always
+        recreate: "{{ render_templates.changed | ternary('always', 'auto') }}"
 
 - name: Disable Immich
   when: immich_enabled is false
