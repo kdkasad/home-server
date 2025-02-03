@@ -371,7 +371,7 @@ healthchecksio_uuid: "{{ secret_healthchecksio_uuid }}"
 ###################
 
 immich_enabled: yes
-immich_tag: v1.125.6
+immich_tag: v1.125.7
 
 immich_routing:
   enabled: true
