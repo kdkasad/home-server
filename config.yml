@@ -63,6 +63,11 @@ storage:
       size: 100G
       fs: ext4
 
+    photos:
+      mount: /nas/Photos
+      size: 50G
+      fs: ext4
+
 
 ####################
 # DDNS options #
@@ -359,3 +364,34 @@ monitoring_scrape_traefik: yes
 
 healthchecksio_enabled: yes
 healthchecksio_uuid: "{{ secret_healthchecksio_uuid }}"
+
+
+###################
+# Immich settings #
+###################
+
+immich_enabled: yes
+immich_tag: v1.132.3
+
+immich_routing:
+  enabled: true
+  subdomain: photos
+
+immich_postgres_password: "{{ secret_immich_postgres_password }}"
+
+immich_sso:
+  enabled: true
+  issuer_url: "https://{{ authentik_routing.subdomain }}.{{ general.domain }}/application/o/immich/"
+  client_id: "{{ secret_immich_oidc_client_id }}"
+  client_secret: "{{ secret_immich_oidc_client_secret }}"
+  button_text: "Log in via Kasad auth portal"
+
+immich_hwaccel:
+  enabled: true
+  backend: quicksync
+  accel_setting: qsv
+
+immich_settings_transcode: false
+
+photos_archive_user: "{{ secret_photos_archive_user }}"
+photos_archive_password: "{{ secret_photos_archive_password }}"

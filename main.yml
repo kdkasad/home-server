@@ -97,3 +97,12 @@
     - role: monitoring
       tags:
         - monitoring
+
+    # - role: photos_archive
+    #   tags:
+    #     - immich
+    #     - photos_archive
+
+    - role: immich
+      tags:
+        - immich

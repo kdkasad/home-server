@@ -1,0 +1,10 @@
+[Unit]
+Description=Mount photos archive share
+After=network-online.target
+Wants=network-online.target
+
+[Mount]
+What=//SNEETCH/Pictures
+Where=/mnt/photosarchive
+Type=cifs
+Options=ro,username={{ photos_archive_user }},password={{ photos_archive_password }},workgroup=WORKGROUP,gid=photosarchive,forcegid,iocharset=utf8,file_mode=0440,dir_mode=0550,seal,nounix,noatime,nodev,noexec,nosuid

@@ -1,0 +1,63 @@
+---
+- name: Set up Immich
+  when: immich_enabled is true
+  block:
+
+    # Use ACLs to allow Immich to access media files. This allows us to use
+    # one of the NAS shares as the media directory, and have Immich access
+    # the files without having to change the owner or run as root.
+    # - name: Set permissions on Immich media directory
+    #   ansible.posix.acl:
+    #     path: "{{ immich_photos_dir }}"
+    #     entity: "{{ users.worker  }}}"
+    #     etype: user
+    #     permissions: rwX
+    #     default: true
+    #     recurse: true
+    #     recalculate_mask: mask
+    #     state: present
+
+    # Don't set permissions because Docker is annoying
+    - name: Create Immich data directories
+      ansible.builtin.file:
+        path: "{{ immich_data_dir }}{{ item }}"
+        state: directory
+        mode: '700'
+        recurse: false
+      loop:
+        - ""
+        - "/db"
+        - "/model_cache"
+
+    - name: Render template files
+      ansible.builtin.template:
+        src: templates/{{ item.src }}
+        dest: "{{ immich_data_dir }}/{{ item.dst }}"
+        owner: "{{ users.worker }}"
+        group: "{{ users.worker }}"
+        mode: '0600'
+      loop:
+        - src: docker-compose.yml
+          dst: docker-compose.yml
+        - src: env
+          dst: .env
+        - src: config.json
+          dst: config.json
+        - src: hwaccel.transcoding.yml
+          dst: hwaccel.transcoding.yml
+      register: render_templates
+
+    - name: Start Immich stack
+      community.docker.docker_compose_v2:
+        project_src: "{{ immich_data_dir }}"
+        wait: true
+        pull: always
+        recreate: "{{ render_templates.changed | ternary('always', 'auto') }}"
+
+- name: Disable Immich
+  when: immich_enabled is false
+  block:
+    - name: Stop Immich
+      community.docker.docker_compose_v2:
+        project_src: "{{ immich_data_dir }}"
+        state: absent
