@@ -25,4 +25,4 @@ traefik_acme_dns:
   env: {}
 
 # Version/tag of the traefik image to use
-traefik_tag: "3.1"
+traefik_tag: "3.3"
