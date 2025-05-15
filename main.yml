@@ -98,10 +98,10 @@
       tags:
         - monitoring
 
-    - role: photos_archive
-      tags:
-        - immich
-        - photos_archive
+    # - role: photos_archive
+    #   tags:
+    #     - immich
+    #     - photos_archive
 
     - role: immich
       tags:
