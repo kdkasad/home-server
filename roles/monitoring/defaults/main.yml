@@ -19,6 +19,10 @@ monitoring_prometheus_routing_enabled: true
 monitoring_prometheus_routing_subdomain: prometheus
 monitoring_prometheus_routing_private: true
 
+monitoring_loki_routing_enabled: true
+monitoring_loki_routing_subdomain: loki
+monitoring_loki_routing_private: true
+
 monitoring_grafana_routing_enabled: true
 monitoring_grafana_routing_subdomain: grafana
 monitoring_grafana_routing_private: true

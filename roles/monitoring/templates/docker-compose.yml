@@ -107,6 +107,14 @@ services:
     volumes:
       - "{{ monitoring_loki_data_dir }}/local-config.yaml:/etc/loki/local-config.yaml"
       - "{{ monitoring_loki_data_dir }}/data:/loki"
+    labels:
+      traefik.enable: "{{ monitoring_loki_routing_enabled | ternary('true', 'false') }}"
+      traefik.http.routers.loki.rule: >-
+        Host(`{{ monitoring_loki_routing_subdomain }}.{{ general.domain }}`)
+      traefik.http.routers.loki.middlewares: >-
+        {{ monitoring_loki_routing_private | ternary('privateip@file', '') }}
+      traefik.http.routers.loki.entrypoints: websecure
+      traefik.http.services.loki.loadbalancer.server.port: "80"
     networks:
       - default
       - subway
