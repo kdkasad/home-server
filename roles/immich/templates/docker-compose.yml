@@ -28,7 +28,7 @@ services:
       - ${UPLOAD_LOCATION}:/usr/src/app/upload
       - /etc/localtime:/etc/localtime:ro
       - "{{ immich_data_dir }}/config.json:${IMMICH_CONIG_FILE}"
-      - /mnt/photosarchive:/mnt/photosarchive:ro
+      - /mnt/photosarchive/rw:/mnt/photosarchive/rw
     env_file:
       - .env
     depends_on:
@@ -40,6 +40,7 @@ services:
     networks:
       - default
       - subway
+    cpus: 2
     labels:
       traefik.enable: "{{ immich_routing.enabled | ternary('true', 'false') }}"
       traefik.http.routers.immich.rule: Host(`{{ immich_routing.subdomain }}.{{ general.domain }}`)
@@ -63,6 +64,7 @@ services:
       disable: false
     networks:
       - default
+    cpus: 2
 
   redis:
     container_name: immich_redis

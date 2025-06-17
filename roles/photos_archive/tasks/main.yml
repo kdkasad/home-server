@@ -18,22 +18,34 @@
     append: yes
   loop:
     - "{{ users.worker }}"
-    - kian
 
-- name: Render systemd unit files
-  ansible.builtin.template:
-    src: "{{ item }}"
-    dest: /etc/systemd/system/{{ item }}
+- name: Create mount points
+  ansible.builtin.file:
+    path: /mnt/photosarchive/{{ item }}
+    state: directory
     owner: root
-    group: root
-    mode: 0600 # not world-readable because they contain passwords
+    group: photosarchive
   loop:
-    - mnt-photosarchive.mount
-    - mnt-photosarchive.automount
-  notify: Restart units
+    - ro
+    - wo
+    - rw
+    - work
 
-- name: Start and enable systemd automount unit
-  ansible.builtin.systemd:
-    name: mnt-photosarchive.automount
-    state: started
-    enabled: yes
+- name: Add/remove filesystems to/from /etc/fstab
+  ansible.posix.mount:
+    state: "{{ photos_archive_enabled | ternary('present', 'absent') }}"
+    src: "{{ item.src }}"
+    path: "{{ item.dst }}"
+    fstype: "{{ item.type }}"
+    opts: "{{ item.options | join(',') }}"
+  loop: "{{ photos_archive_mounts }}"
+
+- name: Start/stop automount units
+  ansible.builtin.systemd_service:
+    daemon_reload: true
+    unit: "{{ item }}"
+    enabled: "{{ photos_archive_enabled | ternary('true', 'false') }}"
+    state: "{{ photos_archive_enabled | ternary('started', 'stopped') }}"
+  loop:
+    - mnt-photosarchive-ro.automount
+    - mnt-photosarchive-rw.automount

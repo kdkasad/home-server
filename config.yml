@@ -393,5 +393,6 @@ immich_hwaccel:
 
 immich_settings_transcode: false
 
+photos_archive_enabled: true
 photos_archive_user: "{{ secret_photos_archive_user }}"
 photos_archive_password: "{{ secret_photos_archive_password }}"
