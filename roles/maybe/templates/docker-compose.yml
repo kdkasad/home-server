@@ -1,0 +1,117 @@
+# ===========================================================================
+# Example Docker Compose file
+# ===========================================================================
+#
+# Purpose:
+# --------
+#
+# This file is an example Docker Compose configuration for self hosting
+# Maybe on your local machine or on a cloud VPS.
+#
+# The configuration below is a "standard" setup that works out of the box,
+# but if you're running this outside of a local network, it is recommended
+# to set the environment variables for extra security.
+#
+# Setup:
+# ------
+#
+# To run this, you should read the setup guide:
+#
+# https://github.com/maybe-finance/maybe/blob/main/docs/hosting/docker.md
+#
+# Troubleshooting:
+# ----------------
+#
+# If you run into problems, you should open a Discussion here:
+#
+# https://github.com/maybe-finance/maybe/discussions/categories/general
+#
+
+name: maybe
+
+networks:
+  default: {}
+  subway:
+    external: true
+    name: subway
+
+x-db-env: &db_env
+  POSTGRES_USER: maybe-user
+  POSTGRES_PASSWORD: "{{ maybe_postgres_password }}"
+  POSTGRES_DB: maybe-prod
+
+x-rails-env: &rails_env
+  <<: *db_env
+  SECRET_KEY_BASE: "{{ maybe_secret_key_base }}"
+  SELF_HOSTED: "true"
+  RAILS_FORCE_SSL: "false"
+  RAILS_ASSUME_SSL: "false"
+  DB_HOST: db
+  DB_PORT: 5432
+  REDIS_URL: redis://redis:6379/1
+  # NOTE: enabling OpenAI will incur costs when you use AI-related features in the app (chat, rules).  Make sure you have set appropriate spend limits on your account before adding this.
+  # OPENAI_ACCESS_TOKEN: ${OPENAI_ACCESS_TOKEN}
+
+services:
+  web:
+    image: ghcr.io/maybe-finance/maybe:{{ maybe_tag }}
+    volumes:
+      - {{ maybe_data_dir }}/app:/rails/storage
+    restart: unless-stopped
+    environment:
+      <<: *rails_env
+    env_file: .env
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - default
+      - subway
+    labels:
+      traefik.enable: "{{ maybe_routing.enabled | ternary('true', 'false') }}"
+      traefik.http.routers.maybe.rule: Host(`{{ maybe_routing.subdomain }}.{{ general.domain }}`)
+      traefik.http.routers.maybe.entrypoints: websecure
+      traefik.http.services.maybe.loadbalancer.server.port: '3000'
+
+  worker:
+    image: ghcr.io/maybe-finance/maybe:{{ maybe_tag }}
+    command: bundle exec sidekiq
+    restart: unless-stopped
+    depends_on:
+      redis:
+        condition: service_healthy
+    environment:
+      <<: *rails_env
+    env_file: .env
+    networks:
+      - default
+
+  db:
+    image: postgres:16
+    restart: unless-stopped
+    volumes:
+      - {{ maybe_data_dir }}/postgres:/var/lib/postgresql/data
+    environment:
+      <<: *db_env
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - default
+
+  redis:
+    image: redis:{{ maybe_redis_tag }}
+    restart: unless-stopped
+    volumes:
+      - {{ maybe_data_dir }}/redis:/data
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - default

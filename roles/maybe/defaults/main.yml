@@ -1,0 +1,26 @@
+---
+maybe_enabled: false
+
+maybe_data_dir: "{{ storage.data_dir }}/maybe"
+
+maybe_tag: latest
+maybe_redis_tag: latest
+
+maybe_routing:
+  enabled: true
+  subdomain: maybe
+
+maybe_secret_key_base: '{{ undef(hint="You must specify a secret key for Maybe") }}'
+maybe_postgres_password: '{{ undef(hint="You must specify a password for Maybe''s PostgreSQL database") }}'
+
+maybe_sso:
+  enabled: false
+  issuer_url: '{{ undef(hint="See maybe issuerUrl option") }}'
+  client_id: '{{ undef(hint="See maybe clientId option") }}'
+  client_secret: '{{ undef(hint="See maybe clientSecret option") }}'
+  button_text: '{{ undef(hint="See maybe buttonText option") }}'
+
+maybe_hwaccel:
+  enabled: false
+  backend: '{{ undef() }}'
+  accel_setting: '{{ undef() }}'

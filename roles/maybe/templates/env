@@ -1,0 +1,4 @@
+SMTP_ADDRESS={{ maybe_smtp_host | default('') }}
+SMTP_PORT={{ maybe_smtp_port | default(465) }}
+SMTP_USERNAME={{ maybe_smtp_user | default('') }}
+SMTP_PASSWORD={{ maybe_smtp_password | default('') }}

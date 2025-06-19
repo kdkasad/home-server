@@ -396,3 +396,23 @@ immich_settings_transcode: false
 photos_archive_enabled: true
 photos_archive_user: "{{ secret_photos_archive_user }}"
 photos_archive_password: "{{ secret_photos_archive_password }}"
+
+
+###################
+# Maybe settings #
+###################
+
+maybe_enabled: yes
+maybe_tag: latest
+
+maybe_routing:
+  enabled: true
+  subdomain: finance
+
+maybe_postgres_password: "{{ secret_maybe_postgres_password }}"
+maybe_secret_key_base: "{{ secret_maybe_secret_key_base }}"
+
+maybe_smtp_host: "{{ secret_maybe_smtp_host }}"
+maybe_smtp_port: "{{ secret_maybe_smtp_port }}"
+maybe_smtp_user: "{{ secret_maybe_smtp_user }}"
+maybe_smtp_password: "{{ secret_maybe_smtp_password }}"

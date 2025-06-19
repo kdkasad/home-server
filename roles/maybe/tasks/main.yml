@@ -1,0 +1,46 @@
+---
+- name: Set up Maybe
+  when: maybe_enabled is true
+  block:
+
+    # Don't set permissions because Docker is annoying
+    - name: Create Maybe data directories
+      ansible.builtin.file:
+        path: "{{ maybe_data_dir }}{{ item }}"
+        state: directory
+        mode: '700'
+        recurse: false
+      loop:
+        - ""
+        - "/postgres"
+        - "/app"
+        - "/redis"
+
+    - name: Render template files
+      ansible.builtin.template:
+        src: templates/{{ item.src }}
+        dest: "{{ maybe_data_dir }}/{{ item.dst }}"
+        owner: "{{ users.worker }}"
+        group: "{{ users.worker }}"
+        mode: '0600'
+      loop:
+        - src: docker-compose.yml
+          dst: docker-compose.yml
+        - src: env
+          dst: .env
+      register: render_templates
+
+    - name: Start Maybe stack
+      community.docker.docker_compose_v2:
+        project_src: "{{ maybe_data_dir }}"
+        wait: true
+        pull: always
+        recreate: "{{ render_templates.changed | ternary('always', 'auto') }}"
+
+- name: Disable Maybe
+  when: maybe_enabled is false
+  block:
+    - name: Stop Maybe
+      community.docker.docker_compose_v2:
+        project_src: "{{ maybe_data_dir }}"
+        state: absent
