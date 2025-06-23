@@ -238,6 +238,8 @@ traefik_acme_dns:
 
 tailscale_enabled: true
 
+tailscale_tag: v1.84.2
+
 # Subnets to route traffic to
 tailscale_routes:
   - "10.0.0.0/24"
