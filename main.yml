@@ -106,3 +106,7 @@
     - role: immich
       tags:
         - immich
+
+    - role: excalidraw
+      tags:
+        - excalidraw

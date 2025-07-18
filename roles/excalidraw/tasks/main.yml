@@ -1,0 +1,25 @@
+---
+- name: Set up Excalidraw
+  when: excalidraw_enabled is true
+  block:
+    - name: Start Excalidraw container
+      community.docker.docker_container:
+        name: excalidraw
+        image: docker.io/excalidraw/excalidraw:{{ excalidraw_tag }}
+        pull: always
+        image_name_mismatch: recreate
+        restart_policy: unless-stopped
+        labels:
+          traefik.enable: "{{ excalidraw_routing.enabled | ternary('true', 'false') }}"
+          traefik.http.routers.excalidraw.rule: Host(`{{ excalidraw_routing.subdomain }}.{{ general.domain }}`)
+          traefik.http.routers.excalidraw.entrypoints: websecure
+          traefik.http.services.excalidraw.loadbalancer.server.port: '80'
+        networks_cli_compatible: false
+        networks:
+          - name: subway
+
+- name: Stop Excalidraw
+  when: excalidraw_enabled is false
+  community.docker.docker_container:
+    name: excalidraw
+    state: absent

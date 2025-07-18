@@ -1,0 +1,8 @@
+---
+excalidraw_enabled: true
+
+excalidraw_tag: latest
+
+excalidraw_routing:
+  enabled: true
+  subdomain: excalidraw
