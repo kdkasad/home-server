@@ -13,8 +13,9 @@
     view tailnet {
         expr incidr(client_ip(), '100.0.0.0/8')
     }
-    hosts /dev/null {{ general.domain }} {
-        {{ coredns_tailscale_ip }} {{ general.domain }}
+    template IN ANY {{ general.domain }} {
+        match "(\w+\.)?{{ general.domain }}\.$"
+        answer "{{ '{{' }} .Name {{ '}}' }} 3600 IN A {{ coredns_tailscale_ip }}"
         fallthrough
     }
 }
@@ -24,8 +25,9 @@
     view homenet {
         expr incidr(client_ip(), '10.0.0.0/24')
     }
-    hosts /dev/null {{ general.domain }} {
-        {{ ansible_default_ipv4.address }} {{ general.domain }}
+    template IN ANY {{ general.domain }} {
+        match "(\w+\.)?{{ general.domain }}\.$"
+        answer "{{ '{{' }} .Name {{ '}}' }} 3600 IN A {{ ansible_default_ipv4.address }}"
         fallthrough
     }
 }
