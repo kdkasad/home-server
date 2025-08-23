@@ -87,7 +87,7 @@ ddns_cloudflare_api_token: "{{ secret_cloudflare_dns_api_token }}"
 # DNS server options #
 ######################
 
-dnsmasq_enabled: true
+dnsmasq_enabled: false
 
 dnsmasq_local_domain_suffix: local
 dnsmasq_local_domains:
@@ -238,7 +238,7 @@ traefik_acme_dns:
 
 tailscale_enabled: true
 
-tailscale_tag: v1.84.2
+tailscale_tag: v1.86.2
 
 # Subnets to route traffic to
 tailscale_routes:
@@ -408,3 +408,11 @@ excalidraw_enabled: true
 excalidraw_routing:
   enabled: true
   subdomain: draw
+
+
+###################
+# CoreDNS options #
+###################
+
+coredns_enabled: true
+coredns_tailscale_ip: 100.118.229.49

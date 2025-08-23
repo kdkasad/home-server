@@ -42,6 +42,11 @@
         - dnsmasq
         - dns
 
+    - role: coredns
+      tags:
+        - coredns
+        - dns
+
     - role: vladgh.samba.server
       tags:
         - nas

@@ -1,0 +1,12 @@
+---
+# Enable/disable coredns
+coredns_enabled: false
+
+# Set data directory
+coredns_data_dir: "{{ storage.data_dir }}/coredns"
+
+# Set the port to listen on
+coredns_port: 53
+
+# Version/tag of the ghcr.io/dockur/coredns image to use
+coredns_tag: "1.12.3"

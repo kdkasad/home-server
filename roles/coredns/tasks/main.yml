@@ -1,0 +1,44 @@
+---
+- name: Set up CoreDNS
+  when: coredns_enabled is true
+  block:
+    - name: Create data directory
+      ansible.builtin.file:
+        name: "{{ coredns_data_dir }}"
+        state: directory
+        owner: "{{ users.worker }}"
+        group: "{{ users.worker }}"
+        mode: '0755'
+
+    - name: Render configuration file
+      ansible.builtin.template:
+        src: Corefile
+        dest: "{{ coredns_data_dir }}/Corefile"
+        owner: "{{ users.worker }}"
+        group: "{{ users.worker }}"
+        mode: '0644'
+      register: corefile
+
+    - name: Start CoreDNS
+      community.docker.docker_container:
+        name: coredns
+        image: docker.io/coredns/coredns:{{ coredns_tag }}
+        pull: always
+        image_name_mismatch: recreate
+        state: started
+        restart: "{{ corefile.changed }}"
+        restart_policy: unless-stopped
+        network_mode: host
+        # ports:
+        #   - "{{ coredns_port }}:{{ coredns_port }}/udp"
+        #   - "{{ coredns_port }}:{{ coredns_port }}/tcp"
+        volumes:
+          - "{{ coredns_data_dir }}/Corefile:/Corefile:ro"
+
+- name: Disable CoreDNS
+  when: coredns_enabled is false
+  block:
+    - name: Stop CoreDNS
+      community.docker.docker_container:
+        name: coredns
+        state: absent

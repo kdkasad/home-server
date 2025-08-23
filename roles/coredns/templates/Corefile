@@ -1,0 +1,35 @@
+(common) {
+    cancel
+    cache
+    errors
+    any
+    # log
+
+    forward . /etc/resolv.conf
+}
+
+. {
+    import common
+    view tailnet {
+        expr incidr(client_ip(), '100.0.0.0/8')
+    }
+    hosts /dev/null {{ general.domain }} {
+        {{ coredns_tailscale_ip }} {{ general.domain }}
+        fallthrough
+    }
+}
+
+. {
+    import common
+    view homenet {
+        expr incidr(client_ip(), '10.0.0.0/24')
+    }
+    hosts /dev/null {{ general.domain }} {
+        {{ ansible_default_ipv4.address }} {{ general.domain }}
+        fallthrough
+    }
+}
+
+. {
+    import common
+}
