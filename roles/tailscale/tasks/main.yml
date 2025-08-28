@@ -13,6 +13,13 @@
       with_items:
         - "{{ tailscale_data_dir }}"
 
+    - name: Render sysctl drop-in file
+      ansible.builtin.template:
+        src: 99-tailscale.conf
+        dest: /etc/sysctl.d/99-tailscale.conf
+        mode: '0644'
+      notify: reload sysctl
+
     - name: Start Tailscale container
       community.docker.docker_container:
         name: tailscale
@@ -26,9 +33,13 @@
           TS_STATE_DIR: /var/lib/tailscale
           TS_HOSTNAME: "{{ general.hostname }}"
           TS_ROUTES: "{{ tailscale_routes | map('ansible.utils.ipaddr') | join(',') | default(omit) }}"
+          TS_EXTRA_ARGS: --advertise-exit-node
+          TS_DEBUG_FIREWALL_MODE: nftables
         network_mode: host
         volumes:
           - "{{ tailscale_data_dir }}:/var/lib/tailscale"
+        devices:
+          - /dev/net/tun
         capabilities:
           - net_admin
           - sys_module

@@ -1,0 +1,6 @@
+---
+- name: Apply sysctl drop-in configuration
+  listen: reload sysctl
+  become: true
+  ansible.builtin.command:
+    cmd: sysctl -p /etc/sysctl.d/99-tailscale.conf
