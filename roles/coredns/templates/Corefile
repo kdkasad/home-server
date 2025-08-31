@@ -18,6 +18,10 @@
         answer "{{ '{{' }} .Name {{ '}}' }} 3600 IN A {{ coredns_tailscale_ip }}"
         fallthrough
     }
+    hosts /dev/null {
+        100.81.253.80 mc21.cs.purdue.edu
+        fallthrough
+    }
 }
 
 . {
