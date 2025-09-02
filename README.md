@@ -14,6 +14,10 @@ in their respective directories to retain the original copyright and license.
 
 ## What's included?
 
+> [!WARNING]
+> This README is not updated regularly.
+> The list of services has changed significantly since this was written.
+
 This playbook installs and configures the following services
 (when enabled in `config.yml`):
 
