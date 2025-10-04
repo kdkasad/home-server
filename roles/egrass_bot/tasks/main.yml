@@ -10,7 +10,7 @@
         group: "{{ users.worker }}"
         mode: '0755'
 
-    - name: Start egrass_bot
+    - name: Start egrass-bot
       community.docker.docker_container:
         name: egrass-bot
         image: ghcr.io/kdkasad/egrass-bot:{{ egrass_bot_tag }}
@@ -21,6 +21,7 @@
         env:
           DISCORD_BOT_TOKEN: "{{ egrass_bot_token }}"
           DISCORD_CLIENT_ID: "{{ egrass_bot_client_id }}"
+          TZ: America/Indianapolis
 
 - name: Disable egrass-bot
   when: egrass_bot_enabled is false
