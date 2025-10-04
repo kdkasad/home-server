@@ -373,7 +373,7 @@ healthchecksio_uuid: "{{ secret_healthchecksio_uuid }}"
 ###################
 
 immich_enabled: yes
-immich_tag: v1.140.1
+immich_tag: v2.0.0
 
 immich_routing:
   enabled: true
@@ -395,7 +395,7 @@ immich_hwaccel:
 
 immich_settings_transcode: false
 
-photos_archive_enabled: true
+photos_archive_enabled: false
 photos_archive_user: "{{ secret_photos_archive_user }}"
 photos_archive_password: "{{ secret_photos_archive_password }}"
 

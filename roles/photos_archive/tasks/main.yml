@@ -33,7 +33,7 @@
 
 - name: Add/remove filesystems to/from /etc/fstab
   ansible.posix.mount:
-    state: "{{ photos_archive_enabled | ternary('present', 'absent') }}"
+    state: present
     src: "{{ item.src }}"
     path: "{{ item.dst }}"
     fstype: "{{ item.type }}"

@@ -28,7 +28,9 @@ services:
       - ${UPLOAD_LOCATION}:/usr/src/app/upload
       - /etc/localtime:/etc/localtime:ro
       - "{{ immich_data_dir }}/config.json:${IMMICH_CONIG_FILE}"
+{% if photos_archive_enabled %}
       - /mnt/photosarchive/rw:/mnt/photosarchive/rw
+{% endif %}
     env_file:
       - .env
     depends_on:
