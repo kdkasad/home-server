@@ -115,3 +115,7 @@
     - role: excalidraw
       tags:
         - excalidraw
+
+    - role: egrass_bot
+      tags:
+        - egrass_bot
