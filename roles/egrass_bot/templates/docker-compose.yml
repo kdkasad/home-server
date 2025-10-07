@@ -1,0 +1,12 @@
+name: egrass-bot
+
+services:
+  bot:
+    image: ghcr.io/kdkasad/egrass-bot:latest
+    pull_policy: always
+    restart: unless-stopped
+    volumes:
+      - "{{ egrass_bot_data_dir }}:/var/lib/bot"
+    environment:
+      TZ: America/Indianapolis
+    env_file: secrets.env
