@@ -422,6 +422,6 @@ coredns_tailscale_ip: 100.118.229.49
 ######################
 
 egrass_bot_enabled: true
-egrass_bot_tag: 0.0.3
+egrass_bot_tag: edge
 egrass_bot_token: "{{ secret_egrass_bot_token }}"
 egrass_bot_client_id: "{{ secret_egrass_bot_client_id }}"

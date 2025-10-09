@@ -2,7 +2,7 @@ name: egrass-bot
 
 services:
   bot:
-    image: ghcr.io/kdkasad/egrass-bot:latest
+    image: ghcr.io/kdkasad/egrass-bot:{{ egrass_bot_tag }}
     pull_policy: always
     restart: unless-stopped
     volumes:
