@@ -5,7 +5,7 @@ Description=Forward a TCP port using upnpc(1)
 # Run on timer start
 OnActiveSec=0
 # Run 6 hours after last time the service was run
-OnUnitActiveSec=6h
+OnUnitInactiveSec=6h
 
 [Install]
 WantedBy=multi-user.target

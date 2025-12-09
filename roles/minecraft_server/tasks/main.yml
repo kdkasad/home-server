@@ -7,6 +7,7 @@
   loop:
     - upnpc@.service
     - upnpc@.timer
+  register: systemd_unit_files
 
 - name: Start Minecraft Server
   when: minecraft_server_enabled is true
@@ -35,10 +36,11 @@
       changed_when: false
 
     - name: Start port forwarding
-      ansible.builtin.service:
+      ansible.builtin.systemd:
         name: upnpc@25565.timer
         enabled: true
         state: started
+        daemon_reload: "{{ systemd_unit_files.changed }}"
 
     - name: Start Minecraft server Docker container
       community.docker.docker_container:

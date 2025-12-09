@@ -5,6 +5,4 @@ After=network-online.target
 
 [Service]
 Type=oneshot
-RemainAfterExit=yes
 ExecStart=/usr/bin/upnpc -r %I tcp
-ExecStop=/usr/bin/upnpc -d %I tcp
