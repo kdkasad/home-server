@@ -1,8 +1,17 @@
 ---
+- name: Create port forwarding systemd units
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: /etc/systemd/system/{{ item }}
+    mode: "0644"
+  loop:
+    - upnpc@.service
+    - upnpc@.timer
+
 - name: Start Minecraft Server
   when: minecraft_server_enabled is true
   block:
-    - name: Create Minecraft Server Directories
+    - name: Create Minecraft server directories
       ansible.builtin.file:
         path: "{{ item }}"
         state: directory
@@ -25,13 +34,21 @@
       register: worker_gid
       changed_when: false
 
-    - name: Minecraft Server Docker Container
+    - name: Start port forwarding
+      ansible.builtin.service:
+        name: upnpc@25565.timer
+        enabled: true
+        state: started
+
+    - name: Start Minecraft server Docker container
       community.docker.docker_container:
         name: "{{ minecraft_server_container_name }}"
         image: itzg/minecraft-server:{{ minecraft_server_tag }}
         pull: always
         restart_policy: no
         image_name_mismatch: recreate
+        stop_timeout: "{{ (minecraft_server_env.STOP_SERVER_ANNOUNCE_DELAY | default(120) | int) + 60 }}"
+        tty: true
         volumes:
           - "{{ minecraft_server_data_directory }}:/data:rw"
         ports:
@@ -39,7 +56,7 @@
         env: "{{ minecraft_server_env | combine(default_env) }}"
         # Add CAP_NET_RAW if auto-pause is enabled
         capabilities: >-
-          {{ ((minecraft_server_env.ENABLE_AUTOPAUSE | lower) in ['true', 'yes', '1']) | ternary(['CAP_NET_RAW'], []) }}
+          {{ ((minecraft_server_env.ENABLE_AUTOPAUSE | default('false') | lower) in ['true', 'yes', '1']) | ternary(['CAP_NET_RAW'], []) }}
         networks_cli_compatible: false
         networks:
           - name: subway
@@ -56,3 +73,9 @@
       community.docker.docker_container:
         name: "{{ minecraft_server_container_name }}"
         state: absent
+
+    - name: Stop port forwarding
+      ansible.builtin.service:
+        name: upnpc@25565.timer
+        enabled: false
+        state: stopped
