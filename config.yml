@@ -437,3 +437,4 @@ egrass_bot_enabled: true
 egrass_bot_tag: edge
 egrass_bot_token: "{{ secret_egrass_bot_token }}"
 egrass_bot_client_id: "{{ secret_egrass_bot_client_id }}"
+egrass_bot_disable_announcements: true

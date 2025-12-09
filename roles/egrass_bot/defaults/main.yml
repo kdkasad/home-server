@@ -4,3 +4,5 @@ egrass_bot_enabled: true
 egrass_bot_data_dir: "{{ storage.data_dir }}/egrass-bot"
 
 egrass_bot_tag: v0.0.1
+
+egrass_bot_disable_announcements: false

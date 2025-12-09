@@ -9,4 +9,5 @@ services:
       - "{{ egrass_bot_data_dir }}:/var/lib/bot"
     environment:
       TZ: America/Indianapolis
+      DISABLE_NEETCODE_ANNOUNCEMENTS: "{{ egrass_bot_disable_announcements | ternary('true', 'false') }}"
     env_file: secrets.env
