@@ -1,5 +1,10 @@
 name: egrass-bot
 
+networks:
+  subway:
+    external: true
+    name: subway
+
 services:
   bot:
     image: ghcr.io/kdkasad/egrass-bot:{{ egrass_bot_tag }}
@@ -11,3 +16,5 @@ services:
       TZ: America/Indianapolis
       DISABLE_NEETCODE_ANNOUNCEMENTS: "{{ egrass_bot_disable_announcements | ternary('true', 'false') }}"
     env_file: secrets.env
+    networks:
+      - subway
