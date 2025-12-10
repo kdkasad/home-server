@@ -179,6 +179,9 @@ minecraft_server_env:
   # https://modrinth.com/mods/<slug>
   MODRINTH_PROJECTS: |-
     fabric-api
+    ferrite-core
+    c2me-fabric
+    scalablelux
     lithium
     no-chat-reports
     fabrictailor
