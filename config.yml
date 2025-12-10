@@ -139,6 +139,7 @@ samba_shares:
 ############################
 
 minecraft_server_enabled: yes
+monitoring_scrape_minecraft_server: yes
 minecraft_server_env:
   # Server properties
   SERVER_PORT: "25565"
@@ -183,14 +184,20 @@ minecraft_server_env:
     c2me-fabric
     scalablelux
     lithium
+    spark
+    fabricexporter
     no-chat-reports
     fabrictailor
     coord-finder:beta
     carpet
     image2map
+    luckperms
     datapack:terratonic
     datapack:terralith
   REMOVE_OLD_MODS: "true"
+
+  # Vanilla Tweaks datapacks
+  VANILLATWEAKS_SHARECODE: h33Lct
 
 ######################
 # Authentik settings #

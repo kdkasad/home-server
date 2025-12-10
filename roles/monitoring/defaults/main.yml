@@ -50,6 +50,7 @@ monitoring_scrape_authentik: yes
 monitoring_scrape_jellyfin: yes
 monitoring_scrape_minio: yes
 monitoring_scrape_traefik: yes
+monitoring_scrape_minecraft_server: no
 
 # Extra scrape configs for Prometheus.
 monitoring_prometheus_extra_scrape_configs: []

@@ -75,5 +75,13 @@ scrape_configs:
           instance: "{{ general.domain }}"
 {% endif %}
 
+{% if (minecraft_server_enabled | default(false)) and (monitoring_scrape_minecraft_server) %}
+  - job_name: minecraft
+    static_configs:
+      - targets: ['minecraft-server:25585']
+        labels:
+          instance: "{{ general.domain }}"
+{% endif %}
+
 scrape_config_files:
   - "/etc/prometheus/X_extra_scrape_configs.yml"
