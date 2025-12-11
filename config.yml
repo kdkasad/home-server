@@ -169,7 +169,7 @@ minecraft_server_env:
 
   # Server settings
   TYPE: fabric
-  VERSION: "1.21.10"
+  VERSION: "1.21.11"
   INIT_MEMORY: "512M"
   MAX_MEMORY: "8G"
   TZ: America/Indiana/Indianapolis
@@ -186,14 +186,12 @@ minecraft_server_env:
   MODRINTH_PROJECTS: |-
     fabric-api
     ferrite-core
-    c2me-fabric
+    c2me-fabric:beta
     scalablelux
     lithium
     spark
     fabricexporter
     no-chat-reports
-    fabrictailor
-    coord-finder:beta
     image2map
     luckperms
   REMOVE_OLD_MODS: "true"
