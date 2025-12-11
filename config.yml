@@ -70,7 +70,7 @@ storage:
 
     photos-old:
       mount: /nas/PhotosFromDesktop
-      size: 950G
+      size: 800G
       fs: ext4
 
 
@@ -138,6 +138,11 @@ samba_shares:
     comment: Media to be streamed using Jellyfin
     public: yes
     writeable: yes
+
+  - name: PhotosFromDesktop
+    comment: Photos/videos from old desktop
+    public: yes
+    writeable: no
 
 ############################
 # Minecraft server options #
@@ -417,9 +422,7 @@ immich_hwaccel:
 
 immich_settings_transcode: false
 
-photos_archive_enabled: false
-photos_archive_user: "{{ secret_photos_archive_user }}"
-photos_archive_password: "{{ secret_photos_archive_password }}"
+photos_archive_enabled: true
 
 
 #######################

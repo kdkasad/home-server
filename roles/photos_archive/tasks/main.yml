@@ -1,51 +1,21 @@
 ---
-- name: Install SMB utilities
-  ansible.builtin.package:
-    name: cifs-utils
-    state: present
-
-- name: Create photos archive group
-  ansible.builtin.group:
-    name: photosarchive
-    state: present
-    system: no
-
-- name: Add users to photos archive group
-  ansible.builtin.user:
-    name: "{{ item }}"
-    groups:
-      - photosarchive
-    append: yes
-  loop:
-    - "{{ users.worker }}"
-
 - name: Create mount points
   ansible.builtin.file:
     path: /mnt/photosarchive/{{ item }}
     state: directory
     owner: root
     group: photosarchive
+    mode: 0770
   loop:
-    - ro
     - wo
     - rw
     - work
 
-- name: Add/remove filesystems to/from /etc/fstab
+- name: Mount/unmount filesystem
   ansible.posix.mount:
-    state: present
+    state: "{{ photos_archive_enabled | ternary('mounted', 'absent') }}"
     src: "{{ item.src }}"
     path: "{{ item.dst }}"
     fstype: "{{ item.type }}"
     opts: "{{ item.options | join(',') }}"
   loop: "{{ photos_archive_mounts }}"
-
-- name: Start/stop automount units
-  ansible.builtin.systemd_service:
-    daemon_reload: true
-    unit: "{{ item }}"
-    enabled: "{{ photos_archive_enabled | ternary('true', 'false') }}"
-    state: "{{ photos_archive_enabled | ternary('started', 'stopped') }}"
-  loop:
-    - mnt-photosarchive-ro.automount
-    - mnt-photosarchive-rw.automount

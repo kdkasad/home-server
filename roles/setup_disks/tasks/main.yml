@@ -36,5 +36,5 @@
     src: "/dev/{{ storage.vg }}/{{ item.key }}"
     fstype: "{{ item.value.fs }}"
     state: mounted
-    opts: defaults,rw
+    opts: "{{ item.value.mount_opts | default(['defaults', 'rw']) | join(',') }}"
   with_items: "{{ storage.volumes | dict2items }}"

@@ -1,8 +1,0 @@
----
-- name: Restart units
-  ansible.builtin.systemd:
-    daemon_reload: yes
-    name: mnt-photosarchive.automount
-    state: restarted
-    enabled: yes
-

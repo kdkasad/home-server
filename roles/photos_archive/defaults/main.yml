@@ -2,41 +2,11 @@
 photos_archive_enabled: false
 
 photos_archive_mounts:
-  - src: //SNEETCH/Pictures
-    dst: /mnt/photosarchive/ro
-    type: cifs
-    options:
-      - ro
-      - username={{ photos_archive_user }}
-      - password={{ photos_archive_password }}
-      - workgroup=WORKGROUP
-      - uid=root
-      - forceuid
-      - gid=photosarchive
-      - forcegid
-      - iocharset=utf8
-      - file_mode=0440
-      - dir_mode=0550
-      - seal
-      - nounix
-      - noatime
-      - nodev
-      - noexec
-      - nosuid
-      - _netdev
-      - x-systemd.automount
-      - x-systemd.idle-timeout=15min
-      - x-systemd.mount-timeout=1min
-
   - src: overlay
     dst: /mnt/photosarchive/rw
     type: overlay
     options:
       - rw
-      - lowerdir=/mnt/photosarchive/ro
+      - lowerdir=/nas/PhotosFromDesktop
       - upperdir=/mnt/photosarchive/wo
       - workdir=/mnt/photosarchive/work
-      - x-systemd.automount
-      - x-systemd.requires-mounts-for=/mnt/photosarchive/ro
-      - x-systemd.rw-only
-
