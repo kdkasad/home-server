@@ -171,6 +171,7 @@ minecraft_server_env:
   TZ: America/Indiana/Indianapolis
   USE_MEOWICE_FLAGS: "true"
   STOP_SERVER_ANNOUNCE_DELAY: "60"
+  EXEC_DIRECTLY: "true"
 
   # RCON settings
   RCON_PASSWORD: "{{ secret_minecraft_rcon_password }}"

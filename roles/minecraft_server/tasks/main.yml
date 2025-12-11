@@ -50,6 +50,7 @@
         restart_policy: no
         image_name_mismatch: recreate
         stop_timeout: "{{ (minecraft_server_env.STOP_SERVER_ANNOUNCE_DELAY | default(120) | int) + 60 }}"
+        interactive: true
         tty: true
         volumes:
           - "{{ minecraft_server_data_directory }}:/data:rw"
@@ -58,7 +59,8 @@
         env: "{{ minecraft_server_env | combine(default_env) }}"
         # Add CAP_NET_RAW if auto-pause is enabled
         capabilities: >-
-          {{ ((minecraft_server_env.ENABLE_AUTOPAUSE | default('false') | lower) in ['true', 'yes', '1']) | ternary(['CAP_NET_RAW'], []) }}
+          {{ ((minecraft_server_env.ENABLE_AUTOPAUSE | default('false') | lower)
+             in ['true', 'yes', '1']) | ternary(['CAP_NET_RAW'], []) }}
         networks_cli_compatible: false
         networks:
           - name: subway
