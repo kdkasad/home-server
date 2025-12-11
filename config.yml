@@ -150,14 +150,12 @@ minecraft_server_env:
 
   # Manage users
   ENABLE_WHITELIST: "true"
-  OPS: |
-    WiredTangles
   WHITELIST: |
     WiredTangles
 
   # World settings
   SERVER_NAME: Egrass MC
-  LEVEL: egrass
+  LEVEL: egrass-new
   MOTD: Cubular grass yummy
   ICON: https://s3.box.kasad.com/public/egrass.png
   ENABLE_COMMAND_BLOCK: "true"
@@ -191,11 +189,8 @@ minecraft_server_env:
     no-chat-reports
     fabrictailor
     coord-finder:beta
-    carpet
     image2map
     luckperms
-    datapack:terratonic
-    datapack:terralith
   REMOVE_OLD_MODS: "true"
 
   # Vanilla Tweaks datapacks
