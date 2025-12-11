@@ -1,0 +1,11 @@
+[Unit]
+Description=Enables possibly-disabled CI job on kdkasad/website
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=false
+EnvironmentFile=/etc/default/website-ci-enabler
+ExecStart=/usr/local/bin/website-ci-enabler.sh
+TimeoutStartSec=10s

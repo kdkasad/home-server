@@ -1,0 +1,36 @@
+---
+- name: Render files
+  ansible.builtin.template:
+    src: "{{ item.name }}.j2"
+    dest: "{{ item.dir }}/{{ item.name }}"
+    mode: "{{ item.mode | default('0644') }}"
+  register: render
+  loop:
+    - name: website-ci-enabler.service
+      dir: /etc/systemd/system
+    - name: website-ci-enabler.timer
+      dir: /etc/systemd/system
+    - name: website-ci-enabler.sh
+      dir: /usr/local/bin
+      mode: '0755'
+    - name: website-ci-enabler
+      dir: /etc/default
+      mode: '0600'
+
+- name: Enable & start timer
+  when: website_ci_enabler_enabled is true
+  ansible.builtin.systemd_service:
+    daemon-reload: "{{ render.changed }}"
+    name: website-ci-enabler.timer
+    enabled: true
+    state: started
+
+- name: Disable timer
+  when: website_ci_enabler_enabled is false
+  block:
+    - name: Disable website-ci-enabler.timer
+      ansible.builtin.systemd_service:
+        daemon-reload: "{{ render.changed }}"
+        name: website-ci-enabler.timer
+        enabled: false
+        state: stopped

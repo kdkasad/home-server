@@ -1,0 +1,21 @@
+#!/bin/bash
+
+set -e -u -o pipefail
+
+CURL_ARGS=(
+	-f -s -S -l
+	-H 'Accept: application/json'
+	-H "Authorization: Bearer ${GH_PAT}"
+)
+
+WORKFLOW_API_URL="https://api.github.com/repos/${USER}/${REPO}/actions/workflows/${WORKFLOW}"
+
+STATE=$( curl "${CURL_ARGS[@]}" "$WORKFLOW_API_URL" | jq -r '.state' )
+if [ "$STATE" != 'active' ]
+then
+	echo "Workflow not active (got state $STATE). Enabling..."
+	curl "${CURL_ARGS[@]}" -X PUT "${WORKFLOW_API_URL}/enable"
+	echo 'Workflow enabled'
+else
+	echo 'Workflow already active'
+fi

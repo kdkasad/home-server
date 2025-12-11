@@ -120,3 +120,8 @@
       tags:
         - egrass_bot
         - egrass-bot
+
+    - role: website_ci_enabler
+      tags:
+        - website-ci-enabler
+        - website_ci_enabler

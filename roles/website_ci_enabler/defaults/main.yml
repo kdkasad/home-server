@@ -1,0 +1,6 @@
+---
+website_ci_enabler_enabled: true
+website_ci_enabler:
+  user: kdkasad
+  repo: website
+  workflow: ci.yml
