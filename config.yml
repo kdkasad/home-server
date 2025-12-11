@@ -65,7 +65,12 @@ storage:
 
     photos:
       mount: /nas/Photos
-      size: 50G
+      size: 1000G
+      fs: ext4
+
+    photos-old:
+      mount: /nas/PhotosFromDesktop
+      size: 950G
       fs: ext4
 
 
