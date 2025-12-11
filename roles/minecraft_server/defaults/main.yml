@@ -4,6 +4,8 @@ minecraft_server_enabled: false
 # Note: All environment variables defined here must be strings.
 minecraft_server_env: {}
 
+minecraft_server_container_memory: 8G
+
 minecraft_server_data_directory: "{{ storage.data_dir }}/minecraft_server"
 
 minecraft_server_port: "25565"

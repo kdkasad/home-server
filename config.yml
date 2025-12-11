@@ -140,6 +140,7 @@ samba_shares:
 
 minecraft_server_enabled: yes
 monitoring_scrape_minecraft_server: yes
+minecraft_server_container_memory: 9G
 minecraft_server_env:
   # Server properties
   SERVER_PORT: "25565"
@@ -396,7 +397,7 @@ healthchecksio_uuid: "{{ secret_healthchecksio_uuid }}"
 ###################
 
 immich_enabled: yes
-immich_tag: v2.2.0
+immich_tag: v2.3.1
 
 immich_routing:
   enabled: true

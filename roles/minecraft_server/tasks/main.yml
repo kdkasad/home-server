@@ -52,6 +52,7 @@
         stop_timeout: "{{ (minecraft_server_env.STOP_SERVER_ANNOUNCE_DELAY | default(120) | int) + 60 }}"
         interactive: true
         tty: true
+        memory: "{{ minecraft_server_container_memory }}"
         volumes:
           - "{{ minecraft_server_data_directory }}:/data:rw"
         ports:
