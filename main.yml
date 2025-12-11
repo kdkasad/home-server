@@ -125,3 +125,6 @@
       tags:
         - website-ci-enabler
         - website_ci_enabler
+
+    - role: umami
+      tags: [umami]

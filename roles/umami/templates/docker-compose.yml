@@ -1,0 +1,52 @@
+networks:
+  default: {}
+  subway:
+    external: true
+    name: subway
+
+services:
+  umami:
+    image: ghcr.io/umami-software/umami:{{ umami_tag }}
+    pull_policy: always
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    init: true
+    healthcheck:
+      test: ["CMD-SHELL", "curl http://localhost:3000/api/heartbeat"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    environment:
+      DATABASE_URL: postgresql://umami:umami@db:5432/umami
+      APP_SECRET: "{{ secret_umami_app_secret | mandatory }}"
+      TRACKER_SCRIPT_NAME: oj5ooPho.js
+      COLLECT_API_ENDPOINT: /api/post
+    networks:
+      - default
+      - subway
+    labels:
+      traefik.enable: "{{ (umami_routing_default | combine(umami_routing)).enabled | ternary('true', 'false') }}"
+      traefik.http.routers.umami.rule:
+        Host(`{{ (umami_routing_default | combine(umami_routing)).subdomain }}.{{ general.domain }}`)
+        || Host(`stats.{{ general.domain }}`)
+      traefik.http.routers.umami.entrypoints: websecure
+      traefik.http.services.umami.loadbalancer.server.port: '3000'
+
+  db:
+    image: postgres:18-alpine
+    user: "{{ uid }}:{{ gid }}"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+    networks:
+      - default
+    volumes:
+      - "/etc/passwd:/etc/passwd:ro"
+      - "/etc/group:/etc/group:ro"
+      - "{{ umami_data_dir }}/db:/var/lib/postgresql"
+    environment:
+      POSTGRES_DB: umami
+      POSTGRES_USER: umami
+      POSTGRES_PASSWORD: umami

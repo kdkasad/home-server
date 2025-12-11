@@ -1,0 +1,14 @@
+---
+umami_enabled: true
+
+umami_data_dir: "{{ storage.data_dir }}/umami"
+
+umami_routing: {}
+
+umami_routing_default:
+  enabled: true
+  subdomain: umami
+
+umami_env: {}
+
+umami_tag: 3

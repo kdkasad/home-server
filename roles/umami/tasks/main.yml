@@ -1,0 +1,48 @@
+---
+- name: Set up Umami
+  when: umami_enabled is true
+  block:
+    - name: Create Umami data directories
+      ansible.builtin.file:
+        name: "{{ umami_data_dir }}/{{ item }}"
+        state: directory
+        owner: "{{ users.worker }}"
+        group: "{{ users.worker }}"
+        mode: '0755'
+      with_items:
+        - db
+
+    - name: Get worker UID
+      ansible.builtin.command:
+        cmd: "id -u {{ users.worker }}"
+      register: worker_uid
+      changed_when: false
+
+    - name: Get worker GID
+      ansible.builtin.command:
+        cmd: "id -g {{ users.worker }}"
+      register: worker_gid
+      changed_when: false
+
+    - name: Create Docker Compose file
+      ansible.builtin.template:
+        src: docker-compose.yml
+        dest: "{{ umami_data_dir }}/docker-compose.yml"
+        owner: root
+        group: root
+        mode: '0600'
+      vars:
+        uid: "{{ worker_uid.stdout }}"
+        gid: "{{ worker_gid.stdout }}"
+
+    - name: Start Umami stack
+      community.docker.docker_compose_v2:
+        project_src: "{{ umami_data_dir }}"
+        pull: always
+
+
+- name: Stop Umami
+  when: umami_enabled is false
+  community.docker.docker_container:
+    name: umami
+    state: absent
