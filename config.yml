@@ -340,7 +340,7 @@ bitwarden_routing:
 # Jellyfin settings #
 #####################
 
-jellyfin_enabled: true
+jellyfin_enabled: false
 jellyfin_routing:
   enabled: true
   subdomain: media
