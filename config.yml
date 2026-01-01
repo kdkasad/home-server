@@ -191,7 +191,7 @@ minecraft_server_env:
   MODRINTH_PROJECTS: |-
     fabric-api
     ferrite-core
-    c2me-fabric:beta
+    c2me-fabric
     scalablelux
     lithium
     spark
