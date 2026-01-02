@@ -22,6 +22,25 @@
         recurse: false
       with_items:
         - "{{ minecraft_server_data_directory }}"
+        - "{{ minecraft_server_data_directory }}/mods-src"
+        - "{{ minecraft_server_data_directory }}/dynmap"
+
+    - name: Upload Dynmap mod JAR
+      ansible.builtin.copy:
+        src: Dynmap-3.7-beta-11-fabric-1.21.11.jar
+        dest: "{{ minecraft_server_data_directory }}/mods-src/"
+        owner: "{{ users.worker }}"
+        group: "{{ users.worker }}"
+        mode: "0640"
+
+    - name: Render Dynmap configuration file
+      ansible.builtin.template:
+        src: configuration.txt
+        dest: "{{ minecraft_server_data_directory }}/dynmap/configuration.txt"
+        backup: true
+        owner: "{{ users.worker }}"
+        group: "{{ users.worker }}"
+        mode: "0640"
 
     - name: Get worker UID
       ansible.builtin.command:
@@ -55,6 +74,7 @@
         memory: "{{ minecraft_server_container_memory }}"
         volumes:
           - "{{ minecraft_server_data_directory }}:/data:rw"
+          - "{{ minecraft_server_data_directory }}/mods-src:/{{ minecraft_server_enable_dynmap | ternary('mods', 'tmp/mods') }}:ro"
         ports:
           - "{{ minecraft_server_port }}:25565"
         env: "{{ minecraft_server_env | combine(default_env) }}"
@@ -65,6 +85,11 @@
         networks_cli_compatible: false
         networks:
           - name: subway
+        labels:
+          traefik.enable: "{{ minecraft_server_enable_dynmap | ternary('true', 'false') }}"
+          traefik.http.routers.dynmap.rule: Host(`mc.{{ general.domain }}`)
+          traefik.http.routers.dynmap.entrypoints: websecure
+          traefik.http.services.dynmap.loadbalancer.server.port: '8123'
       vars:
         default_env:
           EULA: 'TRUE'

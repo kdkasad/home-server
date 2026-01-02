@@ -12,3 +12,5 @@ minecraft_server_port: "25565"
 
 minecraft_server_container_name: minecraft-server
 minecraft_server_tag: java21-alpine
+
+minecraft_server_enable_dynmap: true
