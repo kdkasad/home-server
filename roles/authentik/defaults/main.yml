@@ -26,6 +26,6 @@ authentik_routing:
 
 # Versions/tags for containers
 authentik_image_tags:
-  authentik: "2025.10.3"
+  authentik: "2025.12.1"
   postgres: 16-alpine
   redis: 7-alpine

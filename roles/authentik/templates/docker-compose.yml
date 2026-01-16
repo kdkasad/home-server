@@ -63,7 +63,7 @@ services:
     env_file:
       - .env
     volumes:
-      - "{{ authentik_data_dir }}/server/media:/media"
+      - "{{ authentik_data_dir }}/server/data:/data"
       - "{{ authentik_data_dir }}/server/custom-templates:/templates"
     depends_on:
       - postgresql
@@ -93,7 +93,7 @@ services:
     env_file:
       - .env
     volumes:
-      - "{{ authentik_data_dir }}/worker/media:/media"
+      - "{{ authentik_data_dir }}/worker/data:/data"
       - "{{ authentik_data_dir }}/worker/certs:/certs"
       - "{{ authentik_data_dir }}/worker/custom-templates:/templates"
     depends_on:

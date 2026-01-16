@@ -14,9 +14,9 @@
         mode: '0755'
         recurse: false
       with_items:
-        - server/media
+        - server/data
         - server/custom-templates
-        - worker/media
+        - worker/data
         - worker/certs
         - worker/custom-templates
 
