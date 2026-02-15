@@ -15,6 +15,7 @@ services:
     environment:
       TZ: America/Indianapolis
       DISABLE_NEETCODE_ANNOUNCEMENTS: "{{ egrass_bot_disable_announcements | ternary('true', 'false') }}"
+      DISABLE_LOCK_IN: "{{ egrass_bot_disable_lock_in | ternary('true', 'false') }}"
     env_file: secrets.env
     networks:
       - subway

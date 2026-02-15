@@ -400,7 +400,7 @@ healthchecksio_uuid: "{{ secret_healthchecksio_uuid }}"
 ###################
 
 immich_enabled: yes
-immich_tag: v2.5.5
+immich_tag: v2.5.6
 
 immich_routing:
   enabled: true
@@ -451,3 +451,4 @@ egrass_bot_tag: edge
 egrass_bot_token: "{{ secret_egrass_bot_token }}"
 egrass_bot_client_id: "{{ secret_egrass_bot_client_id }}"
 egrass_bot_disable_announcements: true
+egrass_bot_disable_lock_in: true
