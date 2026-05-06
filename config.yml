@@ -265,7 +265,7 @@ traefik_acme_dns:
 
 tailscale_enabled: true
 
-tailscale_tag: v1.86.2
+tailscale_tag: v1.94.2
 
 # Subnets to route traffic to
 tailscale_routes:
@@ -400,7 +400,7 @@ healthchecksio_uuid: "{{ secret_healthchecksio_uuid }}"
 ###################
 
 immich_enabled: yes
-immich_tag: v2.5.6
+immich_tag: v2.6.3
 
 immich_routing:
   enabled: true
