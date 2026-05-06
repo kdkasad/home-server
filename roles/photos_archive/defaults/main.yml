@@ -10,3 +10,4 @@ photos_archive_mounts:
       - lowerdir=/nas/PhotosFromDesktop
       - upperdir=/mnt/photosarchive/wo
       - workdir=/mnt/photosarchive/work
+      - x-systemd.requires=/nas/PhotosFromDesktop
