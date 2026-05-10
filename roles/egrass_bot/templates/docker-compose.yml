@@ -7,15 +7,20 @@ networks:
 
 services:
   bot:
-    image: ghcr.io/kdkasad/egrass-bot:{{ egrass_bot_tag }}
+    image: ghcr.io/kdkasad/egrass-bot:edge
     pull_policy: always
     restart: unless-stopped
     volumes:
       - "{{ egrass_bot_data_dir }}:/var/lib/bot"
     environment:
       TZ: America/Indianapolis
-      DISABLE_NEETCODE_ANNOUNCEMENTS: "{{ egrass_bot_disable_announcements | ternary('true', 'false') }}"
-      DISABLE_LOCK_IN: "{{ egrass_bot_disable_lock_in | ternary('true', 'false') }}"
+      DISABLED_FEATURES: "{{ egrass_bot_disabled_features | join(',') }}"
+      DATABASE_FILE: data.sqlite3
     env_file: secrets.env
     networks:
       - subway
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.egrass-bot.rule: Host(`egrass-bot.{{ general.domain }}`)
+      traefik.http.routers.egrass-bot.entrypoints: websecure
+      traefik.http.services.egrass-bot.loadbalancer.server.port: "80"
