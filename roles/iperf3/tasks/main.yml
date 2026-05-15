@@ -1,0 +1,23 @@
+---
+- name: Install iperf3
+  ansible.builtin.package:
+    name: iperf3
+    state: present
+
+- name: Set up iperf3
+  when: iperf3_enabled is true
+  block:
+    - name: Enable & start iperf3 service
+      ansible.builtin.systemd:
+        service: iperf3.service
+        state: started
+        enabled: true
+
+- name: Disable iperf3
+  when: iperf3_enabled is false
+  block:
+    - name: Disable & stop iperf3 service
+      ansible.builtin.systemd:
+        service: iperf3.service
+        state: stopped
+        enabled: false
