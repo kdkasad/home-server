@@ -131,3 +131,6 @@
 
     - role: iperf3
       tags: [iperf3]
+
+    - role: vnstat
+      tags: [vnstat]

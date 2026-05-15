@@ -1,0 +1,22 @@
+- name: Install vnstat
+  ansible.builtin.package:
+    name: vnstat
+    state: present
+
+- name: Set up vnstat
+  when: vnstat_enabled is true
+  block:
+    - name: Enable & start vnstat service
+      ansible.builtin.service:
+        name: vnstat
+        state: started
+        enabled: true
+
+- name: Disable vnstat
+  when: vnstat_enabled is false
+  block:
+    - name: Disable & stop vnstat service
+      ansible.builtin.service:
+        name: vnstat
+        state: stopped
+        enabled: false
