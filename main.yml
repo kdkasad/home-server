@@ -18,6 +18,9 @@
         - setup
         - nas
 
+    - role: setup_network
+      tags: [setup, setup_network, network]
+
     - role: setup_dns
       tags:
         - setup

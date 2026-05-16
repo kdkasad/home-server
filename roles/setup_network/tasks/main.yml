@@ -1,0 +1,47 @@
+---
+# Needed to get Wi-Fi card working
+- name: Install kernel and iwlwifi firmware from backports
+  block:
+    - name: Enable non-free-firmware from backports
+      ansible.builtin.copy:
+        dest: /etc/apt/sources.list.d/backports.list
+        content: |
+          deb http://deb.debian.org/debian bookworm-backports main non-free-firmware
+        owner: root
+        group: root
+        mode: '0644'
+      register: add_backports
+
+    - name: Install kernel and iwlwifi firmware from backports
+      ansible.builtin.apt:
+        package:
+          - linux-image-amd64
+          - firmware-iwlwifi
+          - firmware-intel-graphics
+        default_release: bookworm-backports
+        update_cache: "{{ add_backports.changed }}"
+
+- name: Configure systemd-networkd
+  block:
+    - name: Create systemd-networkd configuration file for ethernet NICs
+      ansible.builtin.template:
+        src: "{{ item }}"
+        dest: "/etc/systemd/network/{{ item }}"
+        owner: root
+        group: root
+        mode: '0644'
+      loop:
+        - 90-eth.network
+      notify: reload systemd-networkd
+
+    - name: Disable legacy networking
+      ansible.builtin.service:
+        name: networking.service
+        state: stopped
+        enabled: false
+
+    - name: Enable systemd-networkd
+      ansible.builtin.service:
+        name: systemd-networkd.service
+        state: started
+        enabled: true
