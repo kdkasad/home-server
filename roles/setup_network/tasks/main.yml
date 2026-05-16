@@ -23,7 +23,7 @@
 
 - name: Configure systemd-networkd
   block:
-    - name: Create systemd-networkd configuration file for ethernet NICs
+    - name: Create systemd-networkd configuration files
       ansible.builtin.template:
         src: "{{ item }}"
         dest: "/etc/systemd/network/{{ item }}"
@@ -31,6 +31,9 @@
         group: root
         mode: '0644'
       loop:
+        - 10-bridge.netdev
+        - 20-bridge.network
+        - 20-enp1s0.network
         - 90-eth.network
       notify: reload systemd-networkd
 
@@ -45,3 +48,23 @@
         name: systemd-networkd.service
         state: started
         enabled: true
+
+- name: Configure hostapd
+  block:
+    - name: Render hostapd configuration
+      ansible.builtin.template:
+        src: "hostapd.{{ item }}.conf"
+        dest: "/etc/hostapd/{{ item }}.conf"
+        owner: root
+        group: root
+        mode: '0600'
+      loop:
+        - wlan0
+
+    - name: Enable/disable hostapd
+      ansible.builtin.service:
+        name: hostapd@{{ item }}.service
+        state: "{{ setup_network_wifi_ap_enabled | ternary('started', 'stopped') }}"
+        enabled: "{{ setup_network_wifi_ap_enabled }}"
+      loop:
+        - wlan0
