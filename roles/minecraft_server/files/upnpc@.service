@@ -3,6 +3,12 @@ Description=Forward a TCP port using upnpc(1)
 Wants=network-online.target
 After=network-online.target
 
+# Fail after 10 tries within 30 minutes
+StartLimitIntervalSec=30min
+StartLimitBurst=10
+
 [Service]
 Type=oneshot
 ExecStart=/usr/bin/upnpc -r %I tcp
+Restart=on-failure
+RestartSec=1min
