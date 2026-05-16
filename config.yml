@@ -75,6 +75,13 @@ storage:
 
 
 ####################
+# Network settings #
+####################
+
+setup_network_wifi_ap_enabled: true
+
+
+####################
 # DDNS options #
 ####################
 
