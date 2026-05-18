@@ -148,8 +148,8 @@ samba_shares:
 # Minecraft server options #
 ############################
 
-minecraft_server_enabled: yes
-monitoring_scrape_minecraft_server: yes
+minecraft_server_enabled: no
+monitoring_scrape_minecraft_server: no
 minecraft_server_container_memory: 9G
 minecraft_server_env:
   # Server properties
