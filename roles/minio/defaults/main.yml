@@ -9,8 +9,8 @@ minio_routing:
 minio_data_dir: "{{ storage.data_dir }}/minio"
 
 minio_container:
-  image: quay.io/minio/minio
-  tag: RELEASE.2024-07-16T23-46-41Z
+  image: docker.io/pgsty/minio
+  tag: RELEASE.2026-04-17T00-00-00Z
 
 minio_root_user: "{{ undef(hint='You must set the Minio root username') }}"
 minio_root_password: "{{ undef(hint='You must set the Minio root password') }}"
