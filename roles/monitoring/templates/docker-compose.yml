@@ -67,6 +67,8 @@ services:
     # this service
     networks:
       - default
+    environment:
+      AUTH_TOKEN: abc123
 
   cadvisor:
     container_name: prometheus-cadvisor
