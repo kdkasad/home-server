@@ -3,3 +3,9 @@
   ansible.builtin.service:
     name: unattended-upgrades
     state: restarted
+
+- name: Restart TLP service
+  ansible.builtin.service:
+    name: tlp
+    state: restarted
+  listen: restart tlp

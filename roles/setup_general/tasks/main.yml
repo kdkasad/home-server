@@ -39,3 +39,28 @@
     name: unattended-upgrades
     enabled: no
     state: stopped
+
+- name: Power management
+  block:
+    - name: Install tools
+      ansible.builtin.apt:
+        name: [tlp, powertop]
+        state: present
+        install_recommends: false
+
+    - name: Render TLP configuration
+      ansible.builtin.template:
+        src: templates/tlp.conf
+        dest: /etc/tlp.conf
+        owner: root
+        group: root
+        mode: '0644'
+        backup: yes
+      notify: restart tlp
+
+    - name: Enable and start power services
+      ansible.builtin.service:
+        name: "{{ item }}.service"
+        enabled: yes
+        state: started
+      loop: [tlp, powertop]
