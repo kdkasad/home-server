@@ -1,0 +1,28 @@
+[Unit]
+Description=Prometheus nftables exporter
+After=network.target
+
+# Fail after 10 tries within 30 minutes
+StartLimitIntervalSec=30min
+StartLimitBurst=10
+
+[Service]
+Type=exec
+ExecStart=/usr/local/bin/prometheus_nftables_exporter.py
+Restart=on-failure
+
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictNamespaces=true
+RestrictRealtime=true
+LockPersonality=true
+SystemCallArchitectures=native
+CapabilityBoundingSet=CAP_NET_ADMIN
+
+[Install]
+WantedBy=multi-user.target

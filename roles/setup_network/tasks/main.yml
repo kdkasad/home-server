@@ -68,3 +68,47 @@
         enabled: "{{ setup_network_wifi_ap_enabled }}"
       loop:
         - wlan0
+
+- name: Configure firewall
+  ansible.builtin.template:
+    src: firewall.nft
+    dest: /etc/nftables.conf
+    owner: root
+    group: root
+    mode: '0600'
+  notify: reload nftables
+
+- name: Start & enable nftables.service
+  ansible.builtin.service:
+    name: nftables.service
+    state: started
+    enabled: true
+
+- name: Install Python libraries
+  ansible.builtin.package:
+    name: python3-prometheus-client
+    state: present
+
+- name: Render Python script
+  ansible.builtin.template:
+    src: prometheus_nftables_exporter.py
+    dest: /usr/local/bin/prometheus_nftables_exporter.py
+    owner: root
+    group: root
+    mode: '0755'
+  notify: restart prometheus-nftables-exporter
+
+- name: Render systemd service
+  ansible.builtin.template:
+    src: prometheus-nftables-exporter.service
+    dest: /etc/systemd/system/prometheus-nftables-exporter.service
+    owner: root
+    group: root
+    mode: '0644'
+  notify: restart prometheus-nftables-exporter
+
+- name: Start & enable prometheus-nftables-exporter.service
+  ansible.builtin.service:
+    name: prometheus-nftables-exporter.service
+    state: started
+    enabled: true

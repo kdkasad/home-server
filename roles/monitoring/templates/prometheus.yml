@@ -20,6 +20,12 @@ scrape_configs:
         labels:
           instance: "{{ general.domain }}"
 
+  - job_name: nftables
+    static_configs:
+      - targets: ['host.docker.internal:9101']
+        labels:
+          instance: "{{ general.domain }}"
+
   - job_name: cadvisor
     static_configs:
       - targets: ['cadvisor:8080']

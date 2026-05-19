@@ -1,0 +1,30 @@
+#!/usr/sbin/nft -f
+
+define LAN = {
+	10.0.0.0/8
+}
+
+table bridge accounting {}
+delete table bridge accounting
+table bridge accounting {
+	counter box_rx {}
+	counter box_tx {}
+	counter wlan_rx {}
+	counter wlan_tx {}
+
+	chain ingress {
+		type filter hook input priority 0;
+		pkttype unicast iifname enp1s0 ip saddr != $LAN counter name box_rx
+	}
+
+	chain egress {
+		type filter hook output priority 0;
+		pkttype unicast oifname enp1s0 ip daddr != $LAN counter name box_tx
+	}
+
+	chain forward {
+		type filter hook forward priority 0;
+		pkttype unicast iifname enp1s0 oifname wlan0 ip saddr != $LAN counter name wlan_rx
+		pkttype unicast iifname wlan0 oifname enp1s0 ip saddr != $LAN counter name wlan_tx
+	}
+}

@@ -4,3 +4,16 @@
     name: systemd-networkd.service
     state: reloaded
   listen: reload systemd-networkd
+
+- name: Reload nftables
+  ansible.builtin.service:
+    name: nftables.service
+    state: reloaded
+  listen: reload nftables
+
+- name: Restart prometheus-nftables-exporter
+  ansible.builtin.systemd:
+    name: prometheus-nftables-exporter.service
+    state: restarted
+    daemon_reload: true
+  listen: restart prometheus-nftables-exporter
