@@ -1,7 +1,15 @@
 #!/usr/sbin/nft -f
 
-define LAN = {
-	10.0.0.0/8
+define LAN4 = {
+	10.0.0.0/8,
+    224.0.0.0/4,
+    255.255.255.255
+}
+
+define LAN6 = {
+	fe80::/10,
+	2601:644:8401:8400::/64,
+	ff00::/8
 }
 
 table bridge accounting {}
@@ -14,17 +22,21 @@ table bridge accounting {
 
 	chain ingress {
 		type filter hook input priority 0;
-		pkttype unicast iifname enp1s0 ip saddr != $LAN counter name box_rx
+		iifname enp1s0 ip  saddr != $LAN4 counter name box_rx
+		iifname enp1s0 ip6 saddr != $LAN6 counter name box_rx
 	}
 
 	chain egress {
 		type filter hook output priority 0;
-		pkttype unicast oifname enp1s0 ip daddr != $LAN counter name box_tx
+		oifname enp1s0 ip  daddr != $LAN4 counter name box_tx
+		oifname enp1s0 ip6 daddr != $LAN6 counter name box_tx
 	}
 
 	chain forward {
 		type filter hook forward priority 0;
-		pkttype unicast iifname enp1s0 oifname wlan0 ip saddr != $LAN counter name wlan_rx
-		pkttype unicast iifname wlan0 oifname enp1s0 ip saddr != $LAN counter name wlan_tx
+		iifname enp1s0 oifname wlan0 ip  saddr != $LAN4 counter name wlan_rx
+		iifname enp1s0 oifname wlan0 ip6 saddr != $LAN6 counter name wlan_rx
+		iifname wlan0 oifname enp1s0 ip  daddr != $LAN4 counter name wlan_tx
+		iifname wlan0 oifname enp1s0 ip6 daddr != $LAN6 counter name wlan_tx
 	}
 }
