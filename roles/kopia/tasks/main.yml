@@ -1,0 +1,65 @@
+---
+- name: Install apt-transport-https and gnupg
+  ansible.builtin.apt:
+    name:
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - gnupg
+    state: present
+
+- name: Create apt keyrings directory
+  ansible.builtin.file:
+    path: /etc/apt/keyrings
+    state: directory
+    mode: '0755'
+
+- name: Download Kopia GPG key
+  ansible.builtin.get_url:
+    url: https://kopia.io/signing-key
+    dest: /etc/apt/keyrings/kopia-keyring.asc
+    mode: '0644'
+    checksum: sha256:e01adf3b905ef41a1c0b81f28a41fd7daa6a6918c97506a726b0f896aa93555a
+
+- name: Add Kopia APT repository
+  ansible.builtin.apt_repository:
+    repo: "deb [signed-by=/etc/apt/keyrings/kopia-keyring.asc] http://packages.kopia.io/apt/ stable main"
+    state: present
+    filename: kopia
+    update_cache: yes
+
+- name: Install Kopia
+  ansible.builtin.apt:
+    name: kopia
+    state: present
+
+- name: Create kopia user
+  ansible.builtin.user:
+    name: kopia
+    system: yes
+    create_home: yes
+    home: /home/kopia
+    shell: /usr/sbin/nologin
+
+- name: Create systemd unit templates
+  ansible.builtin.template:
+    src: "{{ item }}"
+    dest: "/etc/systemd/system/{{ item }}"
+    owner: root
+    group: root
+    mode: '0644'
+  loop:
+    - kopia.timer
+    - kopia.service
+    - kopia-maintenance.timer
+    - kopia-maintenance.service
+
+- name: Enable and start timers
+  ansible.builtin.systemd:
+    name: "{{ item }}"
+    enabled: yes
+    state: started
+    daemon_reload: yes
+  loop:
+    - kopia.timer
+    - kopia-maintenance.timer

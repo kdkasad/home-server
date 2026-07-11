@@ -1,0 +1,11 @@
+[Unit]
+Description=Run kopia maintenance
+Documentation=man:kopia(1)
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/kopia maintenance run --full
+User=kopia
+TimeoutStartSec=15m
+TimeoutStopSec=2m
+Restart=no

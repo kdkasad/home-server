@@ -1,0 +1,11 @@
+[Unit]
+Description=Run Kopia backup every 6 hours
+
+[Timer]
+Unit=kopia.service
+OnCalendar=*-*-* 00/6:00:00 America/Los_Angeles
+Persistent=true
+RandomizedDelaySec=1h
+
+[Install]
+WantedBy=timers.target

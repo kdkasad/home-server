@@ -1,0 +1,9 @@
+[Unit]
+Description=Run kopia maintenance on a schedule
+
+[Timer]
+OnCalendar=*-*-* 03:00:00 America/Los_Angeles
+RandomizedDelaySec=15m
+
+[Install]
+WantedBy=timers.target

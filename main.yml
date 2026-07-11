@@ -137,3 +137,6 @@
 
     - role: vnstat
       tags: [vnstat]
+
+    - role: kopia
+      tags: [kopia]
