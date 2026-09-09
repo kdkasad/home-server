@@ -3,7 +3,7 @@ Description=Run kopia maintenance
 Documentation=man:kopia(1)
 
 # Restart automatically at most once
-StartLimitIntervalSec=infinity
+StartLimitIntervalSec=1h
 StartLimitBurst=2
 
 [Service]
