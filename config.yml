@@ -458,3 +458,4 @@ egrass_bot_tag: edge
 egrass_bot_token: "{{ secret_egrass_bot_token }}"
 egrass_bot_disabled_features:
   - neetcode
+  - troll
