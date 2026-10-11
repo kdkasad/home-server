@@ -342,6 +342,11 @@ bitwarden_routing:
   enabled: true
   subdomain: bw
 
+bitwarden_push:
+  enabled: true
+  installation_id: "{{ secret_bw_push_installation_id }}"
+  installation_key: "{{ secret_bw_push_installation_key }}"
+
 
 #####################
 # Jellyfin settings #

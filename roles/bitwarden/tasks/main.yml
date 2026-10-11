@@ -26,6 +26,9 @@
           SIGNUPS_VERIFY: "{{ bitwarden_verify_emails | ternary('true', 'false') }}"
           ADMIN_TOKEN: >-
             {{ bitwarden_admin_panel.enabled | default(false) | ternary(bitwarden_admin_panel.password, omit) }}
+          PUSH_ENABLED: "{{ bitwarden_push.enabled | default(false) | ternary('true', 'false') }}"
+          PUSH_INSTALLATION_ID: "{{ bitwarden_push.installation_id | default(omit) }}"
+          PUSH_INSTALLATION_KEY: "{{ bitwarden_push.installation_key | default(omit) }}"
         volumes:
           - "{{ bitwarden_data_dir }}:/data"
         labels:
