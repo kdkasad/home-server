@@ -16,6 +16,9 @@ entryPoints:
   # Listen for HTTPS connections
   websecure:
     address: ":{{ traefik_ports.https }}"
+    transport:
+      respondingTimeouts:
+        readTimeout: 1200s
     http:
       tls:
         certResolver: letsencrypt
